@@ -119,7 +119,7 @@ export default function ToolsDirectory() {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="glass p-5 rounded-2xl border hover:border-primary/40 hover-scale flex flex-col gap-4 relative overflow-hidden group"
+                className="glass p-5 rounded-2xl border hover:border-primary/40 hover-scale card-stripe flex flex-col gap-4 relative overflow-hidden group"
               >
                 <div className="absolute top-0 right-0 h-16 w-16 bg-indigo-500/5 rounded-bl-full pointer-events-none group-hover:bg-indigo-500/10 transition-colors" />
                 <div className="flex items-center justify-between">
@@ -184,7 +184,7 @@ export default function ToolsDirectory() {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="glass p-5 rounded-2xl border hover:border-primary/40 hover-scale flex flex-col justify-between gap-5 group"
+                className="glass p-5 rounded-2xl border hover:border-primary/40 hover-scale card-stripe flex flex-col justify-between gap-5 group"
               >
                 <div className="flex flex-col gap-3">
                   <div className="flex items-center justify-between">
