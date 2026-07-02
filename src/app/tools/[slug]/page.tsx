@@ -166,14 +166,14 @@ export default async function ToolPage({ params }: ToolPageProps) {
           {/* Main Info Column */}
           <section className="lg:col-span-2 flex flex-col gap-8 text-sm">
             <div className="flex flex-col gap-3">
-              <h2 className="text-lg font-bold text-white tracking-tight">About {tool.name}</h2>
+              <h2 className="text-lg font-bold text-foreground tracking-tight">About {tool.name}</h2>
               <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
                 {tool.longDesc}
               </p>
             </div>
 
             <div className="flex flex-col gap-3">
-              <h2 className="text-lg font-bold text-white tracking-tight">How to Use the Tool</h2>
+              <h2 className="text-lg font-bold text-foreground tracking-tight">How to Use the Tool</h2>
               <ol className="list-decimal pl-5 space-y-2 text-xs md:text-sm text-muted-foreground">
                 {tool.howToUse.map((step, i) => (
                   <li key={i} className="leading-relaxed pl-1">{step}</li>
@@ -185,11 +185,11 @@ export default async function ToolPage({ params }: ToolPageProps) {
           {/* Right Sidebar FAQs Column */}
           <section className="flex flex-col gap-6 border-t lg:border-t-0 lg:border-l border-border/40 pt-6 lg:pt-0 lg:pl-8 text-sm">
             <div className="flex flex-col gap-3">
-              <h2 className="text-lg font-bold text-white tracking-tight">FAQs</h2>
+              <h2 className="text-lg font-bold text-foreground tracking-tight">FAQs</h2>
               <div className="flex flex-col gap-4">
                 {tool.faqs.map((faq, i) => (
                   <div key={i} className="flex flex-col gap-1.5 border-b border-border/40 pb-4 last:border-b-0 last:pb-0">
-                    <h4 className="font-bold text-white text-xs">{faq.question}</h4>
+                    <h4 className="font-bold text-foreground text-xs">{faq.question}</h4>
                     <p className="text-xs text-muted-foreground leading-relaxed">{faq.answer}</p>
                   </div>
                 ))}

@@ -21,7 +21,7 @@ export default function ToolsDirectoryPage() {
         <nav className="flex items-center gap-1.5 text-3xs font-semibold text-muted-foreground uppercase tracking-wider">
           <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
           <ChevronRight className="h-3 w-3 shrink-0" />
-          <span className="text-white">All Tools Directory</span>
+          <span className="text-foreground">All Tools Directory</span>
         </nav>
 
         {/* Header Title */}
@@ -30,7 +30,7 @@ export default function ToolsDirectoryPage() {
             <Folder className="h-5 w-5" />
           </div>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">All Tools Directory</h1>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">All Tools Directory</h1>
             <p className="text-xs sm:text-sm text-muted-foreground mt-1">Browse and access our complete suite of client-side web utilities.</p>
           </div>
         </div>
@@ -44,7 +44,7 @@ export default function ToolsDirectoryPage() {
             return (
               <div key={category.id} className="flex flex-col gap-4">
                 <div className="flex items-baseline gap-3 border-b border-border/20 pb-2">
-                  <h2 className="text-base font-bold text-white tracking-tight">{category.name}</h2>
+                  <h2 className="text-base font-bold text-foreground tracking-tight">{category.name}</h2>
                   <span className="text-3xs text-muted-foreground font-semibold">{categoryTools.length} utilities</span>
                 </div>
                 
@@ -60,7 +60,7 @@ export default function ToolsDirectoryPage() {
                           <LucideIcon name={tool.iconName} className="h-4 w-4" />
                         </div>
                         <div className="min-w-0">
-                          <span className="text-xs font-semibold text-white group-hover:text-primary transition-colors block truncate">{tool.name}</span>
+                          <span className="text-xs font-semibold text-foreground group-hover:text-primary transition-colors block truncate">{tool.name}</span>
                           <span className="text-3xs text-muted-foreground block truncate">{tool.category}</span>
                         </div>
                       </div>

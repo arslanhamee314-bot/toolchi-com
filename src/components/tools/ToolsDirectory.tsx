@@ -112,7 +112,7 @@ export default function ToolsDirectory() {
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2 border-b border-border/40 pb-2">
             <TrendingUp className="h-5 w-5 text-indigo-400" />
-            <h2 className="text-lg font-bold tracking-tight text-white">Popular Utilities</h2>
+            <h2 className="text-lg font-bold tracking-tight text-foreground">Popular Utilities</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {popularTools.map((tool) => (
@@ -146,7 +146,7 @@ export default function ToolsDirectory() {
       {/* 3. Category Filter Chips & Grid */}
       <div id="categories" className="flex flex-col gap-6 scroll-mt-24">
         <div className="flex flex-col gap-2 border-b border-border/40 pb-2">
-          <h2 className="text-lg font-bold tracking-tight text-white">All Browser Utilities</h2>
+          <h2 className="text-lg font-bold tracking-tight text-foreground">All Browser Utilities</h2>
           <p className="text-xs text-muted-foreground">Select a category chip below to filter tools dynamically.</p>
         </div>
 
@@ -218,7 +218,7 @@ export default function ToolsDirectory() {
             <div className="h-10 w-10 bg-muted text-muted-foreground rounded-full flex items-center justify-center">
               <Search className="h-5 w-5" />
             </div>
-            <h3 className="font-bold text-white text-base">No utilities found</h3>
+            <h3 className="font-bold text-foreground text-base">No utilities found</h3>
             <p className="text-xs text-muted-foreground max-w-xs">
               We couldn't find any tool matching "{searchQuery}" under this category. Check your spelling or reset filters.
             </p>
