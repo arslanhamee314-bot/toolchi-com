@@ -1,6 +1,7 @@
 import React from "react";
 import { Shield, Sparkles, Cpu, Lock, CheckCircle } from "lucide-react";
 import ToolsDirectory from "@/components/tools/ToolsDirectory";
+import ToolsSlider from "@/components/tools/ToolsSlider";
 
 // Page level metadata for homepage (pre-rendered for Google)
 export const metadata = {
@@ -34,6 +35,11 @@ export default function HomePage() {
           <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-xl">
             Text transformations, JSON formatting, local PDF merging, color system conversions, and math calculators. All processed on your device.
           </p>
+        </section>
+
+        {/* 1.5 Highlights Slideshow */}
+        <section className="relative w-full z-20 animate-in fade-in slide-in-from-bottom-3 duration-500">
+          <ToolsSlider />
         </section>
 
         {/* 2. Tools Directory Component (Filtered Cards & Search) */}
