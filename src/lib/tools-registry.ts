@@ -25,7 +25,8 @@ export const CATEGORIES = [
   { id: "image", name: "Image Utilities", desc: "Convert formats and edit dimensions client-side." },
   { id: "color", name: "Color Utilities", desc: "Translate between Hex, RGB, HSL and manage color spaces." },
   { id: "math", name: "Math & Conversions", desc: "Evaluate equations and translate measurement units." },
-  { id: "business", name: "Business & Productivity", desc: "Generate invoices and manage client assets." }
+  { id: "business", name: "Business & Productivity", desc: "Generate invoices and manage client assets." },
+  { id: "ai", name: "AI Content Utilities", desc: "Detect AI-generated text and humanize content to bypass checkers." }
 ];
 
 export const TOOLS_REGISTRY: ToolItem[] = [
@@ -335,6 +336,29 @@ export const TOOLS_REGISTRY: ToolItem[] = [
       { question: "Are my invoices saved online?", answer: "No, Toolchi does not store any customer bills or invoices. All details are kept in client-side states." }
     ],
     popular: true
+  },
+
+  // 8. AI CONTENT TOOLS
+  {
+    slug: "ai-detector",
+    name: "AI Content Detector & Humanizer",
+    category: "ai",
+    shortDesc: "Analyze writing patterns to verify AI-generated text, and humanize content to bypass detection tools.",
+    iconName: "Cpu",
+    seoTitle: "Free AI Content Detector & Text Humanizer Online | Toolchi",
+    seoDescription: "Detect AI-generated text from GPT-4, Gemini, and Claude. Humanize AI text to 100% human score to bypass checkers instantly and securely.",
+    longDesc: "Analyze text perplexity, syntactic variance, and transition predictable distributions to detect AI content. Convert AI copy into highly natural humanized formats to bypass modern detector algorithms.",
+    howToUse: [
+      "Enter your article, paper, or email content into the input workspace.",
+      "Click Detect AI Content to check probability distributions and highlight AI sentences.",
+      "Switch to the Humanizer tab and click Humanize to rewrite the copy into 100% human-score structure."
+    ],
+    faqs: [
+      { question: "How does the AI Detector work?", answer: "It checks sentence perplexity variance, word repetitions, and density of typical LLM transition phrases." },
+      { question: "How does the Humanizer work?", answer: "It restructures sentence patterns, increases word variety (burstiness), and swaps predictable AI phrasing with active human colloquialisms." }
+    ],
+    popular: true,
+    isNew: true
   }
 ];
 

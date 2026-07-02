@@ -13,6 +13,7 @@ import MergePdf from "./MergePdf";
 import ColorConverter from "./ColorConverter";
 import Calculator from "./Calculator";
 import InvoiceGenerator from "./InvoiceGenerator";
+import AiDetector from "./AiDetector";
 
 interface ToolSwitcherProps {
   slug: string;
@@ -59,6 +60,10 @@ export default function ToolSwitcher({ slug }: ToolSwitcherProps) {
     // 6. Business Tools
     case "invoice-generator":
       return <InvoiceGenerator />;
+
+    // 7. AI Tools
+    case "ai-detector":
+      return <AiDetector />;
 
     default:
       return (
