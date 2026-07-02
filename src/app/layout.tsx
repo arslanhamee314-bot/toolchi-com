@@ -30,7 +30,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="">
       <head>
         {/* Google Fonts Outfit */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -47,7 +47,7 @@ export default function RootLayout({
                 T
               </div>
               <div>
-                <div className="text-base font-bold leading-tight tracking-tight text-white">Toolchi</div>
+                <div className="text-base font-bold leading-tight tracking-tight text-foreground">Toolchi</div>
                 <div className="text-[10px] text-muted-foreground font-medium">100% Client-Side Tools</div>
               </div>
             </Link>
@@ -85,7 +85,7 @@ export default function RootLayout({
                 <div className="h-6 w-6 rounded-md bg-primary text-primary-foreground flex items-center justify-center font-bold text-xs">
                   T
                 </div>
-                <span className="font-bold text-white tracking-tight">Toolchi</span>
+                <span className="font-bold text-foreground tracking-tight">Toolchi</span>
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed">
                 Toolchi runs entirely in your web browser. All file merges, conversions, text modifications, and data encodings happen locally. No data leaves your device.
@@ -98,7 +98,7 @@ export default function RootLayout({
 
             {/* Column 2: Categories */}
             <div className="flex flex-col gap-3">
-              <span className="font-bold text-white uppercase text-xs tracking-wider">Tool Categories</span>
+              <span className="font-bold text-foreground uppercase text-xs tracking-wider">Tool Categories</span>
               <ul className="space-y-2 text-xs text-muted-foreground font-medium">
                 <li><Link href="/#pdf" className="hover:text-foreground transition-colors">PDF Merging & Compacting</Link></li>
                 <li><Link href="/#text" className="hover:text-foreground transition-colors">Casing & Word Counters</Link></li>
@@ -109,7 +109,7 @@ export default function RootLayout({
 
             {/* Column 3: Trust & Company */}
             <div className="flex flex-col gap-3">
-              <span className="font-bold text-white uppercase text-xs tracking-wider">Privacy & Trust</span>
+              <span className="font-bold text-foreground uppercase text-xs tracking-wider">Privacy & Trust</span>
               <ul className="space-y-2 text-xs text-muted-foreground font-medium">
                 <li><Link href="/#about" className="hover:text-foreground transition-colors">Our Privacy Promise</Link></li>
                 <li><a href="#" className="hover:text-foreground transition-colors">Terms of Service</a></li>
@@ -119,7 +119,7 @@ export default function RootLayout({
 
             {/* Column 4: Quick Links */}
             <div className="flex flex-col gap-3">
-              <span className="font-bold text-white uppercase text-xs tracking-wider">Site Directory</span>
+              <span className="font-bold text-foreground uppercase text-xs tracking-wider">Site Directory</span>
               <ul className="space-y-2 text-xs text-muted-foreground font-medium">
                 <li><Link href="/tools" className="hover:text-foreground transition-colors">All 25+ Tools Directory</Link></li>
                 <li><Link href="/sitemap.xml" className="hover:text-foreground transition-colors">XML Sitemap</Link></li>

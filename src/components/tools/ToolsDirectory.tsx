@@ -89,7 +89,7 @@ export default function ToolsDirectory() {
                       <LucideIcon name={result.iconName} className="h-4.5 w-4.5" />
                     </div>
                     <div>
-                      <div className="text-sm font-semibold text-white group-hover:text-primary transition-colors">
+                      <div className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
                         {result.name}
                       </div>
                       <div className="text-xs text-muted-foreground truncate max-w-sm md:max-w-md">
@@ -131,7 +131,7 @@ export default function ToolsDirectory() {
                   </span>
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-bold text-sm text-white group-hover:text-primary transition-colors mb-1.5">{tool.name}</h3>
+                  <h3 className="font-bold text-sm text-foreground group-hover:text-primary transition-colors mb-1.5">{tool.name}</h3>
                   <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">{tool.shortDesc}</p>
                 </div>
                 <div className="text-xs font-semibold text-primary group-hover:text-primary-foreground flex items-center gap-1 mt-2">
@@ -198,7 +198,7 @@ export default function ToolsDirectory() {
                     )}
                   </div>
                   <div>
-                    <h3 className="font-bold text-sm text-white group-hover:text-primary transition-colors mb-1.5">{tool.name}</h3>
+                    <h3 className="font-bold text-sm text-foreground group-hover:text-primary transition-colors mb-1.5">{tool.name}</h3>
                     <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3">{tool.shortDesc}</p>
                   </div>
                 </div>

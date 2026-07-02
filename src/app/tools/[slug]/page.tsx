@@ -124,7 +124,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
           <ChevronRight className="h-3 w-3 shrink-0" />
           <Link href="/tools" className="hover:text-foreground transition-colors">Tools</Link>
           <ChevronRight className="h-3 w-3 shrink-0" />
-          <span className="text-white truncate">{tool.name}</span>
+          <span className="text-foreground truncate">{tool.name}</span>
         </nav>
 
         {/* Action Header */}
@@ -134,13 +134,13 @@ export default async function ToolPage({ params }: ToolPageProps) {
               <LucideIcon name={tool.iconName} className="h-5 w-5" />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">{tool.name}</h1>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">{tool.name}</h1>
               <p className="text-xs sm:text-sm text-muted-foreground mt-1">{tool.shortDesc}</p>
             </div>
           </div>
           <Link 
             href="/"
-            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-white transition-colors bg-card border border-border px-3 py-1.5 rounded-lg hover:border-neutral-700 shrink-0"
+            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors bg-card border border-border px-3 py-1.5 rounded-lg hover:border-neutral-700 shrink-0"
           >
             <ArrowLeft className="h-4.5 w-4.5" /> Back to Dashboard
           </Link>

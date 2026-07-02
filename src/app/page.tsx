@@ -24,7 +24,7 @@ export default function HomePage() {
             <Sparkles className="h-3.5 w-3.5" /> 100% Private Browser Utilities
           </div>
 
-          <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight bg-clip-text text-linear-to-b from-white via-neutral-100 to-neutral-500 leading-none">
+          <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight bg-clip-text text-neutral-900 dark:text-neutral-100 leading-none">
             Every utility you use,<br />
             <span className="bg-clip-text text-linear-to-r from-primary via-indigo-400 to-purple-500">
               in one secure place
@@ -47,7 +47,7 @@ export default function HomePage() {
             <div className="h-10 w-10 bg-primary/10 text-primary border border-primary/20 rounded-xl flex items-center justify-center">
               <Shield className="h-5 w-5" />
             </div>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight leading-tight">
+            <h2 className="text-2xl md:text-3xl font-extrabold text-foreground tracking-tight leading-tight">
               Our Zero-Data <br />
               <span className="text-primary">Privacy Promise</span>
             </h2>
@@ -70,14 +70,14 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="p-5 rounded-2xl bg-card border border-border/80 flex flex-col gap-3">
               <Lock className="h-5 w-5 text-indigo-400" />
-              <h4 className="font-bold text-sm text-white">Browser Processing</h4>
+              <h4 className="font-bold text-sm text-foreground">Browser Processing</h4>
               <p className="text-xs text-muted-foreground leading-relaxed">
                 By loading compiled JS bundles into your viewport memory, Toolchi operations are executed sandbox-style within your browser.
               </p>
             </div>
             <div className="p-5 rounded-2xl bg-card border border-border/80 flex flex-col gap-3">
               <Cpu className="h-5 w-5 text-purple-400" />
-              <h4 className="font-bold text-sm text-white">Wasm & Canvas</h4>
+              <h4 className="font-bold text-sm text-foreground">Wasm & Canvas</h4>
               <p className="text-xs text-muted-foreground leading-relaxed">
                 Complex PDF merges or image conversions leverage WebAssembly code layers and HTML5 canvases, maintaining processing speed.
               </p>
@@ -88,34 +88,34 @@ export default function HomePage() {
         {/* 4. Platform FAQs Hub */}
         <section className="flex flex-col gap-6">
           <div className="text-center max-w-xl mx-auto flex flex-col gap-2">
-            <h2 className="text-2xl font-extrabold tracking-tight text-white">Frequently Asked Questions</h2>
+            <h2 className="text-2xl font-extrabold tracking-tight text-foreground">Frequently Asked Questions</h2>
             <p className="text-xs text-muted-foreground">General information regarding how the Toolchi platform processes browser utilities.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm max-w-4xl mx-auto w-full">
             <div className="glass p-6 rounded-2xl border flex flex-col gap-2">
-              <h4 className="font-bold text-white text-xs md:text-sm">How can Toolchi modify PDFs without uploading them?</h4>
+              <h4 className="font-bold text-foreground text-xs md:text-sm">How can Toolchi modify PDFs without uploading them?</h4>
               <p className="text-xs text-muted-foreground leading-relaxed">
                 We load client-side libraries (like `pdf-lib`) directly into your browser tab. When you drag and drop your PDFs to merge or split them, the JavaScript interpreter compiles the PDF streams natively in RAM, producing an instant download link.
               </p>
             </div>
 
             <div className="glass p-6 rounded-2xl border flex flex-col gap-2">
-              <h4 className="font-bold text-white text-xs md:text-sm">Does the tool work offline?</h4>
+              <h4 className="font-bold text-foreground text-xs md:text-sm">Does the tool work offline?</h4>
               <p className="text-xs text-muted-foreground leading-relaxed">
                 Yes! Once the webpage is loaded initially, all computations (casing transforms, formatting, conversions) work completely offline since they require no external APIs or network calls.
               </p>
             </div>
 
             <div className="glass p-6 rounded-2xl border flex flex-col gap-2">
-              <h4 className="font-bold text-white text-xs md:text-sm">Are there any file count or upload limit caps?</h4>
+              <h4 className="font-bold text-foreground text-xs md:text-sm">Are there any file count or upload limit caps?</h4>
               <p className="text-xs text-muted-foreground leading-relaxed">
                 Since we do not host or store your assets on remote hardware servers, there are no artificial pricing plans or upload caps. Your limits are only bounded by your local computer's processor speed and available memory.
               </p>
             </div>
 
             <div className="glass p-6 rounded-2xl border flex flex-col gap-2">
-              <h4 className="font-bold text-white text-xs md:text-sm">How can I suggest new browser utilities?</h4>
+              <h4 className="font-bold text-foreground text-xs md:text-sm">How can I suggest new browser utilities?</h4>
               <p className="text-xs text-muted-foreground leading-relaxed">
                 We are actively expanding our tools directory! If you need developer, text, math, or PDF utilities added to our list, reach out to our support channel via `support@toolchi.online`.
               </p>
