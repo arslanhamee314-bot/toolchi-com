@@ -134,8 +134,12 @@ export default async function ToolPage({ params }: ToolPageProps) {
         {/* Action Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-border/40 pb-6 print:hidden">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 bg-primary/10 text-primary border border-primary/20 rounded-xl flex items-center justify-center">
-              <LucideIcon name={tool.iconName} className="h-5 w-5" />
+            <div className="h-10 w-10 bg-primary/10 text-primary border border-primary/20 rounded-xl flex items-center justify-center text-base">
+              {/\p{Extended_Pictographic}/u.test(tool.iconName) ? (
+                <span className="select-none">{tool.iconName}</span>
+              ) : (
+                <LucideIcon name={tool.iconName} className="h-5 w-5" />
+              )}
             </div>
             <div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">{tool.name}</h1>
@@ -152,7 +156,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
 
         {/* Premium interactive tool element */}
         <section className="glass rounded-3xl border border-border p-6 md:p-8 bg-card/25 shadow-2xl relative overflow-hidden print:border-0 print:bg-transparent print:shadow-none print:p-0 print:rounded-none">
-          <div className="absolute top-0 right-0 p-3 flex gap-2 pointer-events-none print:hidden">
+          <div className="flex flex-wrap gap-2 mb-4 md:absolute md:top-3 md:right-3 md:mb-0 pointer-events-none print:hidden">
             <span className="inline-flex items-center gap-1 text-3xs font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">
               <ShieldCheck className="h-3.5 w-3.5" /> Client Sandbox
             </span>
