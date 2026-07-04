@@ -49,17 +49,10 @@ export default function RootLayout({
             </Link>
 
             {/* Navigation links */}
-            <nav className="hidden md:flex items-center gap-5 text-sm font-semibold text-[#363c48] dark:text-[#a0a8b9]">
-              <Link href="/" className="hover:text-foreground transition-colors">Guides</Link>
-              <Link href="/" className="hover:text-foreground transition-colors">Reviews</Link>
-              <Link href="/" className="flex items-center hover:text-foreground transition-colors">
-                Coupons 
-                <span className="bg-[#7d4dff] text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded-full ml-1 shrink-0">
-                  99+
-                </span>
-              </Link>
-              <Link href="/tools" className="text-[#7d4dff] hover:text-[#6530ef] transition-colors">Tools</Link>
-              <Link href="/blog" className="hover:text-foreground transition-colors">Blog</Link>
+            <nav className="hidden md:flex items-center gap-8 text-sm font-bold text-[#363c48] dark:text-[#a0a8b9]">
+              <Link href="/" className="hover:text-[#7d4dff] transition-colors">Home</Link>
+              <Link href="/tools" className="hover:text-[#7d4dff] transition-colors">Tools</Link>
+              <Link href="/blog" className="hover:text-[#7d4dff] transition-colors">Blogs</Link>
             </nav>
 
             {/* Header actions */}
