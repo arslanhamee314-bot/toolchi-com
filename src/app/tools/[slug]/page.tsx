@@ -5,6 +5,7 @@ import { ChevronRight, ArrowLeft, ShieldCheck, Zap } from "lucide-react";
 import { getToolBySlug, TOOLS_REGISTRY } from "@/lib/tools-registry";
 import ToolSwitcher from "@/components/tools/ToolSwitcher";
 import LucideIcon from "@/components/tools/LucideIcon";
+import TutorialGallery from "@/components/tools/TutorialGallery";
 
 interface ToolPageProps {
   params: Promise<{ slug: string }>;
@@ -134,12 +135,8 @@ export default async function ToolPage({ params }: ToolPageProps) {
         {/* Action Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-border/40 pb-6 print:hidden">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 bg-primary/10 text-primary border border-primary/20 rounded-xl flex items-center justify-center text-base">
-              {/\p{Extended_Pictographic}/u.test(tool.iconName) ? (
-                <span className="select-none">{tool.iconName}</span>
-              ) : (
-                <LucideIcon name={tool.iconName} className="h-5 w-5" />
-              )}
+            <div className="h-10 w-10 bg-primary/10 text-primary border border-primary/20 rounded-xl flex items-center justify-center">
+              <LucideIcon name={tool.iconName} className="h-5 w-5" />
             </div>
             <div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">{tool.name}</h1>
@@ -183,13 +180,14 @@ export default async function ToolPage({ params }: ToolPageProps) {
               </p>
             </div>
 
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-4">
               <h2 className="text-lg font-bold text-foreground tracking-tight">How to Use the Tool</h2>
-              <ol className="list-decimal pl-5 space-y-2 text-xs md:text-sm text-muted-foreground">
+              <ol className="list-decimal pl-5 space-y-2 text-xs md:text-sm text-muted-foreground mb-2">
                 {tool.howToUse.map((step, i) => (
                   <li key={i} className="leading-relaxed pl-1">{step}</li>
                 ))}
               </ol>
+              <TutorialGallery tool={tool} />
             </div>
           </section>
 

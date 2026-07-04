@@ -132,11 +132,7 @@ export default function ToolsDirectory() {
                         {/* Tool Icon Header row */}
                         <div className="flex w-full items-center justify-between mb-4">
                           <div className="h-16 w-16 rounded-[18px] bg-[#f3eeff] dark:bg-[#251e1c] text-[#7d4dff] flex items-center justify-center font-bold text-2xl border border-[#e8ddff]/40">
-                            {isEmoji(tool.iconName) ? (
-                              <span className="select-none">{tool.iconName}</span>
-                            ) : (
-                              <LucideIcon name={tool.iconName} className="h-6 w-6" />
-                            )}
+                            <LucideIcon name={tool.iconName} className="h-6 w-6" />
                           </div>
                           <span className="text-[9px] font-extrabold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/15 select-none shrink-0">
                             Local
