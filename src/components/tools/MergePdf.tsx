@@ -106,10 +106,27 @@ export default function MergePdf() {
         </div>
       </div>
 
+      {/* Privacy Guarantee Panel (inspired by TinyWow file safety) */}
+      <div className="p-3.5 bg-emerald-500/5 text-emerald-500 rounded-xl border border-emerald-500/10 text-3xs font-semibold flex items-start gap-2.5">
+        <span className="shrink-0 text-sm mt-0.5">🔒</span>
+        <div className="flex flex-col gap-0.5">
+          <span className="font-extrabold text-emerald-400">Zero Server Storage Guarantee</span>
+          <span className="text-muted text-[10px] leading-relaxed">
+            All PDF merges, splits, and compressions are processed strictly within your browser's local sandbox utilizing client assemblies. Files are never uploaded, stored, or indexed on our systems.
+          </span>
+        </div>
+      </div>
+
       {/* Files List */}
       {files.length > 0 && (
         <div className="flex flex-col gap-3">
-          <label className="text-2xs font-semibold text-muted-foreground uppercase tracking-wider">Staged Documents</label>
+          <div className="flex justify-between items-center select-none">
+            <label className="text-2xs font-semibold text-muted-foreground uppercase tracking-wider">Staged Documents</label>
+            <label className="text-3xs font-extrabold text-[#7d4dff] hover:text-[#6530ef] cursor-pointer flex items-center gap-1">
+              <span>+ Add More Files</span>
+              <input type="file" multiple accept="application/pdf" onChange={handleFileChange} className="hidden" />
+            </label>
+          </div>
           <div className="flex flex-col gap-2 max-h-60 overflow-y-auto divide-y divide-border/20 border border-border/80 rounded-xl bg-card/10">
             {files.map((file, index) => (
               <div key={file.id} className="flex items-center justify-between p-3 gap-4">

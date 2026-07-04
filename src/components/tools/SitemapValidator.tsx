@@ -65,11 +65,14 @@ export default function SitemapValidator() {
         });
       }
 
+      const seoScore = Math.max(0, 100 - warnings * 10);
+
       setReport({
         isValid: true,
         totalUrls: urls.length,
         urls,
         warnings,
+        seoScore,
         schema: xmlDoc.documentElement.getAttribute("xmlns") || "Missing schema namespace"
       });
       import("canvas-confetti").then((m) => m.default({ particleCount: 30, spread: 50, origin: { y: 0.85 } }));
@@ -124,14 +127,18 @@ export default function SitemapValidator() {
             </div>
           ) : (
             <div className="flex flex-col gap-4">
-              <div className="grid grid-cols-2 gap-4 text-center">
+              <div className="grid grid-cols-3 gap-4 text-center">
                 <div className="p-3 bg-neutral-50 dark:bg-neutral-800/40 rounded-xl border border-border/40">
                   <span className="text-muted block text-3xs font-semibold uppercase">Total URLs</span>
-                  <span className="font-extrabold text-base text-primary">{report.totalUrls}</span>
+                  <span className="font-extrabold text-base text-[#7d4dff]">{report.totalUrls}</span>
                 </div>
                 <div className="p-3 bg-neutral-50 dark:bg-neutral-800/40 rounded-xl border border-border/40">
                   <span className="text-muted block text-3xs font-semibold uppercase">Warnings</span>
                   <span className="font-extrabold text-base text-amber-500">{report.warnings}</span>
+                </div>
+                <div className="p-3 bg-neutral-50 dark:bg-neutral-800/40 rounded-xl border border-border/40">
+                  <span className="text-muted block text-3xs font-semibold uppercase">SEO Score</span>
+                  <span className="font-extrabold text-base text-emerald-400">{report.seoScore}/100</span>
                 </div>
               </div>
 

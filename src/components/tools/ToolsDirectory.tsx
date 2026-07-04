@@ -50,7 +50,7 @@ export default function ToolsDirectory() {
   return (
     <div className="flex flex-col w-full gap-10">
       
-      {/* 1. Website Planet Search Bar Widget (Centered in Hero) */}
+      {/* 1. Toolchi Search Bar Widget (Centered in Hero) */}
       <div className="relative max-w-2xl mx-auto w-full -mt-20 mb-8 z-30 px-4 sm:px-0">
         <div className="flex items-center bg-white dark:bg-card border border-border focus-within:border-primary/50 rounded-full px-5 py-2 shadow-lg transition-all duration-200">
           <Search className="h-5 w-5 text-muted mr-3 shrink-0" />
@@ -73,7 +73,7 @@ export default function ToolsDirectory() {
           )}
           <button 
             type="button"
-            className="px-6 py-2.5 text-xs font-extrabold bg-[#ff623d] hover:bg-[#ef5330] text-white rounded-full transition-all active:scale-95 cursor-pointer shrink-0 ml-2"
+            className="px-6 py-2.5 text-xs font-extrabold bg-[#7d4dff] hover:bg-[#6530ef] text-white rounded-full transition-all active:scale-95 cursor-pointer shrink-0 ml-2"
           >
             Search
           </button>
@@ -124,23 +124,28 @@ export default function ToolsDirectory() {
                     {tools.map((tool) => (
                       <article
                         key={tool.slug}
-                        className="bg-white dark:bg-card border border-border rounded-[18px] p-6 shadow-xs min-h-[260px] flex flex-col items-start hover:-translate-y-0.5 transition-transform-ease duration-200 relative group"
+                        className="bg-white dark:bg-card border border-border group-hover:border-[#7d4dff]/50 rounded-[18px] p-6 shadow-xs min-h-[260px] flex flex-col items-start hover:-translate-y-0.5 transition-transform-ease duration-200 relative group"
                       >
                         {/* Custom Card Stripe top border */}
-                        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#ff623d] to-[#7d4dff] rounded-t-[18px] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#7d4dff] to-[#7d4dff] rounded-t-[18px] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         
-                        {/* Tool Icon Container */}
-                        <div className="h-16 w-16 rounded-[18px] bg-[#fff2ee] dark:bg-[#251e1c] text-[#ff623d] flex items-center justify-center font-bold text-2xl mb-4 border border-[#ffd2c8]/40">
-                          {isEmoji(tool.iconName) ? (
-                            <span className="select-none">{tool.iconName}</span>
-                          ) : (
-                            <LucideIcon name={tool.iconName} className="h-6 w-6" />
-                          )}
+                        {/* Tool Icon Header row */}
+                        <div className="flex w-full items-center justify-between mb-4">
+                          <div className="h-16 w-16 rounded-[18px] bg-[#f3eeff] dark:bg-[#251e1c] text-[#7d4dff] flex items-center justify-center font-bold text-2xl border border-[#e8ddff]/40">
+                            {isEmoji(tool.iconName) ? (
+                              <span className="select-none">{tool.iconName}</span>
+                            ) : (
+                              <LucideIcon name={tool.iconName} className="h-6 w-6" />
+                            )}
+                          </div>
+                          <span className="text-[9px] font-extrabold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/15 select-none shrink-0">
+                            Local
+                          </span>
                         </div>
 
                         {/* Title & Desc */}
                         <div className="flex-1 mb-4">
-                          <h3 className="font-extrabold text-sm text-foreground tracking-tight leading-snug mb-2 group-hover:text-[#ff623d] transition-colors">
+                          <h3 className="font-extrabold text-sm text-foreground tracking-tight leading-snug mb-2 group-hover:text-[#7d4dff] transition-colors">
                             {tool.name}
                           </h3>
                           <p className="text-xs text-muted leading-relaxed line-clamp-3">
@@ -151,7 +156,7 @@ export default function ToolsDirectory() {
                         {/* Call to Action Button */}
                         <Link
                           href={`/tools/${tool.slug}`}
-                          className="w-full text-center py-2.5 px-4 bg-[#ff623d] hover:bg-[#ef5330] text-white font-bold text-xs rounded-full transition-colors mt-auto select-none shadow-sm shadow-[#ff623d]/10"
+                          className="w-full text-center py-2.5 px-4 bg-[#7d4dff] hover:bg-[#6530ef] text-white font-bold text-xs rounded-full transition-colors mt-auto select-none shadow-sm shadow-[#7d4dff]/10"
                         >
                           Open Tool
                         </Link>
@@ -177,7 +182,7 @@ export default function ToolsDirectory() {
           </div>
           <button
             onClick={() => setSearchQuery("")}
-            className="px-5 py-2.5 text-xs font-bold bg-[#ff623d] hover:bg-[#ef5330] text-white rounded-full transition-all active:scale-95 cursor-pointer shadow-md shadow-[#ff623d]/15"
+            className="px-5 py-2.5 text-xs font-bold bg-[#7d4dff] hover:bg-[#6530ef] text-white rounded-full transition-all active:scale-95 cursor-pointer shadow-md shadow-[#7d4dff]/15"
           >
             Clear Search Filter
           </button>

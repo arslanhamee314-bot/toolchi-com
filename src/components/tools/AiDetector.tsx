@@ -329,6 +329,20 @@ export default function AiDetector() {
                   </div>
                 </div>
 
+                {/* Export Report Actions (inspired by DupliChecker) */}
+                <div className="flex gap-2 mt-2">
+                  <button
+                    onClick={() => {
+                      const report = `Toolchi AI Content Detector Report\n---------------------------------\nAI Score: ${detectorResult.aiPercent}%\nHuman Score: ${detectorResult.humanPercent}%\nSentence Variance (Perplexity): ${detectorResult.perplexity}\nLLM Buzzwords: ${detectorResult.buzzwordsFound.length} detected\nStatus: ${detectorResult.aiPercent > 60 ? "Highly Likely AI-Generated" : detectorResult.aiPercent > 35 ? "Mix of AI & Human" : "Highly Likely Human-Written"}\n\nGenerated locally on Toolchi.online`;
+                      navigator.clipboard.writeText(report);
+                      import("canvas-confetti").then((m) => m.default({ particleCount: 30, spread: 50, origin: { y: 0.85 } }));
+                    }}
+                    className="flex-1 py-2 text-3xs font-extrabold bg-[#7d4dff] hover:bg-[#6530ef] text-white rounded-xl transition-all text-center select-none shadow-sm shadow-[#7d4dff]/15 cursor-pointer"
+                  >
+                    Copy Analysis Report
+                  </button>
+                </div>
+
               </div>
             ) : (
               <div className="h-full border border-dashed border-border rounded-2xl flex flex-col items-center justify-center p-8 text-center text-muted-foreground gap-3 bg-card/20">

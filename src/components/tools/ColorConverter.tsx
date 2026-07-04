@@ -74,10 +74,37 @@ export default function ColorConverter() {
     setTimeout(() => setActiveCopied(null), 2000);
   };
 
+  const applyPresetColor = (presetHex: string) => {
+    setHex(presetHex);
+    const rgbRes = hexToRgb(presetHex);
+    if (rgbRes) {
+      const rgbStr = `rgb(${rgbRes.r}, ${rgbRes.g}, ${rgbRes.b})`;
+      setRgb(rgbStr);
+      const hslRes = rgbToHsl(rgbRes.r, rgbRes.g, rgbRes.b);
+      setHsl(`hsl(${hslRes.h}, ${hslRes.s}%, ${hslRes.l}%)`);
+    }
+    import("canvas-confetti").then((m) => m.default({ particleCount: 20, spread: 40, origin: { y: 0.85 } }));
+  };
+
   return (
     <div className="flex flex-col md:flex-row gap-6 p-4 items-center justify-center">
       <div className="flex-1 flex flex-col gap-4 w-full">
         
+        {/* Preset colors (inspired by Omni Calculator swatches) */}
+        <div className="flex flex-col gap-1.5 mb-1 select-none">
+          <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Select Preset Palette Swatch</label>
+          <div className="flex gap-2">
+            {["#7d4dff", "#6530ef", "#10b981", "#ef4444", "#f59e0b", "#3b82f6"].map((c) => (
+              <button
+                key={c}
+                onClick={() => applyPresetColor(c)}
+                style={{ backgroundColor: c }}
+                className="h-6 w-6 rounded-full border border-white/20 hover:scale-110 active:scale-95 transition-transform cursor-pointer"
+                title={c}
+              />
+            ))}
+          </div>
+        </div>
         {/* Hex Input */}
         <div className="flex flex-col gap-1.5">
           <label className="text-2xs font-semibold text-muted-foreground uppercase tracking-wider">Hex Code</label>
@@ -122,6 +149,20 @@ export default function ColorConverter() {
               className="p-1 hover:bg-neutral-800 rounded text-muted-foreground hover:text-white transition-colors"
             >
               {activeCopied === "hsl" ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
+            </button>
+          </div>
+        </div>
+
+        {/* Tailwind CSS Format */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-2xs font-semibold text-muted-foreground uppercase tracking-wider">Tailwind CSS Format</label>
+          <div className="flex bg-neutral-900 border border-border rounded-xl px-3 py-2 items-center justify-between">
+            <span className="text-xs font-mono text-indigo-300">bg-[{hex}]</span>
+            <button
+              onClick={() => copyToClipboard(`bg-[${hex}]`, "tw")}
+              className="p-1 hover:bg-neutral-800 rounded text-muted-foreground hover:text-white transition-colors"
+            >
+              {activeCopied === "tw" ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
             </button>
           </div>
         </div>

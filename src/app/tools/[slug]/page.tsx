@@ -46,6 +46,10 @@ export default async function ToolPage({ params }: ToolPageProps) {
     notFound();
   }
 
+  const relatedTools = TOOLS_REGISTRY.filter(
+    (t) => t.category === tool.category && t.slug !== tool.slug
+  ).slice(0, 5);
+
   // Pre-compile JSON-LD schemas
   const jsonLd = {
     "@context": "https://schema.org",
@@ -105,7 +109,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
   };
 
   return (
-    <div className="py-8 px-4 sm:px-6 max-w-5xl mx-auto w-full relative overflow-hidden">
+    <div className="py-8 px-4 sm:px-6 max-w-5xl mx-auto w-full relative overflow-hidden print:p-0 print:max-w-none print:w-full">
       
       {/* Dynamic JSON-LD injection */}
       <script
@@ -119,7 +123,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
       <div className="flex flex-col gap-6 z-10 relative">
         
         {/* Breadcrumbs */}
-        <nav className="flex items-center gap-1.5 text-3xs font-semibold text-muted-foreground uppercase tracking-wider">
+        <nav className="flex items-center gap-1.5 text-3xs font-semibold text-muted-foreground uppercase tracking-wider print:hidden">
           <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
           <ChevronRight className="h-3 w-3 shrink-0" />
           <Link href="/tools" className="hover:text-foreground transition-colors">Tools</Link>
@@ -128,7 +132,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
         </nav>
 
         {/* Action Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-border/40 pb-6">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-border/40 pb-6 print:hidden">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 bg-primary/10 text-primary border border-primary/20 rounded-xl flex items-center justify-center">
               <LucideIcon name={tool.iconName} className="h-5 w-5" />
@@ -147,13 +151,16 @@ export default async function ToolPage({ params }: ToolPageProps) {
         </div>
 
         {/* Premium interactive tool element */}
-        <section className="glass rounded-3xl border border-border p-6 md:p-8 bg-card/25 shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-3 flex gap-2 pointer-events-none">
+        <section className="glass rounded-3xl border border-border p-6 md:p-8 bg-card/25 shadow-2xl relative overflow-hidden print:border-0 print:bg-transparent print:shadow-none print:p-0 print:rounded-none">
+          <div className="absolute top-0 right-0 p-3 flex gap-2 pointer-events-none print:hidden">
             <span className="inline-flex items-center gap-1 text-3xs font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">
               <ShieldCheck className="h-3.5 w-3.5" /> Client Sandbox
             </span>
             <span className="inline-flex items-center gap-1 text-3xs font-semibold text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded">
               <Zap className="h-3.5 w-3.5" /> Instant
+            </span>
+            <span className="inline-flex items-center gap-1 text-3xs font-semibold text-[#7d4dff] bg-[#f3eeff] border border-[#e8ddff] px-2 py-0.5 rounded">
+              ⚡ Auto-Bake
             </span>
           </div>
 
@@ -161,7 +168,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
         </section>
 
         {/* Educational SEO & E-E-A-T Blocks */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-6 print:hidden">
           
           {/* Main Info Column */}
           <section className="lg:col-span-2 flex flex-col gap-8 text-sm">
@@ -195,6 +202,24 @@ export default async function ToolPage({ params }: ToolPageProps) {
                 ))}
               </div>
             </div>
+
+            {relatedTools.length > 0 && (
+              <div className="flex flex-col gap-3 mt-4 pt-6 border-t border-border/40">
+                <h2 className="text-sm font-extrabold text-foreground tracking-tight">Related Tools</h2>
+                <div className="flex flex-col gap-2">
+                  {relatedTools.map((rt) => (
+                    <Link
+                      key={rt.slug}
+                      href={`/tools/${rt.slug}`}
+                      className="flex items-center justify-between p-3 rounded-xl border border-border bg-white dark:bg-card/40 hover:border-[#7d4dff] transition-all text-3xs font-bold text-foreground group"
+                    >
+                      <span className="truncate group-hover:text-[#7d4dff] transition-colors">{rt.name}</span>
+                      <ChevronRight className="h-3.5 w-3.5 text-muted group-hover:text-[#7d4dff] transition-colors" />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
           </section>
 
         </div>

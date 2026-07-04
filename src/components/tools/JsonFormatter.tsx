@@ -8,6 +8,17 @@ export default function JsonFormatter() {
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setJsonInput(event.target?.result as string);
+      setError(null);
+    };
+    reader.readAsText(file);
+  };
+
   const handleFormat = (spaces = 2) => {
     if (!jsonInput.trim()) return;
     try {
@@ -60,6 +71,20 @@ export default function JsonFormatter() {
       )}
 
       <div className="flex flex-wrap items-center gap-2">
+        <label className="px-3.5 py-2 text-xs font-semibold bg-muted hover:bg-neutral-800 text-white rounded-lg transition-colors border border-border/40 cursor-pointer flex items-center gap-1">
+          <span>Upload JSON</span>
+          <input type="file" accept=".json,application/json" onChange={handleFileUpload} className="hidden" />
+        </label>
+        <button
+          onClick={() => {
+            setJsonInput(JSON.stringify({ name: "Toolchi Platform", version: "2.0.0", active: true, stats: { tools: 36, local: true } }, null, 2));
+            setError(null);
+            import("canvas-confetti").then((m) => m.default({ particleCount: 15, spread: 30, origin: { y: 0.85 } }));
+          }}
+          className="px-3.5 py-2 text-xs font-semibold bg-muted hover:bg-neutral-800 text-white rounded-lg transition-colors border border-border/40 cursor-pointer"
+        >
+          Load Sample
+        </button>
         <button
           onClick={() => handleFormat(2)}
           className="px-3.5 py-2 text-xs font-semibold bg-muted hover:bg-neutral-800 text-white rounded-lg transition-colors border border-border/40"

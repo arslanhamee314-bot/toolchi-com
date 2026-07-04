@@ -9,6 +9,15 @@ export default function Unminifier() {
   const [outputCode, setOutputCode] = useState("");
   const [copied, setCopied] = useState(false);
 
+  const loadDemoCode = () => {
+    if (codeType === "js") {
+      setInputCode("function greet(name){console.log('Hello, '+name+'!');}greet('Toolchi');");
+    } else {
+      setInputCode("body{margin:0;padding:0;font-family:sans-serif;}h1{color:#7d4dff;font-size:2rem;}");
+    }
+    setOutputCode("");
+  };
+
   const handleUnminify = () => {
     if (!inputCode.trim()) return;
 
@@ -105,10 +114,23 @@ export default function Unminifier() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col gap-2">
-          <span className="text-muted block text-3xs font-bold uppercase">Minified Code</span>
+          <div className="flex justify-between items-center mb-1 select-none">
+            <span className="text-muted block text-3xs font-bold uppercase">Minified Code</span>
+            <div className="flex gap-2 text-3xs text-muted-foreground font-semibold">
+              <button onClick={loadDemoCode} className="text-[#7d4dff] hover:underline cursor-pointer">Load Demo</button>
+              <span>•</span>
+              <span>Ctrl + Enter to Pretty Print</span>
+            </div>
+          </div>
           <textarea
             value={inputCode}
             onChange={(e) => setInputCode(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.ctrlKey && e.key === "Enter") {
+                e.preventDefault();
+                handleUnminify();
+              }
+            }}
             placeholder="Paste compressed code here..."
             className="h-48 w-full p-4 bg-white dark:bg-card border border-border rounded-xl outline-none focus:border-[#7d4dff] font-mono leading-relaxed"
           />

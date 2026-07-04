@@ -7,6 +7,7 @@ export default function LoremIpsum() {
   const [paragraphsCount, setParagraphsCount] = useState(3);
   const [generatedText, setGeneratedText] = useState("");
   const [copied, setCopied] = useState(false);
+  const [formatType, setFormatType] = useState<"text" | "html">("text");
 
   const LOREM_DATABASE = [
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
@@ -21,9 +22,9 @@ export default function LoremIpsum() {
     for (let i = 0; i < paragraphsCount; i++) {
       // Pick paragraphs cyclically
       const p = LOREM_DATABASE[i % LOREM_DATABASE.length];
-      result.push(p);
+      result.push(formatType === "html" ? `<p>${p}</p>` : p);
     }
-    setGeneratedText(result.join("\n\n"));
+    setGeneratedText(result.join(formatType === "html" ? "\n" : "\n\n"));
     import("canvas-confetti").then((m) => m.default({ particleCount: 15, spread: 30, origin: { y: 0.85 } }));
   };
 
@@ -48,6 +49,25 @@ export default function LoremIpsum() {
             onChange={(e) => setParagraphsCount(Math.max(1, Number(e.target.value)))}
             className="w-16 bg-neutral-900 border border-border text-xs text-white rounded-lg p-2 focus:outline-hidden"
           />
+        </div>
+
+        <div className="flex bg-neutral-900 border border-border p-1 rounded-xl select-none">
+          <button
+            onClick={() => setFormatType("text")}
+            className={`px-3 py-1 text-3xs font-bold rounded-lg transition-all cursor-pointer ${
+              formatType === "text" ? "bg-[#7d4dff] text-white" : "text-muted-foreground hover:text-white"
+            }`}
+          >
+            Raw Text
+          </button>
+          <button
+            onClick={() => setFormatType("html")}
+            className={`px-3 py-1 text-3xs font-bold rounded-lg transition-all cursor-pointer ${
+              formatType === "html" ? "bg-[#7d4dff] text-white" : "text-muted-foreground hover:text-white"
+            }`}
+          >
+            HTML Tags
+          </button>
         </div>
 
         <button

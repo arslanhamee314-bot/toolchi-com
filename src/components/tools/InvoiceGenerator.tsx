@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import { Plus, Trash2, Printer, CheckCircle } from "lucide-react";
+import Image from "next/image";
 
 interface InvoiceItem {
   description: string;
@@ -17,6 +18,7 @@ export default function InvoiceGenerator() {
   const [currency, setCurrency] = useState("$");
   const [taxRate, setTaxRate] = useState(10);
   const [notes, setNotes] = useState("Thank you for your business!");
+  const [logo, setLogo] = useState<string | null>(null);
   
   const [items, setItems] = useState<InvoiceItem[]>([
     { description: "Web Development Services", qty: 1, price: 1500 },
@@ -39,6 +41,13 @@ export default function InvoiceGenerator() {
     setItems(list);
   };
 
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const url = URL.createObjectURL(e.target.files[0]);
+      setLogo(url);
+    }
+  };
+
   const finances = useMemo(() => {
     const subtotal = items.reduce((acc, item) => acc + item.qty * item.price, 0);
     const tax = subtotal * (taxRate / 100);
@@ -54,6 +63,29 @@ export default function InvoiceGenerator() {
   return (
     <div className="flex flex-col gap-6 p-2">
       
+      {/* Logo Upload Section */}
+      <div className="flex flex-col gap-2">
+        <label className="text-3xs font-semibold text-muted-foreground uppercase">Company Logo</label>
+        <div className="flex items-center gap-4">
+          {logo ? (
+            <div className="relative group">
+              <img src={logo} alt="Company Logo" className="h-16 object-contain rounded-lg border border-border" />
+              <button
+                onClick={() => setLogo(null)}
+                className="absolute -top-2 -right-2 bg-rose-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <Trash2 className="h-3 w-3" />
+              </button>
+            </div>
+          ) : (
+            <label className="cursor-pointer bg-neutral-900 border border-border text-xs text-white rounded-lg p-3 hover:bg-neutral-800 transition-colors flex items-center gap-2">
+              <Plus className="h-4 w-4" /> Upload Logo
+              <input type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} />
+            </label>
+          )}
+        </div>
+      </div>
+
       {/* Settings Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         <div className="flex flex-col gap-1">
@@ -76,16 +108,39 @@ export default function InvoiceGenerator() {
         </div>
         <div className="flex flex-col gap-1">
           <label className="text-3xs font-semibold text-muted-foreground uppercase">Currency</label>
+          {/* Currency selector with extensive world currencies */}
           <select
             value={currency}
             onChange={(e) => setCurrency(e.target.value)}
             className="bg-neutral-950 border border-border text-xs text-white rounded-lg p-2 focus:outline-hidden"
           >
-            <option value="$">USD ($)</option>
-            <option value="€">EUR (€)</option>
-            <option value="£">GBP (£)</option>
-            <option value="₹">INR (₹)</option>
-            <option value="¥">JPY (¥)</option>
+            {[
+              { code: "USD", symbol: "$" },
+              { code: "EUR", symbol: "€" },
+              { code: "GBP", symbol: "£" },
+              { code: "INR", symbol: "₹" },
+              { code: "PKR", symbol: "Rs" },
+              { code: "BDT", symbol: "৳" },
+              { code: "AED", symbol: "د.إ" },
+              { code: "SAR", symbol: "﷼" },
+              { code: "JPY", symbol: "¥" },
+              { code: "AUD", symbol: "A$" },
+              { code: "CAD", symbol: "C$" },
+              { code: "CHF", symbol: "CHF" },
+              { code: "CNY", symbol: "¥" },
+              { code: "HKD", symbol: "HK$" },
+              { code: "NZD", symbol: "NZ$" },
+              { code: "SEK", symbol: "kr" },
+              { code: "KRW", symbol: "₩" },
+              { code: "ZAR", symbol: "R" },
+              { code: "RUB", symbol: "₽" },
+              { code: "BRL", symbol: "R$" },
+              { code: "SGD", symbol: "S$" },
+            ].map((c) => (
+              <option key={c.code} value={c.symbol}>
+                {c.code} ({c.symbol})
+              </option>
+            ))}
           </select>
         </div>
         <div className="flex flex-col gap-1">
@@ -192,10 +247,28 @@ export default function InvoiceGenerator() {
       </div>
 
       {/* Trigger Print Action */}
-      <div className="flex justify-end border-t border-border/40 pt-4">
+      <div className="flex justify-end gap-3 border-t border-border/40 pt-4">
+        <button
+          onClick={() => {
+            if (window.confirm("Are you sure you want to reset all invoice fields?")) {
+              setFrom("Your Company\n123 Business Ave\nCity, Country");
+              setTo("Client Company\n456 Client St\nCity, Country");
+              setInvoiceNum("INV-001");
+              setDate(new Date().toISOString().split("T")[0]);
+              setCurrency("$");
+              setTaxRate(10);
+              setNotes("Thank you for your business!");
+              setLogo(null);
+              setItems([{ description: "Web Development Services", qty: 1, price: 1500 }]);
+            }
+          }}
+          className="px-4 py-2.5 text-xs font-semibold bg-white dark:bg-card border border-border text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-all cursor-pointer"
+        >
+          Reset Form
+        </button>
         <button
           onClick={handlePrint}
-          className="px-5 py-2.5 text-xs font-bold bg-primary border border-primary text-primary-foreground hover:bg-primary-hover rounded-xl transition-all active:scale-95 shadow-md shadow-primary/10 flex items-center gap-1.5"
+          className="px-5 py-2.5 text-xs font-bold bg-[#7d4dff] border border-[#7d4dff] text-white hover:bg-[#6530ef] rounded-xl transition-all active:scale-95 shadow-md shadow-[#7d4dff]/10 flex items-center gap-1.5 cursor-pointer"
         >
           <Printer className="h-4 w-4" /> Generate & Print Invoice
         </button>

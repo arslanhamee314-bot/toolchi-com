@@ -89,10 +89,19 @@ export default function Minifier() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col gap-2">
-          <span className="text-muted block text-3xs font-bold uppercase">Source Code</span>
+          <div className="flex justify-between items-center mb-1 select-none">
+            <span className="text-muted block text-3xs font-bold uppercase">Source Code</span>
+            <span className="text-3xs text-muted-foreground font-semibold">Ctrl + Enter to Minify</span>
+          </div>
           <textarea
             value={inputCode}
             onChange={(e) => setInputCode(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.ctrlKey && e.key === "Enter") {
+                e.preventDefault();
+                handleMinify();
+              }
+            }}
             placeholder={`Paste raw ${codeType.toUpperCase()} code here...`}
             className="h-48 w-full p-4 bg-white dark:bg-card border border-border rounded-xl outline-none focus:border-[#7d4dff] font-mono leading-relaxed"
           />

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export const metadata: Metadata = {
   title: "Toolchi Web Tools Directory – Recreated Structure",
@@ -8,6 +9,11 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.toolchi.online"),
   alternates: {
     canonical: "/webtools/",
+  },
+  icons: {
+    icon: "/logo.jpg",
+    shortcut: "/logo.jpg",
+    apple: "/logo.jpg",
   },
   openGraph: {
     title: "Toolchi Web Tools Directory – Recreated Structure",
@@ -32,10 +38,10 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
       </head>
-      <body className="antialiased min-h-screen flex flex-col bg-[#f6f7fb] dark:bg-[#11141c] text-foreground">
+              <body className="antialiased min-h-screen flex flex-col bg-[#f6f7fb] dark:bg-[#11141c] text-black dark:text-white">
         
         {/* Header Navigation */}
-        <header className="sticky top-0 z-40 border-b border-border bg-white/90 dark:bg-card/90 backdrop-blur-md">
+        <header className="sticky top-0 z-40 border-b border-border bg-white/90 dark:bg-card/90 backdrop-blur-md print:hidden">
           <div className="mx-auto max-w-6xl flex items-center justify-between px-6 py-4">
             
             {/* Logo/Brand link */}
@@ -43,7 +49,7 @@ export default function RootLayout({
               <img 
                 src="/logo.jpg" 
                 alt="Toolchi Logo" 
-                className="h-7 w-7 rounded-lg border border-border/80 shadow-xs group-hover:scale-105 transition-transform" 
+                className="h-10 w-10 rounded-lg border border-border/80 shadow-xs group-hover:scale-105 transition-transform" 
               />
               <span className="font-extrabold text-base text-[#20242d] dark:text-[#f6f7fb] tracking-tight">Toolchi</span>
             </Link>
@@ -64,6 +70,7 @@ export default function RootLayout({
               />
               <button className="locale-btn">US$</button>
               <button className="locale-btn">EN</button>
+              <ThemeToggle />
             </div>
 
           </div>
@@ -75,7 +82,7 @@ export default function RootLayout({
         </main>
 
         {/* Trust Footer */}
-        <footer className="border-t border-border bg-white dark:bg-card py-8 px-6">
+        <footer className="border-t border-border bg-white dark:bg-card py-8 px-6 print:hidden">
           <div className="mx-auto max-w-6xl flex flex-col sm:flex-row items-center justify-between text-xs text-muted gap-4">
             <p>Recreated structural reference based on the visible page design.</p>
             <p>
