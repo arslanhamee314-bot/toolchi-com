@@ -1,135 +1,118 @@
 import React from "react";
-import { Shield, Sparkles, Cpu, Lock, CheckCircle } from "lucide-react";
 import ToolsDirectory from "@/components/tools/ToolsDirectory";
-import ToolsSlider from "@/components/tools/ToolsSlider";
 
-// Page level metadata for homepage (pre-rendered for Google)
+// Page level SEO metadata (pre-rendered for Google)
 export const metadata = {
-  title: "Toolchi — 100% Client-Side Web Utilities & PDF tools",
-  description: "Toolchi: all-in-one browser tools for text, developer, PDF, image, color, math, and business — 100% client-side. Fast, private, secure.",
+  title: "Website Planet Web Tools Directory – Recreated Structure",
+  description: "Effective (Free) Tools to Help You Manage and Improve Your Website. 100% client-side web master, performance, and operational tools.",
 };
 
 export default function HomePage() {
   return (
-    <div className="flex-1 flex flex-col py-12 md:py-20 px-4 sm:px-6 relative overflow-hidden">
+    <div className="flex-1 flex flex-col bg-[#f6f7fb] dark:bg-[#11141c]">
       
-      {/* Background Glows */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-10 left-10 w-[300px] h-[300px] bg-indigo-500/5 rounded-full blur-[100px] pointer-events-none" />
-
-      <div className="max-w-6xl mx-auto w-full z-10 flex flex-col gap-16">
+      {/* 1. Hero Section */}
+      <section className="relative overflow-hidden py-16 md:py-24 border-b border-border bg-white dark:bg-card">
+        {/* Background glow checks */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[140px] pointer-events-none" />
         
-        {/* 1. Hero Brand Panel */}
-        <section className="text-center max-w-3xl mx-auto flex flex-col items-center gap-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass text-[10px] font-bold uppercase tracking-wider text-primary border border-primary/20 bg-primary/5">
-            <Sparkles className="h-3.5 w-3.5" /> 100% Private Browser Utilities
-          </div>
-
-          <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight bg-clip-text text-neutral-900 dark:text-neutral-100 leading-none">
-            Every utility you use,<br />
-            <span className="bg-clip-text text-linear-to-r from-primary via-indigo-400 to-purple-500">
-              in one secure place
-            </span>
-          </h1>
-
-          <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-xl">
-            Text transformations, JSON formatting, local PDF merging, color system conversions, and math calculators. All processed on your device.
-          </p>
-        </section>
-
-        {/* 1.5 Highlights Slideshow */}
-        <section className="relative w-full z-20 animate-in fade-in slide-in-from-bottom-3 duration-500">
-          <ToolsSlider />
-        </section>
-
-        {/* 2. Tools Directory Component (Filtered Cards & Search) */}
-        <section className="relative">
-          <ToolsDirectory />
-        </section>
-
-        {/* 3. E-E-A-T Trust Promise (#about) */}
-        <section id="about" className="glass rounded-3xl border p-6 md:p-10 grid grid-cols-1 lg:grid-cols-2 gap-8 scroll-mt-24">
-          <div className="flex flex-col gap-5 justify-center">
-            <div className="h-10 w-10 bg-primary/10 text-primary border border-primary/20 rounded-xl flex items-center justify-center">
-              <Shield className="h-5 w-5" />
-            </div>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-foreground tracking-tight leading-tight">
-              Our Zero-Data <br />
-              <span className="text-primary">Privacy Promise</span>
-            </h2>
-            <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-              Unlike traditional utility sites that upload your PDFs, images, and texts to cloud storage buckets, Toolchi processes **everything locally** using client-side JavaScript. 
+        <div className="max-w-6xl mx-auto px-6 w-full flex flex-col-reverse lg:flex-row items-center gap-12 z-10 relative">
+          
+          {/* Hero Copy (Left on desktop) */}
+          <div className="flex-1 flex flex-col gap-4 text-center lg:text-left items-center lg:items-start">
+            <p className="text-3xs font-extrabold text-[#ef5330] tracking-widest uppercase">
+              Free website utilities
             </p>
-            <ul className="flex flex-col gap-3 text-xs text-muted-foreground font-semibold">
-              <li className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-emerald-400 shrink-0" /> No files ever leave your local computer
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-emerald-400 shrink-0" /> Zero database tracking of input texts or transactions
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-emerald-400 shrink-0" /> Fully compatible with secure, offline environments
-              </li>
-            </ul>
+            <h1 className="text-3xl sm:text-5xl font-extrabold text-foreground tracking-tight leading-none">
+              Web Tools Directory
+            </h1>
+            <p className="text-sm md:text-base text-muted max-w-lg leading-relaxed">
+              Effective (Free) Tools to Help You Manage and Improve Your Website. Fast, private, and fully local.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="p-5 rounded-2xl bg-card border border-border/80 flex flex-col gap-3">
-              <Lock className="h-5 w-5 text-indigo-400" />
-              <h4 className="font-bold text-sm text-foreground">Browser Processing</h4>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                By loading compiled JS bundles into your viewport memory, Toolchi operations are executed sandbox-style within your browser.
-              </p>
-            </div>
-            <div className="p-5 rounded-2xl bg-card border border-border/80 flex flex-col gap-3">
-              <Cpu className="h-5 w-5 text-purple-400" />
-              <h4 className="font-bold text-sm text-foreground">Wasm & Canvas</h4>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                Complex PDF merges or image conversions leverage WebAssembly code layers and HTML5 canvases, maintaining processing speed.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* 4. Platform FAQs Hub */}
-        <section className="flex flex-col gap-6">
-          <div className="text-center max-w-xl mx-auto flex flex-col gap-2">
-            <h2 className="text-2xl font-extrabold tracking-tight text-foreground">Frequently Asked Questions</h2>
-            <p className="text-xs text-muted-foreground">General information regarding how the Toolchi platform processes browser utilities.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm max-w-4xl mx-auto w-full">
-            <div className="glass p-6 rounded-2xl border flex flex-col gap-2">
-              <h4 className="font-bold text-foreground text-xs md:text-sm">How can Toolchi modify PDFs without uploading them?</h4>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                We load client-side libraries (like `pdf-lib`) directly into your browser tab. When you drag and drop your PDFs to merge or split them, the JavaScript interpreter compiles the PDF streams natively in RAM, producing an instant download link.
-              </p>
+          {/* Hero Decorative Illustration (Right on desktop) */}
+          <div className="flex-1 flex justify-center items-center relative w-full max-w-[420px] h-[240px] px-8">
+            
+            {/* Main Browser Canvas block */}
+            <div className="w-full max-w-[340px] h-[190px] rounded-2xl bg-white dark:bg-[#171c26] border border-border/80 card-shadow relative flex flex-col overflow-hidden animate-in fade-in zoom-in duration-700">
+              <div className="h-7 bg-[#f6f7fb] dark:bg-[#11141c] border-b border-border/80 flex items-center px-3.5 gap-1.5 shrink-0">
+                <span className="h-2 w-2 rounded-full bg-red-400 shrink-0" />
+                <span className="h-2 w-2 rounded-full bg-yellow-400 shrink-0" />
+                <span className="h-2 w-2 rounded-full bg-green-400 shrink-0" />
+              </div>
+              <div className="flex-1 p-5 flex flex-col gap-3 justify-center">
+                <div className="h-2 w-[78%] bg-neutral-100 dark:bg-neutral-800 rounded-md" />
+                <div className="h-2 w-[60%] bg-neutral-100 dark:bg-neutral-800 rounded-md" />
+                <div className="h-2 w-[86%] bg-neutral-100 dark:bg-neutral-800 rounded-md" />
+                <div className="h-2 w-[48%] bg-neutral-100 dark:bg-neutral-800 rounded-md" />
+              </div>
             </div>
 
-            <div className="glass p-6 rounded-2xl border flex flex-col gap-2">
-              <h4 className="font-bold text-foreground text-xs md:text-sm">Does the tool work offline?</h4>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                Yes! Once the webpage is loaded initially, all computations (casing transforms, formatting, conversions) work completely offline since they require no external APIs or network calls.
-              </p>
+            {/* Floating emoji badges */}
+            <div className="absolute top-4 left-2 h-14 w-14 rounded-2xl bg-white dark:bg-[#1c2230] border border-[#ffe3dc]/80 dark:border-border/60 card-shadow flex items-center justify-center text-2xl select-none animate-bounce duration-[3s]">
+              ⚙
             </div>
-
-            <div className="glass p-6 rounded-2xl border flex flex-col gap-2">
-              <h4 className="font-bold text-foreground text-xs md:text-sm">Are there any file count or upload limit caps?</h4>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                Since we do not host or store your assets on remote hardware servers, there are no artificial pricing plans or upload caps. Your limits are only bounded by your local computer's processor speed and available memory.
-              </p>
+            <div className="absolute top-8 right-2 h-14 w-14 rounded-2xl bg-white dark:bg-[#1c2230] border border-[#ffe3dc]/80 dark:border-border/60 card-shadow flex items-center justify-center text-2xl select-none animate-bounce duration-[4s]">
+              📈
             </div>
-
-            <div className="glass p-6 rounded-2xl border flex flex-col gap-2">
-              <h4 className="font-bold text-foreground text-xs md:text-sm">How can I suggest new browser utilities?</h4>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                We are actively expanding our tools directory! If you need developer, text, math, or PDF utilities added to our list, reach out to our support channel via `support@toolchi.online`.
-              </p>
+            <div className="absolute bottom-4 right-8 h-14 w-14 rounded-2xl bg-white dark:bg-[#1c2230] border border-[#ffe3dc]/80 dark:border-border/60 card-shadow flex items-center justify-center text-2xl select-none animate-bounce duration-[3.5s]">
+              🎨
+            </div>
+            <div className="absolute bottom-2 left-6 h-14 w-14 rounded-2xl bg-white dark:bg-[#1c2230] border border-[#ffe3dc]/80 dark:border-border/60 card-shadow flex items-center justify-center text-2xl select-none animate-bounce duration-[4.5s]">
+              ☑
             </div>
           </div>
-        </section>
 
-      </div>
+        </div>
+      </section>
+
+      {/* 2. Tools Grid Section */}
+      <section className="py-12 md:py-16">
+        <ToolsDirectory />
+      </section>
+
+      {/* 3. FAQ Section */}
+      <section className="py-16 bg-[#f9fafc] dark:bg-[#151923] border-t border-border/80">
+        <div className="max-w-3xl mx-auto px-6 flex flex-col gap-8">
+          <div className="text-center flex flex-col gap-2">
+            <h2 className="text-2xl font-extrabold text-foreground tracking-tight">
+              Frequently Asked Questions
+            </h2>
+            <div className="h-1 w-12 bg-[#ff623d] mx-auto rounded-full mt-1" />
+          </div>
+
+          <div className="flex flex-col gap-4">
+            <article className="bg-white dark:bg-card border border-border p-6 rounded-2xl card-shadow flex flex-col gap-2">
+              <h3 className="font-extrabold text-sm text-foreground tracking-tight">
+                What are the most essential tools for web development?
+              </h3>
+              <p className="text-xs text-muted leading-relaxed">
+                Highlighted tools on the page include the PNG/JPG compressor, JS & CSS minifier, SSL checker, Responsive checker, Robots.txt checker, and Sitemap validator.
+              </p>
+            </article>
+
+            <article className="bg-white dark:bg-card border border-border p-6 rounded-2xl card-shadow flex flex-col gap-2">
+              <h3 className="font-extrabold text-sm text-foreground tracking-tight">
+                What types of tools do you feature on your website?
+              </h3>
+              <p className="text-xs text-muted leading-relaxed">
+                The visible categories include webmaster tools, performance tools, operational tools, and design-related utilities.
+              </p>
+            </article>
+
+            <article className="bg-white dark:bg-card border border-border p-6 rounded-2xl card-shadow flex flex-col gap-2">
+              <h3 className="font-extrabold text-sm text-foreground tracking-tight">
+                Will you be updating this page with more tools?
+              </h3>
+              <p className="text-xs text-muted leading-relaxed">
+                The page messaging indicates that more vetted free tools may be added over time.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 }
