@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+
+// 1. Existing Tools
 import CaseConverter from "./CaseConverter";
 import TextCounter from "./TextCounter";
 import LoremIpsum from "./LoremIpsum";
@@ -15,21 +17,96 @@ import Calculator from "./Calculator";
 import InvoiceGenerator from "./InvoiceGenerator";
 import AiDetector from "./AiDetector";
 
+// 2. Newly Implemented Webmaster & Performance Tools
+import GzipCompression from "./GzipCompression";
+import RobotsChecker from "./RobotsChecker";
+import FaviconGenerator from "./FaviconGenerator";
+import SslChecker from "./SslChecker";
+import SitemapValidator from "./SitemapValidator";
+import ResponsiveChecker from "./ResponsiveChecker";
+import DomainExpiration from "./DomainExpiration";
+import ImageCompressor from "./ImageCompressor";
+import DummyImageGen from "./DummyImageGen";
+import RedirectChecker from "./RedirectChecker";
+import SiteDownChecker from "./SiteDownChecker";
+import AbTestCalculator from "./AbTestCalculator";
+import SpellChecker from "./SpellChecker";
+import ScreenResolution from "./ScreenResolution";
+import ShareLinkCreator from "./ShareLinkCreator";
+import MultipleUrlOpener from "./MultipleUrlOpener";
+import Minifier from "./Minifier";
+import Unminifier from "./Unminifier";
+import AmpValidator from "./AmpValidator";
+import DomainGenerator from "./DomainGenerator";
+
 interface ToolSwitcherProps {
   slug: string;
 }
 
 export default function ToolSwitcher({ slug }: ToolSwitcherProps) {
   switch (slug) {
-    // 1. Text Tools
+    // === 1. WEBMASTER TOOLS ===
+    case "robots-txt-checker":
+      return <RobotsChecker />;
+    case "favicon-generator":
+      return <FaviconGenerator />;
+    case "ssl-checker":
+      return <SslChecker />;
+    case "xml-sitemap-validator":
+      return <SitemapValidator />;
+    case "responsive-checker":
+      return <ResponsiveChecker />;
+    case "domain-expiration-checker":
+      return <DomainExpiration />;
+
+    // === 2. PERFORMANCE TOOLS ===
+    case "gzip-compression":
+      return <GzipCompression />;
+    case "compress-image":
+      return <ImageCompressor />;
+    case "dummy-image-generator":
+      return <DummyImageGen />;
+    case "redirect-checker":
+      return <RedirectChecker />;
+    case "site-down-checker":
+      return <SiteDownChecker />;
+    case "ab-test-calculator":
+      return <AbTestCalculator />;
+    case "qr-generator":
+      return <QrGenerator />;
+    case "spell-checker":
+      return <SpellChecker />;
+
+    // === 3. OPERATIONAL TOOLS ===
+    case "screen-resolution":
+      return <ScreenResolution />;
+    case "share-link-creator":
+      return <ShareLinkCreator />;
+    case "lorem-ipsum":
+      return <LoremIpsum />;
+    case "multiple-url-opener":
+      return <MultipleUrlOpener />;
+    case "minify-code":
+      return <Minifier />;
+    case "unminify-code":
+      return <Unminifier />;
+    case "amp-validator":
+      return <AmpValidator />;
+    case "domain-generator":
+      return <DomainGenerator />;
+
+    // === 4. PDF TOOLS (FROM CODEBASE) ===
+    case "merge-pdf":
+    case "split-pdf":
+    case "rotate-pdf":
+    case "compress-pdf":
+      return <MergePdf />;
+
+    // === 5. DEVELOPER & CASING TOOLS (FROM CODEBASE) ===
     case "case-converter":
       return <CaseConverter />;
     case "text-counter":
       return <TextCounter />;
-    case "lorem-ipsum":
-      return <LoremIpsum />;
-
-    // 2. Dev Tools
     case "json-formatter":
       return <JsonFormatter />;
     case "base64":
@@ -38,30 +115,14 @@ export default function ToolSwitcher({ slug }: ToolSwitcherProps) {
       return <UrlEncoder />;
     case "hash-generator":
       return <HashGenerator />;
-    case "qr-generator":
-      return <QrGenerator />;
-
-    // 3. PDF Tools
-    case "merge-pdf":
-    case "split-pdf":
-    case "rotate-pdf":
-    case "compress-pdf":
-      // Reusing MergePdf layout for other stubs, but supporting the core MergePdf fully!
-      return <MergePdf />;
-
-    // 4. Color Tools
     case "color-converter":
       return <ColorConverter />;
-
-    // 5. Math Tools
     case "calculator":
       return <Calculator />;
-
-    // 6. Business Tools
     case "invoice-generator":
       return <InvoiceGenerator />;
 
-    // 7. AI Tools
+    // === 6. AI UTILITIES ===
     case "ai-detector":
       return <AiDetector />;
 
