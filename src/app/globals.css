@@ -4,18 +4,18 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
-  /* Website Planet Inspired Color Spaces (Default Light Theme) */
+  /* Toolchi Inspired Color Spaces (Default Light Theme) */
   :root {
     --background: #f6f7fb;
     --foreground: #20242d;
     --card: #ffffff;
     --card-foreground: #20242d;
-    --primary: #ff623d; /* Coral / orange-red accent */
+    --primary: #7d4dff; /* Coral / orange-red accent */
     --primary-foreground: #ffffff;
     --muted: #6f7684;
     --muted-foreground: #6f7684;
-    --accent: #fff2ee; /* Soft pink/coral icon container bg */
-    --accent-foreground: #ef5330; /* Accent dark */
+    --accent: #f3eeff; /* Soft pink/coral icon container bg */
+    --accent-foreground: #6530ef; /* Accent dark */
     --border: #e7e9ef;
     --radius: 24px;
     --shadow: 0 14px 40px rgba(22, 28, 45, 0.08);
@@ -27,12 +27,12 @@
     --foreground: #f6f7fb;
     --card: #171c26;
     --card-foreground: #f6f7fb;
-    --primary: #ff623d;
+    --primary: #7d4dff;
     --primary-foreground: #ffffff;
     --muted: #8b92a2;
     --muted-foreground: #8b92a2;
     --accent: #241d1a;
-    --accent-foreground: #ff623d;
+    --accent-foreground: #7d4dff;
     --border: #222a3a;
     --shadow: 0 14px 40px rgba(0, 0, 0, 0.4);
   }

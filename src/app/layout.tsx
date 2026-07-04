@@ -3,17 +3,17 @@ import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Website Planet Web Tools Directory – Recreated Structure",
+  title: "Toolchi Web Tools Directory – Recreated Structure",
   description: "Effective (Free) Tools to Help You Manage and Improve Your Website. 100% client-side web master, performance, and operational tools.",
-  metadataBase: new URL("https://www.websiteplanet.com"),
+  metadataBase: new URL("https://www.toolchi.online"),
   alternates: {
     canonical: "/webtools/",
   },
   openGraph: {
-    title: "Website Planet Web Tools Directory – Recreated Structure",
+    title: "Toolchi Web Tools Directory – Recreated Structure",
     description: "Effective (Free) Tools to Help You Manage and Improve Your Website. 100% client-side web master, performance, and operational tools.",
     url: "/webtools/",
-    siteName: "Website Planet",
+    siteName: "Toolchi",
     locale: "en_US",
     type: "website",
   }
@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Google Fonts Inter for Website Planet design accuracy */}
+        {/* Google Fonts Inter for Toolchi design accuracy */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -39,9 +39,13 @@ export default function RootLayout({
           <div className="mx-auto max-w-6xl flex items-center justify-between px-6 py-4">
             
             {/* Logo/Brand link */}
-            <Link href="/" className="flex items-center gap-2.5 group font-extrabold text-base select-none shrink-0">
-              <span className="brand-dot text-base leading-none">●</span>
-              <span className="text-[#20242d] dark:text-[#f6f7fb] tracking-tight">Website Planet</span>
+            <Link href="/" className="flex items-center gap-2.5 group select-none shrink-0">
+              <img 
+                src="/logo.jpg" 
+                alt="Toolchi Logo" 
+                className="h-7 w-7 rounded-lg border border-border/80 shadow-xs group-hover:scale-105 transition-transform" 
+              />
+              <span className="font-extrabold text-base text-[#20242d] dark:text-[#f6f7fb] tracking-tight">Toolchi</span>
             </Link>
 
             {/* Navigation links */}
@@ -54,7 +58,7 @@ export default function RootLayout({
                   99+
                 </span>
               </Link>
-              <Link href="/" className="text-[#ff623d] hover:text-[#ef5330] transition-colors">Tools</Link>
+              <Link href="/" className="text-[#7d4dff] hover:text-[#6530ef] transition-colors">Tools</Link>
               <Link href="/" className="hover:text-foreground transition-colors">Blog</Link>
             </nav>
 
@@ -84,12 +88,12 @@ export default function RootLayout({
             <p>
               Source:{" "}
               <a 
-                href="https://www.websiteplanet.com/webtools/" 
+                href="https://www.toolchi.online/" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="underline hover:text-foreground"
               >
-                websiteplanet.com/webtools
+                toolchi.online
               </a>
             </p>
           </div>
