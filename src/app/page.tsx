@@ -1,5 +1,6 @@
 import React from "react";
 import ToolsDirectory from "@/components/tools/ToolsDirectory";
+import ToolsSlider from "@/components/tools/ToolsSlider";
 
 // Page level SEO metadata (pre-rendered for Google)
 export const metadata = {
@@ -67,7 +68,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 2. Tools Grid Section */}
+      {/* 2. Interactive Tool Carousel Slider */}
+      <section className="py-8 bg-neutral-100/30 dark:bg-neutral-900/5 border-b border-border/40 print:hidden">
+        <div className="max-w-6xl mx-auto px-6 w-full">
+          <ToolsSlider />
+        </div>
+      </section>
+
+      {/* 3. Tools Grid Section */}
       <section className="py-12 md:py-16">
         <ToolsDirectory />
       </section>

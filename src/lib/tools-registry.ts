@@ -19,10 +19,10 @@ export interface ToolItem {
 }
 
 export const CATEGORIES = [
+  { id: "documents", name: "PDF & Document Tools", desc: "Merge, split, rotate, and compress PDF documents locally." },
   { id: "webmaster", name: "Webmaster Tools", desc: "Check configuration, security, and responsive layouts." },
   { id: "performance", name: "Performance Tools", desc: "Optimize files, verify compression, and measure load times." },
   { id: "operational", name: "Operational Tools", desc: "Utilities to generate mockups, open links, and clean files." },
-  { id: "documents", name: "PDF & Document Tools", desc: "Merge, split, rotate, and compress PDF documents locally." },
   { id: "developer", name: "Developer & Casing Tools", desc: "Convert case, count text, format JSON, and generate hashes." },
   { id: "ai", name: "AI Content Utilities", desc: "Analyze AI writing density and humanize text structures." }
 ];

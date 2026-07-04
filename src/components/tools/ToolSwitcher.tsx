@@ -12,6 +12,7 @@ import UrlEncoder from "./UrlEncoder";
 import HashGenerator from "./HashGenerator";
 import QrGenerator from "./QrGenerator";
 import MergePdf from "./MergePdf";
+import SplitPdf from "./SplitPdf";
 import ColorConverter from "./ColorConverter";
 import Calculator from "./Calculator";
 import InvoiceGenerator from "./InvoiceGenerator";
@@ -97,10 +98,11 @@ export default function ToolSwitcher({ slug }: ToolSwitcherProps) {
 
     // === 4. PDF TOOLS (FROM CODEBASE) ===
     case "merge-pdf":
-    case "split-pdf":
     case "rotate-pdf":
     case "compress-pdf":
       return <MergePdf />;
+    case "split-pdf":
+      return <SplitPdf />;
 
     // === 5. DEVELOPER & CASING TOOLS (FROM CODEBASE) ===
     case "case-converter":
