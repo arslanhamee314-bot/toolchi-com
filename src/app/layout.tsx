@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import "./globals.css";
-import ThemeToggle from "@/components/ThemeToggle";
+import Header from "@/components/Header";
 
 export const metadata: Metadata = {
   title: "Toolchi Web Tools Directory – Recreated Structure",
@@ -41,40 +40,7 @@ export default function RootLayout({
               <body className="antialiased min-h-screen flex flex-col bg-[#f6f7fb] dark:bg-[#11141c] text-black dark:text-white">
         
         {/* Header Navigation */}
-        <header className="sticky top-0 z-40 border-b border-border bg-white/90 dark:bg-card/90 backdrop-blur-md print:hidden">
-          <div className="mx-auto max-w-6xl flex items-center justify-between px-6 py-4">
-            
-            {/* Logo/Brand link */}
-            <Link href="/" className="flex items-center gap-2.5 group select-none shrink-0">
-              <img 
-                src="/logo.jpg" 
-                alt="Toolchi Logo" 
-                className="h-10 w-10 rounded-lg border border-border/80 shadow-xs group-hover:scale-105 transition-transform" 
-              />
-              <span className="font-extrabold text-base text-[#20242d] dark:text-[#f6f7fb] tracking-tight">Toolchi</span>
-            </Link>
-
-            {/* Navigation links */}
-            <nav className="hidden md:flex items-center gap-8 text-sm font-bold text-[#363c48] dark:text-[#a0a8b9]">
-              <Link href="/" className="hover:text-[#7d4dff] transition-colors">Home</Link>
-              <Link href="/tools" className="hover:text-[#7d4dff] transition-colors">Tools</Link>
-              <Link href="/blog" className="hover:text-[#7d4dff] transition-colors">Blogs</Link>
-            </nav>
-
-            {/* Header actions */}
-            <div className="flex items-center gap-3 shrink-0">
-              <input 
-                type="text" 
-                placeholder="Search..." 
-                className="hidden lg:block w-36 px-3 py-1.5 text-xs bg-neutral-100 dark:bg-neutral-800 border border-border rounded-lg outline-none focus:border-primary/50 text-foreground"
-              />
-              <button className="locale-btn">US$</button>
-              <button className="locale-btn">EN</button>
-              <ThemeToggle />
-            </div>
-
-          </div>
-        </header>
+        <Header />
 
         {/* Main Content Area */}
         <main className="flex-1 flex flex-col">
