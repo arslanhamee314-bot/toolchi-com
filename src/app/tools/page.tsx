@@ -56,8 +56,12 @@ export default function ToolsDirectoryPage() {
                       className="p-4 rounded-xl border border-border/80 bg-card/10 hover:border-primary/40 hover:bg-card/25 transition-all flex items-center justify-between group"
                     >
                       <div className="flex items-center gap-3 min-w-0">
-                        <div className="h-8 w-8 rounded-lg bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-all flex items-center justify-center border shrink-0">
-                          <LucideIcon name={tool.iconName} className="h-4 w-4" />
+                        <div className="h-8 w-8 rounded-lg bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-all flex items-center justify-center border shrink-0 text-xs">
+                          {/\p{Extended_Pictographic}/u.test(tool.iconName) ? (
+                            <span className="select-none">{tool.iconName}</span>
+                          ) : (
+                            <LucideIcon name={tool.iconName} className="h-4 w-4" />
+                          )}
                         </div>
                         <div className="min-w-0">
                           <span className="text-xs font-semibold text-foreground group-hover:text-primary transition-colors block truncate">{tool.name}</span>
