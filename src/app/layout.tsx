@@ -58,8 +58,8 @@ export default function RootLayout({
                   99+
                 </span>
               </Link>
-              <Link href="/" className="text-[#7d4dff] hover:text-[#6530ef] transition-colors">Tools</Link>
-              <Link href="/" className="hover:text-foreground transition-colors">Blog</Link>
+              <Link href="/tools" className="text-[#7d4dff] hover:text-[#6530ef] transition-colors">Tools</Link>
+              <Link href="/blog" className="hover:text-foreground transition-colors">Blog</Link>
             </nav>
 
             {/* Header actions */}
