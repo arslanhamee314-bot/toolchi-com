@@ -22,6 +22,8 @@ export const CATEGORIES = [
   { id: "webmaster", name: "Webmaster Tools", desc: "Check configuration, security, and responsive layouts." },
   { id: "performance", name: "Performance Tools", desc: "Optimize files, verify compression, and measure load times." },
   { id: "operational", name: "Operational Tools", desc: "Utilities to generate mockups, open links, and clean files." },
+  { id: "documents", name: "PDF & Document Tools", desc: "Merge, split, rotate, and compress PDF documents locally." },
+  { id: "developer", name: "Developer & Casing Tools", desc: "Convert case, count text, format JSON, and generate hashes." },
   { id: "ai", name: "AI Content Utilities", desc: "Analyze AI writing density and humanize text structures." }
 ];
 
@@ -33,7 +35,7 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     category: "webmaster",
     shortDesc: "Check whether your robots file is accessible and correctly exposed.",
     iconName: "🤖",
-    seoTitle: "Robots.txt Checker - Validate Search Engine Directives | Website Planet",
+    seoTitle: "Robots.txt Checker - Validate Search Engine Directives | Toolchi",
     seoDescription: "Audit your robots.txt file to ensure correct crawl parameters and prevent search indexing errors.",
     longDesc: "Analyze search engine directives in your robots.txt. Ensure Googlebot and Bingbot can crawl intended paths while blocking secure partitions.",
     howToUse: [
@@ -51,7 +53,7 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     category: "webmaster",
     shortDesc: "Create favicon-ready outputs for browser tabs and shortcuts.",
     iconName: "🖼",
-    seoTitle: "Favicon Generator - Create Browser Tab Icons | Website Planet",
+    seoTitle: "Favicon Generator - Create Browser Tab Icons | Toolchi",
     seoDescription: "Convert PNG, JPG, or SVG images into .ico favicon files for browser shortcut displays.",
     longDesc: "Upload image layouts and compile compatible multi-size favicon packaging natively in the browser.",
     howToUse: [
@@ -69,7 +71,7 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     category: "webmaster",
     shortDesc: "Inspect certificate presence and basic HTTPS availability.",
     iconName: "🔒",
-    seoTitle: "SSL Certificate Checker - Verify HTTPS Security | Website Planet",
+    seoTitle: "SSL Certificate Checker - Verify HTTPS Security | Toolchi",
     seoDescription: "Audit certificate trust chains, expiration timelines, and secure cipher configurations for domains.",
     longDesc: "Confirm SSL credentials. Scan secure handshakes, trust issuers, validity windows, and cipher setups.",
     howToUse: [
@@ -87,7 +89,7 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     category: "webmaster",
     shortDesc: "Validate sitemap visibility and structure for indexing workflows.",
     iconName: "🗺",
-    seoTitle: "XML Sitemap Validator - Verify Indexing Files | Website Planet",
+    seoTitle: "XML Sitemap Validator - Verify Indexing Files | Toolchi",
     seoDescription: "Audit sitemap syntax rules, namespace declarations, and URL structures to prevent indexing failures.",
     longDesc: "Inspect indexing sitemaps. Validate formatting standards, clean namespaces, and verify correct crawl limits.",
     howToUse: [
@@ -105,7 +107,7 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     category: "webmaster",
     shortDesc: "Preview how a site behaves across desktop and mobile form factors.",
     iconName: "💻📱",
-    seoTitle: "Responsive Web Design Checker - Test Devices Online | Website Planet",
+    seoTitle: "Responsive Web Design Checker - Test Devices Online | Toolchi",
     seoDescription: "Preview site design across desktop, tablet, and mobile viewport frames directly inside the workspace.",
     longDesc: "Audit responsive design sheets. Load frame containers at specific resolution breaks to test grid layouts.",
     howToUse: [
@@ -123,7 +125,7 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     category: "webmaster",
     shortDesc: "Review domain expiry timing for ownership and renewal awareness.",
     iconName: "🌐",
-    seoTitle: "Domain Expiration Checker - Verify Expiry Dates | Website Planet",
+    seoTitle: "Domain Expiration Checker - Verify Expiry Dates | Toolchi",
     seoDescription: "Check WHOIS registration parameters and expiry timestamps to prevent domain ownership losses.",
     longDesc: "Track domain timeline records. Query registry databases to map renewal margins and safety thresholds.",
     howToUse: [
@@ -143,7 +145,7 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     category: "performance",
     shortDesc: "Verify compression support to improve delivery efficiency.",
     iconName: "📦",
-    seoTitle: "Gzip Compression Checker - Test Transfer Optimization | Website Planet",
+    seoTitle: "Gzip Compression Checker - Test Transfer Optimization | Toolchi",
     seoDescription: "Check if your web server has Gzip enabled and measure payload size reductions.",
     longDesc: "Verify transfer optimization headers. Test server response parameters to track compression efficacy and transfer payload sizes.",
     howToUse: [
@@ -161,7 +163,7 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     category: "performance",
     shortDesc: "Optimize image assets to reduce payload weight and load time.",
     iconName: "🗜",
-    seoTitle: "Image Compressor - Optimize PNG and JPG files | Website Planet",
+    seoTitle: "Image Compressor - Optimize PNG and JPG files | Toolchi",
     seoDescription: "Compress PNG and JPG images client-side without quality loss to boost page rendering speed.",
     longDesc: "Reduce image file sizes. Compress image payload weights natively inside the browser, using quantization algorithms to preserve visual quality.",
     howToUse: [
@@ -179,7 +181,7 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     category: "performance",
     shortDesc: "Generate placeholders for mockups, layouts, and prototypes.",
     iconName: "🖼",
-    seoTitle: "Dummy Image Generator - Create Custom Placeholders | Website Planet",
+    seoTitle: "Dummy Image Generator - Create Custom Placeholders | Toolchi",
     seoDescription: "Generate custom placeholder images specifying width, height, colors, and text dynamically.",
     longDesc: "Produce layouts placeholders. Create custom dimensions graphics with label text overlays for mockup prototypes.",
     howToUse: [
@@ -197,7 +199,7 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     category: "performance",
     shortDesc: "Track redirect paths for SEO, canonicalization, and QA checks.",
     iconName: "↪",
-    seoTitle: "HTTP Redirect Checker - Track URL Paths | Website Planet",
+    seoTitle: "HTTP Redirect Checker - Track URL Paths | Toolchi",
     seoDescription: "Trace the complete path of URL redirects and analyze HTTP status response headers.",
     longDesc: "Verify redirect loops. Audit routing hops, canonical paths, security redirects (HTTPS), and SEO status codes (301/302).",
     howToUse: [
@@ -215,7 +217,7 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     category: "performance",
     shortDesc: "Run a quick availability check for public site access.",
     iconName: "✖",
-    seoTitle: "Is Website Down or Just Me? - Uptime Checker | Website Planet",
+    seoTitle: "Is Website Down or Just Me? - Uptime Checker | Toolchi",
     seoDescription: "Test connection availability for domains from multiple global servers to diagnose outages.",
     longDesc: "Check site availability. Run connection test checks to verify global port access and DNS lookup records.",
     howToUse: [
@@ -233,7 +235,7 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     category: "performance",
     shortDesc: "Estimate experiment significance and compare variant outcomes.",
     iconName: "🅰🅱",
-    seoTitle: "A/B Testing Significance Calculator | Website Planet",
+    seoTitle: "A/B Testing Significance Calculator | Toolchi",
     seoDescription: "Calculate statistical significance for optimization tests based on control and variant rates.",
     longDesc: "Measure experiment outcomes. Determine statistical confidence indexes, p-values, and conversion variance metrics.",
     howToUse: [
@@ -251,7 +253,7 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     category: "performance",
     shortDesc: "Create QR outputs for links, promotions, and printed materials.",
     iconName: "▣",
-    seoTitle: "QR Code Generator - Create Custom QR Codes | Website Planet",
+    seoTitle: "QR Code Generator - Create Custom QR Codes | Toolchi",
     seoDescription: "Create custom QR codes for URLs, text, Wi-Fi connections, and vCards. Fully client-side.",
     longDesc: "Generate matrix bar codes. Encode data strings into customized QR blocks, adjusting dimensions and styling parameters.",
     howToUse: [
@@ -270,7 +272,7 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     category: "performance",
     shortDesc: "Catch spelling mistakes in short web copy and content blocks.",
     iconName: "✍",
-    seoTitle: "Online Spell Checker - Verify Text Grammar | Website Planet",
+    seoTitle: "Online Spell Checker - Verify Text Grammar | Toolchi",
     seoDescription: "Audit short articles and website copy to verify spellings and syntax rules.",
     longDesc: "Review copy layouts. Scan vocabulary lists, detect orthographic errors, and suggest standard replacements.",
     howToUse: [
@@ -290,7 +292,7 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     category: "operational",
     shortDesc: "Check current display dimensions for QA and design testing.",
     iconName: "🖥",
-    seoTitle: "What is My Screen Resolution? - Display Checker | Website Planet",
+    seoTitle: "What is My Screen Resolution? - Display Checker | Toolchi",
     seoDescription: "Detect your display dimensions, viewport sizes, and pixel ratio instantly in the browser.",
     longDesc: "Audit viewport parameters. Read screen dimensions, responsive breakpoints, device pixel ratios, and color depths.",
     howToUse: [
@@ -308,7 +310,7 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     category: "operational",
     shortDesc: "Prepare cleaner shareable links for communication workflows.",
     iconName: "🔗",
-    seoTitle: "Custom Share Link Creator - Generate URL Links | Website Planet",
+    seoTitle: "Custom Share Link Creator - Generate URL Links | Toolchi",
     seoDescription: "Create custom links with predefined text to share content on social platforms.",
     longDesc: "Draft share links. Encode content targets into custom URL links for message channels.",
     howToUse: [
@@ -326,7 +328,7 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     category: "operational",
     shortDesc: "Generate placeholder text for mockups and design drafts.",
     iconName: "¶",
-    seoTitle: "Lorem Ipsum Generator - Generate Dummy Copy | Website Planet",
+    seoTitle: "Lorem Ipsum Generator - Generate Dummy Copy | Toolchi",
     seoDescription: "Create customizable placeholder text paragraphs, words, or lists for prototypes.",
     longDesc: "Produce classic copy placeholders. Set paragraph count, configure structures, and format outputs.",
     howToUse: [
@@ -344,7 +346,7 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     category: "operational",
     shortDesc: "Open multiple destinations for review and operational testing.",
     iconName: "🗂",
-    seoTitle: "Multiple URL Opener - Open URLs Instantly | Website Planet",
+    seoTitle: "Multiple URL Opener - Open URLs Instantly | Toolchi",
     seoDescription: "Open multiple links simultaneously in new browser tabs. Secure and client-side.",
     longDesc: "Launch target URLs in bulk. Parse bulk lists of links and open them in separate tabs with a single trigger action.",
     howToUse: [
@@ -362,7 +364,7 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     category: "operational",
     shortDesc: "Reduce code weight for faster front-end delivery.",
     iconName: "</>",
-    seoTitle: "JS & CSS Minifier - Compress Code Online | Website Planet",
+    seoTitle: "JS & CSS Minifier - Compress Code Online | Toolchi",
     seoDescription: "Minify JavaScript and CSS styles client-side to decrease file size and page load times.",
     longDesc: "Compress front-end files. Strip whitespace, remove comments, shorten variables, and output optimized minified scripts.",
     howToUse: [
@@ -380,7 +382,7 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     category: "operational",
     shortDesc: "Improve readability for compressed stylesheets and scripts.",
     iconName: "{ }",
-    seoTitle: "JS & CSS Unminifier - Pretty Print Code | Website Planet",
+    seoTitle: "JS & CSS Unminifier - Pretty Print Code | Toolchi",
     seoDescription: "Format and pretty print minified JavaScript and CSS files back into readable scripts.",
     longDesc: "Decompress minified styling. Format layouts, restore code indentation lines, and improve reading flow.",
     howToUse: [
@@ -398,7 +400,7 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     category: "operational",
     shortDesc: "Check Accelerated Mobile Pages markup for validity.",
     iconName: "⚡",
-    seoTitle: "AMP HTML Validator - Test Accelerated Mobile Pages | Website Planet",
+    seoTitle: "AMP HTML Validator - Test Accelerated Mobile Pages | Toolchi",
     seoDescription: "Audit your AMP HTML files to verify syntax parameters and schema rules.",
     longDesc: "Check AMP page standards. Audit styling constraints, namespace checks, and verify correct validation tags.",
     howToUse: [
@@ -416,7 +418,7 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     category: "operational",
     shortDesc: "Brainstorm available and relevant naming directions.",
     iconName: "WWW",
-    seoTitle: "Domain Name Generator - Brainstorm Domain Names | Website Planet",
+    seoTitle: "Domain Name Generator - Brainstorm Domain Names | Toolchi",
     seoDescription: "Brainstorm creative, professional domain names matching keyword search patterns.",
     longDesc: "Generate domain names. Input keywords to synthesize prefix, suffix, and combination options.",
     howToUse: [
@@ -436,7 +438,7 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     category: "ai",
     shortDesc: "Analyze writing patterns to verify AI-generated text, and humanize content to bypass detection tools.",
     iconName: "🤖",
-    seoTitle: "Free AI Content Detector & Text Humanizer Online | Website Planet",
+    seoTitle: "Free AI Content Detector & Text Humanizer Online | Toolchi",
     seoDescription: "Detect AI-generated text from GPT-4, Gemini, and Claude. Humanize AI text to 100% human score to bypass checkers instantly and securely.",
     longDesc: "Analyze text perplexity, syntactic variance, and transition predictable distributions to detect AI content. Convert AI copy into highly natural humanized formats to bypass modern detector algorithms.",
     howToUse: [
@@ -450,6 +452,248 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     ],
     popular: true,
     isNew: true
+  },
+
+  // 5. PDF & DOCUMENT TOOLS
+  {
+    slug: "merge-pdf",
+    name: "Merge PDF",
+    category: "documents",
+    shortDesc: "Merge multiple PDF files into a single document locally.",
+    iconName: "📄",
+    seoTitle: "Merge PDF Online - Combine PDF Files Locally | Toolchi",
+    seoDescription: "Merge multiple PDF documents into a single PDF file instantly and securely in your browser. No files are uploaded.",
+    longDesc: "Combine multiple PDF files into a single structured document. Files are processed entirely client-side using JavaScript, guaranteeing that your sensitive data never leaves your device.",
+    howToUse: [
+      "Select or drag-and-drop multiple PDF files.",
+      "Reorder the files using drag handles.",
+      "Click Merge PDF to assemble and download the combined file."
+    ],
+    faqs: [
+      { question: "Is there a file size limit?", answer: "No, since processing is done locally, the limit is only determined by your browser's memory." }
+    ],
+    popular: true
+  },
+  {
+    slug: "split-pdf",
+    name: "Split PDF",
+    category: "documents",
+    shortDesc: "Split a PDF file into individual pages or ranges locally.",
+    iconName: "✂",
+    seoTitle: "Split PDF Online - Extract Pages Locally | Toolchi",
+    seoDescription: "Split your PDF document into separate pages or custom ranges securely in your browser. No uploads.",
+    longDesc: "Extract pages from your PDF file. Split and save pages as separate files or custom ranges locally within your browser.",
+    howToUse: [
+      "Upload your PDF document.",
+      "Choose to extract all pages or specify a custom page range.",
+      "Click Split PDF to download the extracted pages."
+    ],
+    faqs: [
+      { question: "Is this tool secure?", answer: "Yes, all extractions are processed locally on your computer." }
+    ]
+  },
+  {
+    slug: "rotate-pdf",
+    name: "Rotate PDF",
+    category: "documents",
+    shortDesc: "Rotate PDF pages and save them with correct orientation.",
+    iconName: "🔄",
+    seoTitle: "Rotate PDF Online - Change Page Orientations | Toolchi",
+    seoDescription: "Rotate PDF pages vertically or horizontally and save the corrected file securely. No uploads.",
+    longDesc: "Adjust page orientation parameters. Rotate individual pages or all pages of your PDF document natively in your browser.",
+    howToUse: [
+      "Upload your PDF file.",
+      "Choose which pages to rotate (90, 180, or 270 degrees).",
+      "Save and download the rotated document."
+    ],
+    faqs: [
+      { question: "Can I rotate specific pages?", answer: "Yes, you can rotate selected pages or all pages at once." }
+    ]
+  },
+  {
+    slug: "compress-pdf",
+    name: "Compress PDF",
+    category: "documents",
+    shortDesc: "Reduce the file size of your PDF documents locally.",
+    iconName: "🗜",
+    seoTitle: "Compress PDF Online - Shrink File Size Locally | Toolchi",
+    seoDescription: "Compress and reduce the file size of PDF documents securely in your browser without quality loss.",
+    longDesc: "Shrink PDF payloads. Optimizes images and resource tags inside the PDF file natively to decrease file size.",
+    howToUse: [
+      "Drag and drop your PDF document.",
+      "Select target compression level.",
+      "Download the compressed PDF file."
+    ],
+    faqs: [
+      { question: "Does it reduce text quality?", answer: "No, text remains vector-based and crisp; only heavy images and resources are optimized." }
+    ]
+  },
+
+  // 6. DEVELOPER & CASING TOOLS
+  {
+    slug: "case-converter",
+    name: "Case Converter",
+    category: "developer",
+    shortDesc: "Convert text case between lower, upper, title, and sentence cases.",
+    iconName: "🔤",
+    seoTitle: "Online Case Converter - UPPERCASE, lowercase, Title Case | Toolchi",
+    seoDescription: "Convert text case between upper, lower, title, sentence, camel, and kebab case structures instantly.",
+    longDesc: "Format copy layouts. Transform text blocks to conform to case specifications (UPPERCASE, lowercase, Title Case, sentence case).",
+    howToUse: [
+      "Paste your text into the text area.",
+      "Select your target case format button.",
+      "Copy the converted text to your clipboard."
+    ],
+    faqs: [
+      { question: "What cases are supported?", answer: "Supports UPPERCASE, lowercase, Title Case, Sentence Case, camelCase, and kebab-case." }
+    ],
+    popular: true
+  },
+  {
+    slug: "text-counter",
+    name: "Word & Character Counter",
+    category: "developer",
+    shortDesc: "Count words, characters, sentences, and paragraphs in your text.",
+    iconName: "🔢",
+    seoTitle: "Word Counter - Count Characters & Words Online | Toolchi",
+    seoDescription: "Count characters, words, sentences, paragraphs, and reading times for your writing blocks in real time.",
+    longDesc: "Audit text length parameters. Measure word density, character counts, reading times, and paragraph distributions instantly.",
+    howToUse: [
+      "Paste or type your text into the counter box.",
+      "View live counts for words, characters, and sentences.",
+      "Analyze average reading and speaking times."
+    ],
+    faqs: [
+      { question: "Does it save my text?", answer: "No, counting occurs entirely client-side. Your text is never stored or sent over the internet." }
+    ]
+  },
+  {
+    slug: "json-formatter",
+    name: "JSON Formatter & Validator",
+    category: "developer",
+    shortDesc: "Format, validate, and pretty print JSON data structures.",
+    iconName: "🔍",
+    seoTitle: "JSON Formatter & Validator - Pretty Print JSON | Toolchi",
+    seoDescription: "Format, validate, parse, and pretty print raw JSON strings securely in your browser.",
+    longDesc: "Format developer outputs. Pretty print nested JSON structures, check syntax compliance, and compress payloads.",
+    howToUse: [
+      "Paste your raw JSON string into the editor.",
+      "Click Format to indent or Minify to compress.",
+      "Validate syntax errors highlighted in the console."
+    ],
+    faqs: [
+      { question: "Can it validate invalid JSON?", answer: "Yes, it highlights syntax errors and line numbers to help you debug formatting." }
+    ],
+    popular: true
+  },
+  {
+    slug: "base64",
+    name: "Base64 Encoder/Decoder",
+    category: "developer",
+    shortDesc: "Encode strings or files to Base64 format and decode them back.",
+    iconName: "🔏",
+    seoTitle: "Base64 Encoder & Decoder Online | Toolchi",
+    seoDescription: "Encode text and files to Base64 representations and decode them back to plain layouts securely.",
+    longDesc: "Encode developer assets. Convert binary files or plain text strings to Base64 data blocks client-side.",
+    howToUse: [
+      "Select either Encode or Decode mode.",
+      "Paste your input text or upload a file.",
+      "Copy or download the translated output."
+    ],
+    faqs: [
+      { question: "Are files supported?", answer: "Yes, you can upload small files to translate into Base64 data URIs." }
+    ]
+  },
+  {
+    slug: "url-encoder",
+    name: "URL Encoder/Decoder",
+    category: "developer",
+    shortDesc: "Encode and decode URLs to prevent query transmission issues.",
+    iconName: "🌐",
+    seoTitle: "URL Encoder & Decoder Online - UTF-8 URL Coding | Toolchi",
+    seoDescription: "Encode query string characters to safe URL syntax and decode them back securely.",
+    longDesc: "Encode URL links. Translate query parameters and escape special characters to build reliable API links.",
+    howToUse: [
+      "Paste your URL link or query parameters.",
+      "Select Encode or Decode.",
+      "Copy the safe, escaped URL result."
+    ],
+    faqs: [
+      { question: "Why encode URLs?", answer: "Special characters (like spaces or ampersands) have syntax meanings; encoding them prevents link parsing errors." }
+    ]
+  },
+  {
+    slug: "hash-generator",
+    name: "Hash Generator (MD5, SHA-256)",
+    category: "developer",
+    shortDesc: "Generate secure cryptographic hashes for plain text keys.",
+    iconName: "🔑",
+    seoTitle: "Cryptographic Hash Generator - MD5, SHA-1, SHA-256 | Toolchi",
+    seoDescription: "Generate MD5, SHA-1, SHA-256, and SHA-512 cryptographic hashes client-side in your browser.",
+    longDesc: "Generate secure cryptographic checksums. Input secret strings to build MD5, SHA-1, SHA-256, and SHA-512 outputs natively.",
+    howToUse: [
+      "Type or paste your input text key.",
+      "Observe live cryptographic hash changes.",
+      "Copy the resulting hash to your clipboard."
+    ],
+    faqs: [
+      { question: "Is this cryptographic generator secure?", answer: "Yes, hashing algorithms run locally in Javascript. No keys are sent to any server." }
+    ]
+  },
+  {
+    slug: "color-converter",
+    name: "Color Format Converter",
+    category: "developer",
+    shortDesc: "Translate colors between HEX, RGB, HSL, and CMYK formats.",
+    iconName: "🎨",
+    seoTitle: "Color Converter - HEX, RGB, HSL, CMYK Conversion | Toolchi",
+    seoDescription: "Translate design colors between HEX, RGB, HSL, and CMYK formats with visual sliders.",
+    longDesc: "Translate color formats. Convert design color codes dynamically and match contrast criteria with sliders.",
+    howToUse: [
+      "Select input format and enter color values.",
+      "Adjust sliders to tweak saturation, light, and hue.",
+      "Copy corresponding HEX, RGB, and HSL outputs."
+    ],
+    faqs: [
+      { question: "Does it check contrast criteria?", answer: "Yes, it previews text readability on background shades." }
+    ]
+  },
+  {
+    slug: "calculator",
+    name: "Scientific Calculator",
+    category: "developer",
+    shortDesc: "Solve equations and calculate mathematical functions.",
+    iconName: "🧮",
+    seoTitle: "Scientific Calculator Online - Free Math Calculator | Toolchi",
+    seoDescription: "Perform simple arithmetic and scientific mathematical equations directly in your web browser.",
+    longDesc: "Perform mathematical equations. Calculate trigonometry, algorithms, square roots, and basic equations natively.",
+    howToUse: [
+      "Enter digits and functions using the calculator keypad.",
+      "Use parentheses to group math operations.",
+      "Press '=' to compute results."
+    ],
+    faqs: [
+      { question: "Does it support trigonometric equations?", answer: "Yes, it includes sin, cos, tan, and inverse functions." }
+    ]
+  },
+  {
+    slug: "invoice-generator",
+    name: "Invoice Generator",
+    category: "developer",
+    shortDesc: "Generate structured, print-ready PDF invoices for your business.",
+    iconName: "🧾",
+    seoTitle: "Free Invoice Generator - Create PDF Invoices | Toolchi",
+    seoDescription: "Create print-ready, professional PDF invoices online. Fully client-side and free.",
+    longDesc: "Generate invoice receipts. Fill in business coordinates, items, tax metrics, and print or save print-ready invoices natively.",
+    howToUse: [
+      "Enter your business logo, coordinates, and invoice number.",
+      "List service items, quantities, and rates.",
+      "Specify tax rates and click Print or Save to export PDF."
+    ],
+    faqs: [
+      { question: "Can I save my invoice details?", answer: "Details are stored in local session cache, keeping records inside your tab." }
+    ],
+    popular: true
   }
 ];
 

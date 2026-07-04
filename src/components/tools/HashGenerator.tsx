@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { Copy, Check, RotateCcw, Shield } from "lucide-react";
-import confetti from "canvas-confetti";
 
 export default function HashGenerator() {
   const [text, setText] = useState("");
@@ -34,7 +33,7 @@ export default function HashGenerator() {
     if (!hashOutput) return;
     navigator.clipboard.writeText(hashOutput);
     setCopied(true);
-    confetti({ particleCount: 30, spread: 50, origin: { y: 0.85 } });
+    import("canvas-confetti").then((m) => m.default({ particleCount: 30, spread: 50, origin: { y: 0.85 } }));
     setTimeout(() => setCopied(false), 2000);
   };
 

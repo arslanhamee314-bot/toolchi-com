@@ -2,7 +2,6 @@
 
 import React, { useState, useMemo } from "react";
 import { Plus, Trash2, Printer, CheckCircle } from "lucide-react";
-import confetti from "canvas-confetti";
 
 interface InvoiceItem {
   description: string;
@@ -49,7 +48,7 @@ export default function InvoiceGenerator() {
 
   const handlePrint = () => {
     window.print();
-    confetti({ particleCount: 30, spread: 60, origin: { y: 0.8 } });
+    import("canvas-confetti").then((m) => m.default({ particleCount: 30, spread: 60, origin: { y: 0.8 } }));
   };
 
   return (

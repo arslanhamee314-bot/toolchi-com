@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { PDFDocument } from "pdf-lib";
 import { Upload, ArrowUp, ArrowDown, Trash2, Combine, CheckCircle, FileCode } from "lucide-react";
-import confetti from "canvas-confetti";
 
 interface FileItem {
   id: string;
@@ -78,7 +77,7 @@ export default function MergePdf() {
       
       setIsMerging(false);
       setSuccess(true);
-      confetti({ particleCount: 50, spread: 80, origin: { y: 0.8 } });
+      import("canvas-confetti").then((m) => m.default({ particleCount: 50, spread: 80, origin: { y: 0.8 } }));
     } catch (error) {
       console.error(error);
       setIsMerging(false);

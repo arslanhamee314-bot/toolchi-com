@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { Copy, Check, RotateCcw } from "lucide-react";
-import confetti from "canvas-confetti";
 
 export default function LoremIpsum() {
   const [paragraphsCount, setParagraphsCount] = useState(3);
@@ -25,14 +24,14 @@ export default function LoremIpsum() {
       result.push(p);
     }
     setGeneratedText(result.join("\n\n"));
-    confetti({ particleCount: 15, spread: 30, origin: { y: 0.85 } });
+    import("canvas-confetti").then((m) => m.default({ particleCount: 15, spread: 30, origin: { y: 0.85 } }));
   };
 
   const handleCopy = () => {
     if (!generatedText) return;
     navigator.clipboard.writeText(generatedText);
     setCopied(true);
-    confetti({ particleCount: 30, spread: 50, origin: { y: 0.85 } });
+    import("canvas-confetti").then((m) => m.default({ particleCount: 30, spread: 50, origin: { y: 0.85 } }));
     setTimeout(() => setCopied(false), 2000);
   };
 

@@ -3,7 +3,6 @@
 import React, { useState, useRef } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { Download, RotateCcw, QrCode } from "lucide-react";
-import confetti from "canvas-confetti";
 
 export default function QrGenerator() {
   const [text, setText] = useState("https://toolchi.online");
@@ -40,7 +39,7 @@ export default function QrGenerator() {
         downloadLink.click();
         document.body.removeChild(downloadLink);
         
-        confetti({ particleCount: 30, spread: 50, origin: { y: 0.8 } });
+        import("canvas-confetti").then((m) => m.default({ particleCount: 30, spread: 50, origin: { y: 0.8 } }));
       }
       URL.revokeObjectURL(svgUrl);
     };

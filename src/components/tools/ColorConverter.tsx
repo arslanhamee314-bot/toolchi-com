@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { Copy, Check } from "lucide-react";
-import confetti from "canvas-confetti";
 
 export default function ColorConverter() {
   const [hex, setHex] = useState("#046bd2");
@@ -71,7 +70,7 @@ export default function ColorConverter() {
   const copyToClipboard = (text: string, type: string) => {
     navigator.clipboard.writeText(text);
     setActiveCopied(type);
-    confetti({ particleCount: 20, spread: 40, origin: { y: 0.85 } });
+    import("canvas-confetti").then((m) => m.default({ particleCount: 20, spread: 40, origin: { y: 0.85 } }));
     setTimeout(() => setActiveCopied(null), 2000);
   };
 

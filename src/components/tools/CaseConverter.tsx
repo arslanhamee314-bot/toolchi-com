@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { Copy, Check, RotateCcw } from "lucide-react";
-import confetti from "canvas-confetti";
 
 export default function CaseConverter() {
   const [text, setText] = useState("");
@@ -57,7 +56,7 @@ export default function CaseConverter() {
     if (!text) return;
     navigator.clipboard.writeText(text);
     setCopied(true);
-    confetti({ particleCount: 40, spread: 60, origin: { y: 0.8 } });
+    import("canvas-confetti").then((m) => m.default({ particleCount: 40, spread: 60, origin: { y: 0.8 } }));
     setTimeout(() => setCopied(false), 2000);
   };
 

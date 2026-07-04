@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { Copy, Check, RotateCcw, AlertTriangle } from "lucide-react";
-import confetti from "canvas-confetti";
 
 export default function Base64Converter() {
   const [input, setInput] = useState("");
@@ -41,7 +40,7 @@ export default function Base64Converter() {
     if (!output) return;
     navigator.clipboard.writeText(output);
     setCopied(true);
-    confetti({ particleCount: 30, spread: 50, origin: { y: 0.85 } });
+    import("canvas-confetti").then((m) => m.default({ particleCount: 30, spread: 50, origin: { y: 0.85 } }));
     setTimeout(() => setCopied(false), 2000);
   };
 

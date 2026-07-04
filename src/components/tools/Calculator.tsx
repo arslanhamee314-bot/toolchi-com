@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { Copy, Check, RotateCcw, Equal } from "lucide-react";
-import confetti from "canvas-confetti";
 
 export default function Calculator() {
   const [expression, setExpression] = useState("");
@@ -34,7 +33,7 @@ export default function Calculator() {
     if (!result || error) return;
     navigator.clipboard.writeText(result);
     setCopied(true);
-    confetti({ particleCount: 20, spread: 45, origin: { y: 0.85 } });
+    import("canvas-confetti").then((m) => m.default({ particleCount: 20, spread: 45, origin: { y: 0.85 } }));
     setTimeout(() => setCopied(false), 2000);
   };
 

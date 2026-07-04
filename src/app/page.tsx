@@ -3,7 +3,7 @@ import ToolsDirectory from "@/components/tools/ToolsDirectory";
 
 // Page level SEO metadata (pre-rendered for Google)
 export const metadata = {
-  title: "Website Planet Web Tools Directory – Recreated Structure",
+  title: "Toolchi Web Tools Directory – Recreated Structure",
   description: "Effective (Free) Tools to Help You Manage and Improve Your Website. 100% client-side web master, performance, and operational tools.",
 };
 
@@ -20,7 +20,7 @@ export default function HomePage() {
           
           {/* Hero Copy (Left on desktop) */}
           <div className="flex-1 flex flex-col gap-4 text-center lg:text-left items-center lg:items-start">
-            <p className="text-3xs font-extrabold text-[#ef5330] tracking-widest uppercase">
+            <p className="text-3xs font-extrabold text-[#6530ef] tracking-widest uppercase">
               Free website utilities
             </p>
             <h1 className="text-3xl sm:text-5xl font-extrabold text-foreground tracking-tight leading-none">
@@ -50,16 +50,16 @@ export default function HomePage() {
             </div>
 
             {/* Floating emoji badges */}
-            <div className="absolute top-4 left-2 h-14 w-14 rounded-2xl bg-white dark:bg-[#1c2230] border border-[#ffe3dc]/80 dark:border-border/60 card-shadow flex items-center justify-center text-2xl select-none animate-bounce duration-[3s]">
+            <div className="absolute top-4 left-2 h-14 w-14 rounded-2xl bg-white dark:bg-[#1c2230] border border-[#e8ddff]/80 dark:border-border/60 card-shadow flex items-center justify-center text-2xl select-none animate-bounce duration-[3s]">
               ⚙
             </div>
-            <div className="absolute top-8 right-2 h-14 w-14 rounded-2xl bg-white dark:bg-[#1c2230] border border-[#ffe3dc]/80 dark:border-border/60 card-shadow flex items-center justify-center text-2xl select-none animate-bounce duration-[4s]">
+            <div className="absolute top-8 right-2 h-14 w-14 rounded-2xl bg-white dark:bg-[#1c2230] border border-[#e8ddff]/80 dark:border-border/60 card-shadow flex items-center justify-center text-2xl select-none animate-bounce duration-[4s]">
               📈
             </div>
-            <div className="absolute bottom-4 right-8 h-14 w-14 rounded-2xl bg-white dark:bg-[#1c2230] border border-[#ffe3dc]/80 dark:border-border/60 card-shadow flex items-center justify-center text-2xl select-none animate-bounce duration-[3.5s]">
+            <div className="absolute bottom-4 right-8 h-14 w-14 rounded-2xl bg-white dark:bg-[#1c2230] border border-[#e8ddff]/80 dark:border-border/60 card-shadow flex items-center justify-center text-2xl select-none animate-bounce duration-[3.5s]">
               🎨
             </div>
-            <div className="absolute bottom-2 left-6 h-14 w-14 rounded-2xl bg-white dark:bg-[#1c2230] border border-[#ffe3dc]/80 dark:border-border/60 card-shadow flex items-center justify-center text-2xl select-none animate-bounce duration-[4.5s]">
+            <div className="absolute bottom-2 left-6 h-14 w-14 rounded-2xl bg-white dark:bg-[#1c2230] border border-[#e8ddff]/80 dark:border-border/60 card-shadow flex items-center justify-center text-2xl select-none animate-bounce duration-[4.5s]">
               ☑
             </div>
           </div>
@@ -79,7 +79,7 @@ export default function HomePage() {
             <h2 className="text-2xl font-extrabold text-foreground tracking-tight">
               Frequently Asked Questions
             </h2>
-            <div className="h-1 w-12 bg-[#ff623d] mx-auto rounded-full mt-1" />
+            <div className="h-1 w-12 bg-[#7d4dff] mx-auto rounded-full mt-1" />
           </div>
 
           <div className="flex flex-col gap-4">
