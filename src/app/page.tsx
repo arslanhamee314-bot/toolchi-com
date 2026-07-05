@@ -2,6 +2,7 @@ import React, { Suspense } from "react";
 import ToolsDirectory from "@/components/tools/ToolsDirectory";
 import ToolsSlider from "@/components/tools/ToolsSlider";
 import HeroSearch from "@/components/tools/HeroSearch";
+import { ShieldCheck, Cpu, UserMinus, Gift } from "lucide-react";
 
 // Page level SEO metadata (pre-rendered for Google)
 export const metadata = {
@@ -31,6 +32,22 @@ export default function HomePage() {
             <p className="text-sm md:text-base text-muted max-w-lg leading-relaxed">
               Effective (Free) Tools to Help You Manage and Improve Your Website. Fast, private, and fully local.
             </p>
+
+            {/* Trust Signals Badges */}
+            <div className="flex flex-wrap gap-2 mt-2 select-none justify-center lg:justify-start">
+              <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 dark:bg-emerald-500/5 border border-emerald-500/20 px-2.5 py-1 rounded-lg">
+                <ShieldCheck className="h-3.5 w-3.5 shrink-0" /> No upload
+              </span>
+              <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-blue-600 dark:text-blue-400 bg-blue-500/10 dark:bg-blue-500/5 border border-blue-500/20 px-2.5 py-1 rounded-lg">
+                <Cpu className="h-3.5 w-3.5 shrink-0" /> Runs in browser
+              </span>
+              <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 dark:bg-amber-500/5 border border-amber-500/20 px-2.5 py-1 rounded-lg">
+                <UserMinus className="h-3.5 w-3.5 shrink-0" /> No signup
+              </span>
+              <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 dark:bg-indigo-500/5 border border-indigo-500/20 px-2.5 py-1 rounded-lg">
+                <Gift className="h-3.5 w-3.5 shrink-0" /> Free forever
+              </span>
+            </div>
             
             {/* Centered/Left aligned search bar with shortcuts */}
             <div className="w-full max-w-md mt-4">
