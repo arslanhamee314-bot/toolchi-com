@@ -6,8 +6,8 @@ import { ShieldCheck, Cpu, UserMinus, Gift } from "lucide-react";
 
 // Page level SEO metadata (pre-rendered for Google)
 export const metadata = {
-  title: "Toolchi Web Tools Directory – Recreated Structure",
-  description: "Effective (Free) Tools to Help You Manage and Improve Your Website. 100% client-side web master, performance, and operational tools.",
+  title: "Toolchi - Free Online Web & Developer Tools Directory",
+  description: "Explore Toolchi's complete all-in-one suite of free online web, developer, PDF, and productivity tools. 100% secure, local, and private.",
 };
 
 export default function HomePage() {
@@ -24,13 +24,13 @@ export default function HomePage() {
           {/* Hero Copy (Left on desktop) */}
           <div className="flex-1 flex flex-col gap-4 text-center lg:text-left items-center lg:items-start">
             <p className="text-3xs font-extrabold text-[#6530ef] tracking-widest uppercase">
-              Free website utilities
+              All-in-one free online tools
             </p>
             <h1 className="text-3xl sm:text-5xl font-extrabold text-foreground tracking-tight leading-none">
-              Web Tools Directory
+              Free Tools Directory
             </h1>
             <p className="text-sm md:text-base text-muted max-w-lg leading-relaxed">
-              Effective (Free) Tools to Help You Manage and Improve Your Website. Fast, private, and fully local.
+              Effective free tools for developers, webmasters, creators, and daily digital tasks. 100% private, secure, and fast.
             </p>
 
             {/* Trust Signals Badges */}
