@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header";
+import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Toolchi Web Tools Directory – Recreated Structure",
-  description: "Effective (Free) Tools to Help You Manage and Improve Your Website. 100% client-side web master, performance, and operational tools.",
-  metadataBase: new URL("https://www.toolchi.online"),
+  title: "Toolchi - Free Online Web & Developer Tools Directory",
+  description: "Explore Toolchi's complete all-in-one suite of free online web, developer, PDF, and productivity tools. 100% secure, local, and private.",
+  metadataBase: new URL("https://toolchi.online"),
   alternates: {
-    canonical: "/webtools/",
+    canonical: "/",
   },
   icons: {
     icon: "/logo.jpg",
@@ -15,9 +16,9 @@ export const metadata: Metadata = {
     apple: "/logo.jpg",
   },
   openGraph: {
-    title: "Toolchi Web Tools Directory – Recreated Structure",
-    description: "Effective (Free) Tools to Help You Manage and Improve Your Website. 100% client-side web master, performance, and operational tools.",
-    url: "/webtools/",
+    title: "Toolchi - Free Online Web & Developer Tools Directory",
+    description: "Explore Toolchi's complete all-in-one suite of free online web, developer, PDF, and productivity tools. 100% secure, local, and private.",
+    url: "/",
     siteName: "Toolchi",
     locale: "en_US",
     type: "website",
@@ -49,19 +50,12 @@ export default function RootLayout({
 
         {/* Trust Footer */}
         <footer className="border-t border-border bg-white dark:bg-card py-8 px-6 print:hidden">
-          <div className="mx-auto max-w-6xl flex flex-col sm:flex-row items-center justify-between text-xs text-muted gap-4">
-            <p>Recreated structural reference based on the visible page design.</p>
-            <p>
-              Source:{" "}
-              <a 
-                href="https://www.toolchi.online/" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="underline hover:text-foreground"
-              >
-                toolchi.online
-              </a>
-            </p>
+          <div className="mx-auto max-w-6xl flex flex-col sm:flex-row items-center justify-between text-xs text-muted-foreground gap-4 select-none">
+            <p>© {new Date().getFullYear()} Toolchi. All-in-one free online tools. All processing occurs locally.</p>
+            <div className="flex gap-4">
+              <Link href="/privacy" className="hover:underline hover:text-foreground">Privacy Policy</Link>
+              <Link href="/terms" className="hover:underline hover:text-foreground">Terms of Use</Link>
+            </div>
           </div>
         </footer>
 
