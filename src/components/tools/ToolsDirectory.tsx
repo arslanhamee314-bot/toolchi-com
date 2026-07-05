@@ -1,25 +1,27 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { Search, ChevronDown, ChevronUp, X } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { TOOLS_REGISTRY, CATEGORIES, ToolItem } from "@/lib/tools-registry";
 import LucideIcon from "./LucideIcon";
 
 export default function ToolsDirectory() {
-  const [searchQuery, setSearchQuery] = useState("");
+  const searchParams = useSearchParams();
+  const searchQueryParam = searchParams ? searchParams.get("search") || "" : "";
+  const [searchQuery, setSearchQuery] = useState(searchQueryParam);
   const [collapsedCategories, setCollapsedCategories] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    setSearchQuery(searchQueryParam);
+  }, [searchQueryParam]);
 
   const toggleCategory = (catId: string) => {
     setCollapsedCategories((prev) => ({
       ...prev,
       [catId]: !prev[catId],
     }));
-  };
-
-  const isEmoji = (str: string) => {
-    // Detects raw emojis vs standard Lucide string keys
-    return /\p{Extended_Pictographic}/u.test(str);
   };
 
   // Filter tools based on live search query

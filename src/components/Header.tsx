@@ -2,17 +2,29 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Menu, X, Search } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [searchVal, setSearchVal] = useState("");
+  const router = useRouter();
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
   };
 
   const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
+  const handleSearchSubmit = (val: string) => {
+    if (!val.trim()) {
+      router.push("/");
+    } else {
+      router.push(`/?search=${encodeURIComponent(val)}`);
+    }
     setIsMenuOpen(false);
   };
 
@@ -37,11 +49,13 @@ export default function Header() {
           <Link href="/blog" className="hover:text-[#7d4dff] transition-colors">Blogs</Link>
         </nav>
 
-        {/* Header Actions (Desktop) */}
         <div className="hidden md:flex items-center gap-3 shrink-0">
           <input 
             type="text" 
             placeholder="Search..." 
+            value={searchVal}
+            onChange={(e) => setSearchVal(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSearchSubmit(searchVal)}
             className="hidden lg:block w-36 px-3 py-1.5 text-xs bg-neutral-100 dark:bg-neutral-800 border border-border rounded-lg outline-none focus:border-primary/50 text-foreground"
           />
           <button className="locale-btn">US$</button>
@@ -67,11 +81,13 @@ export default function Header() {
       {isMenuOpen && (
         <div className="md:hidden border-t border-border bg-white/95 dark:bg-card/95 backdrop-blur-lg animate-in slide-in-from-top-4 duration-200">
           <div className="px-6 py-6 flex flex-col gap-5">
-            {/* Search Input for Mobile */}
             <div className="relative w-full">
               <input 
                 type="text" 
                 placeholder="Search tools..." 
+                value={searchVal}
+                onChange={(e) => setSearchVal(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSearchSubmit(searchVal)}
                 className="w-full pl-9 pr-4 py-2 text-xs bg-neutral-100 dark:bg-neutral-800 border border-border rounded-xl outline-none focus:border-primary/50 text-foreground"
               />
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />

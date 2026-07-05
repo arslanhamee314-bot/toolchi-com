@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import ToolsDirectory from "@/components/tools/ToolsDirectory";
 import ToolsSlider from "@/components/tools/ToolsSlider";
 
@@ -77,7 +77,9 @@ export default function HomePage() {
 
       {/* 3. Tools Grid Section */}
       <section className="py-12 md:py-16">
-        <ToolsDirectory />
+        <Suspense fallback={<div className="text-center py-10 text-muted-foreground text-xs">Loading tools directory...</div>}>
+          <ToolsDirectory />
+        </Suspense>
       </section>
 
       {/* 3. FAQ Section */}
