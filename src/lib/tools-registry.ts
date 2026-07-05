@@ -16,6 +16,11 @@ export interface ToolItem {
   faqs: FAQItem[];
   popular?: boolean;
   isNew?: boolean;
+  ctaText?: string;
+  sampleSupported?: boolean;
+  relatedSlugs?: string[];
+  tags?: string[];
+  shortDescription?: string;
 }
 
 export const CATEGORIES = [
@@ -27,7 +32,7 @@ export const CATEGORIES = [
   { id: "ai", name: "AI Content Utilities", desc: "Analyze AI writing density and humanize text structures." }
 ];
 
-export const TOOLS_REGISTRY: ToolItem[] = [
+const RAW_TOOLS_REGISTRY = [
   // 1. WEBMASTER TOOLS
   {
     slug: "robots-txt-checker",
@@ -696,6 +701,60 @@ export const TOOLS_REGISTRY: ToolItem[] = [
     popular: true
   }
 ];
+
+// Helper map for custom properties (CTAs, sample support, related slugs)
+const CUSTOM_TOOL_PROPERTIES: Record<string, Partial<ToolItem>> = {
+  "robots-txt-checker": { ctaText: "Check Robots", sampleSupported: true, relatedSlugs: ["xml-sitemap-validator", "responsive-checker"] },
+  "favicon-generator": { ctaText: "Generate Icon", sampleSupported: false, relatedSlugs: ["compress-image"] },
+  "ssl-checker": { ctaText: "Check SSL", sampleSupported: true, relatedSlugs: ["domain-expiration-checker"] },
+  "xml-sitemap-validator": { ctaText: "Validate Sitemap", sampleSupported: true, relatedSlugs: ["robots-txt-checker"] },
+  "responsive-checker": { ctaText: "Test Responsive", sampleSupported: true, relatedSlugs: ["screen-resolution"] },
+  "domain-expiration-checker": { ctaText: "Check Expiry", sampleSupported: true, relatedSlugs: ["ssl-checker"] },
+  "gzip-compression": { ctaText: "Check Gzip", sampleSupported: true, relatedSlugs: ["redirect-checker"] },
+  "compress-image": { ctaText: "Compress Now", sampleSupported: true, relatedSlugs: ["dummy-image-generator"], popular: true },
+  "dummy-image-generator": { ctaText: "Generate Placeholder", sampleSupported: false, relatedSlugs: ["compress-image"] },
+  "redirect-checker": { ctaText: "Check Redirects", sampleSupported: true, relatedSlugs: ["gzip-compression"] },
+  "site-down-checker": { ctaText: "Check Uptime", sampleSupported: true, relatedSlugs: ["redirect-checker"] },
+  "ab-test-calculator": { ctaText: "Calculate Significance", sampleSupported: true, relatedSlugs: ["calculator"] },
+  "qr-generator": { ctaText: "Generate QR", sampleSupported: true, relatedSlugs: ["share-link-creator"], popular: true },
+  "spell-checker": { ctaText: "Check Spelling", sampleSupported: true, relatedSlugs: ["lorem-ipsum"] },
+  "screen-resolution": { ctaText: "Check Resolution", sampleSupported: false, relatedSlugs: ["responsive-checker"] },
+  "share-link-creator": { ctaText: "Create Link", sampleSupported: false, relatedSlugs: ["qr-generator"] },
+  "lorem-ipsum": { ctaText: "Generate Copy", sampleSupported: false, relatedSlugs: ["text-counter"] },
+  "multiple-url-opener": { ctaText: "Open URLs", sampleSupported: true, relatedSlugs: ["share-link-creator"] },
+  "minify-code": { ctaText: "Minify Code", sampleSupported: true, relatedSlugs: ["unminify-code"] },
+  "unminify-code": { ctaText: "Format Code", sampleSupported: true, relatedSlugs: ["minify-code"] },
+  "amp-validator": { ctaText: "Validate AMP", sampleSupported: true, relatedSlugs: ["xml-sitemap-validator"] },
+  "domain-generator": { ctaText: "Generate Names", sampleSupported: true, relatedSlugs: ["domain-expiration-checker"] },
+  "ai-detector": { ctaText: "Analyze Text", sampleSupported: true, relatedSlugs: ["spell-checker"], popular: true, isNew: true },
+  "merge-pdf": { ctaText: "Merge PDF", sampleSupported: false, relatedSlugs: ["split-pdf", "compress-pdf"], popular: true },
+  "split-pdf": { ctaText: "Split PDF", sampleSupported: false, relatedSlugs: ["merge-pdf", "compress-pdf"], isNew: true },
+  "rotate-pdf": { ctaText: "Rotate PDF", sampleSupported: false, relatedSlugs: ["merge-pdf"] },
+  "compress-pdf": { ctaText: "Compress PDF", sampleSupported: false, relatedSlugs: ["merge-pdf"] },
+  "case-converter": { ctaText: "Convert Case", sampleSupported: true, relatedSlugs: ["text-counter"] },
+  "text-counter": { ctaText: "Count Words", sampleSupported: true, relatedSlugs: ["case-converter"] },
+  "json-formatter": { ctaText: "Format JSON", sampleSupported: true, relatedSlugs: ["base64"], popular: true },
+  "base64": { ctaText: "Convert Base64", sampleSupported: true, relatedSlugs: ["json-formatter"] },
+  "url-encoder": { ctaText: "Encode/Decode", sampleSupported: true, relatedSlugs: ["base64"] },
+  "hash-generator": { ctaText: "Generate Hash", sampleSupported: true, relatedSlugs: ["base64"] },
+  "color-converter": { ctaText: "Convert Colors", sampleSupported: true, relatedSlugs: ["dummy-image-generator"] },
+  "calculator": { ctaText: "Calculate", sampleSupported: false, relatedSlugs: ["ab-test-calculator"] },
+  "invoice-generator": { ctaText: "Create Invoice", sampleSupported: true, relatedSlugs: ["calculator"], popular: true }
+};
+
+export const TOOLS_REGISTRY: ToolItem[] = RAW_TOOLS_REGISTRY.map(tool => {
+  const custom = CUSTOM_TOOL_PROPERTIES[tool.slug] || {};
+  return {
+    ...tool,
+    ctaText: custom.ctaText || "Open Tool",
+    sampleSupported: custom.sampleSupported ?? false,
+    relatedSlugs: custom.relatedSlugs || [],
+    popular: custom.popular ?? tool.popular ?? false,
+    isNew: custom.isNew ?? tool.isNew ?? false,
+    tags: custom.tags || [tool.category],
+    shortDescription: tool.shortDesc
+  };
+});
 
 export const getToolBySlug = (slug: string) => {
   return TOOLS_REGISTRY.find(t => t.slug === slug);

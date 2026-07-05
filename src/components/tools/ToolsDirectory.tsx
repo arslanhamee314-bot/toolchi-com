@@ -6,6 +6,7 @@ import { Search, ChevronDown, ChevronUp, X } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { TOOLS_REGISTRY, CATEGORIES, ToolItem } from "@/lib/tools-registry";
 import LucideIcon from "./LucideIcon";
+import ToolCard from "./ToolCard";
 
 export default function ToolsDirectory() {
   const searchParams = useSearchParams();
@@ -73,7 +74,8 @@ export default function ToolsDirectory() {
             return (
               <section 
                 key={cat.id} 
-                className={`py-8 w-full border border-border/60 rounded-3xl transition-all shadow-xs ${
+                id={cat.id}
+                className={`py-8 w-full border border-border/60 rounded-3xl transition-all shadow-xs scroll-mt-20 ${
                   catIdx % 2 === 1 
                     ? "bg-[#f9fafc] dark:bg-[#151923]" 
                     : "bg-white dark:bg-card"
@@ -103,41 +105,7 @@ export default function ToolsDirectory() {
                     }`}
                   >
                     {tools.map((tool) => (
-                      <article
-                        key={tool.slug}
-                        className="bg-white dark:bg-card border border-border group-hover:border-[#7d4dff]/50 rounded-[18px] p-6 shadow-xs min-h-[260px] flex flex-col items-start hover:-translate-y-0.5 transition-transform-ease duration-200 relative group"
-                      >
-                        {/* Custom Card Stripe top border */}
-                        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#7d4dff] to-[#7d4dff] rounded-t-[18px] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                        
-                        {/* Tool Icon Header row */}
-                        <div className="flex w-full items-center justify-between mb-4">
-                          <div className="h-16 w-16 rounded-[18px] bg-[#f3eeff] dark:bg-[#251e1c] text-[#7d4dff] flex items-center justify-center font-bold text-2xl border border-[#e8ddff]/40">
-                            <LucideIcon name={tool.iconName} className="h-6 w-6" />
-                          </div>
-                          <span className="text-[9px] font-extrabold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/15 select-none shrink-0">
-                            Local
-                          </span>
-                        </div>
-
-                        {/* Title & Desc */}
-                        <div className="flex-1 mb-4">
-                          <h3 className="font-extrabold text-sm text-foreground tracking-tight leading-snug mb-2 group-hover:text-[#7d4dff] transition-colors">
-                            {tool.name}
-                          </h3>
-                          <p className="text-xs text-muted leading-relaxed line-clamp-3">
-                            {tool.shortDesc}
-                          </p>
-                        </div>
-
-                        {/* Call to Action Button */}
-                        <Link
-                          href={`/tools/${tool.slug}`}
-                          className="w-full text-center py-2.5 px-4 bg-[#7d4dff] hover:bg-[#6530ef] text-white font-bold text-xs rounded-full transition-colors mt-auto select-none shadow-sm shadow-[#7d4dff]/10"
-                        >
-                          Open Tool
-                        </Link>
-                      </article>
+                      <ToolCard key={tool.slug} tool={tool} />
                     ))}
                   </div>
 

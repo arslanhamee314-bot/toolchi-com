@@ -2,6 +2,8 @@ import React, { Suspense } from "react";
 import ToolsDirectory from "@/components/tools/ToolsDirectory";
 import ToolsSlider from "@/components/tools/ToolsSlider";
 import HeroSearch from "@/components/tools/HeroSearch";
+import ToolCard from "@/components/tools/ToolCard";
+import { CATEGORIES, TOOLS_REGISTRY } from "@/lib/tools-registry";
 import { ShieldCheck, Cpu, UserMinus, Gift } from "lucide-react";
 
 // Page level SEO metadata (pre-rendered for Google)
@@ -11,6 +13,9 @@ export const metadata = {
 };
 
 export default function HomePage() {
+  const popularTools = TOOLS_REGISTRY.filter((t) => t.popular).slice(0, 4);
+  const newTools = TOOLS_REGISTRY.filter((t) => t.isNew).slice(0, 4);
+
   return (
     <div className="flex-1 flex flex-col bg-[#f6f7fb] dark:bg-[#11141c]">
       
@@ -57,39 +62,128 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Hero Decorative Illustration (Right on desktop) */}
-          <div className="flex-1 flex justify-center items-center relative w-full max-w-[420px] h-[240px] px-8">
+          {/* Hero Decorative Illustration / Visual Proof Mockups (Right on desktop) */}
+          <div className="flex-1 flex flex-col gap-4 relative w-full max-w-[420px] py-4 select-none lg:mt-0 mt-8">
             
-            {/* Main Browser Canvas block */}
-            <div className="w-full max-w-[340px] h-[190px] rounded-2xl bg-white dark:bg-[#171c26] border border-border/80 card-shadow relative flex flex-col overflow-hidden animate-in fade-in zoom-in duration-700">
-              <div className="h-7 bg-[#f6f7fb] dark:bg-[#11141c] border-b border-border/80 flex items-center px-3.5 gap-1.5 shrink-0">
-                <span className="h-2 w-2 rounded-full bg-red-400 shrink-0" />
-                <span className="h-2 w-2 rounded-full bg-yellow-400 shrink-0" />
-                <span className="h-2 w-2 rounded-full bg-green-400 shrink-0" />
+            {/* Card 1: Image Compression Proof */}
+            <div className="bg-white dark:bg-[#1c2230] border border-border/80 rounded-2xl p-4 shadow-sm flex items-center justify-between gap-4 -rotate-1.5 hover:rotate-0 transition-transform duration-300">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center font-bold">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" className="h-5 w-5"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                </div>
+                <div className="text-left">
+                  <h4 className="text-[8px] font-extrabold text-muted-foreground uppercase tracking-wider">Image Optimizer</h4>
+                  <p className="text-[10px] font-extrabold text-foreground leading-tight">hero-banner.png</p>
+                </div>
               </div>
-              <div className="flex-1 p-5 flex flex-col gap-3 justify-center">
-                <div className="h-2 w-[78%] bg-neutral-100 dark:bg-neutral-800 rounded-md" />
-                <div className="h-2 w-[60%] bg-neutral-100 dark:bg-neutral-800 rounded-md" />
-                <div className="h-2 w-[86%] bg-neutral-100 dark:bg-neutral-800 rounded-md" />
-                <div className="h-2 w-[48%] bg-neutral-100 dark:bg-neutral-800 rounded-md" />
+              <div className="text-right flex items-center gap-2">
+                <div className="text-[10px] text-muted-foreground leading-tight">
+                  <span className="line-through block">3.2 MB</span>
+                  <span className="font-extrabold text-foreground block">640 KB</span>
+                </div>
+                <span className="px-2 py-1 bg-emerald-500 text-white font-extrabold text-[9px] rounded-lg select-none shrink-0">
+                  Saved 80%
+                </span>
               </div>
             </div>
 
-            {/* Floating emoji badges */}
-            <div className="absolute top-4 left-2 h-14 w-14 rounded-2xl bg-white dark:bg-[#1c2230] border border-[#e8ddff]/80 dark:border-border/60 card-shadow flex items-center justify-center text-2xl select-none animate-bounce duration-[3s]">
-              ⚙
+            {/* Card 2: JSON Formatter Proof */}
+            <div className="bg-white dark:bg-[#1c2230] border border-border/80 rounded-2xl p-4 shadow-sm flex flex-col gap-2 rotate-1 hover:rotate-0 transition-transform duration-300 ml-4">
+              <div className="flex items-center justify-between border-b border-border/40 pb-1.5">
+                <div className="flex items-center gap-1.5">
+                  <span className="h-2 w-2 rounded-full bg-red-400"></span>
+                  <span className="h-2 w-2 rounded-full bg-yellow-400"></span>
+                  <span className="h-2 w-2 rounded-full bg-green-400"></span>
+                </div>
+                <span className="text-[8px] font-extrabold text-primary bg-[#7d4dff]/10 border border-[#7d4dff]/20 px-1.5 py-0.5 rounded uppercase tracking-wider">JSON Formatted</span>
+              </div>
+              <pre className="text-[9px] text-[#7d4dff] dark:text-[#a582ff] font-mono leading-normal bg-neutral-50 dark:bg-neutral-950 p-2.5 rounded-lg border text-left overflow-hidden">
+{`{
+  "status": "success",
+  "clientSide": true,
+  "formatted": "valid"
+}`}
+              </pre>
             </div>
-            <div className="absolute top-8 right-2 h-14 w-14 rounded-2xl bg-white dark:bg-[#1c2230] border border-[#e8ddff]/80 dark:border-border/60 card-shadow flex items-center justify-center text-2xl select-none animate-bounce duration-[4s]">
-              📈
+
+            {/* Card 3: SSL Trust Seal Proof */}
+            <div className="bg-white dark:bg-[#1c2230] border border-border/80 rounded-2xl p-4 shadow-sm flex items-center justify-between gap-4 -rotate-1 hover:rotate-0 transition-transform duration-300 mr-4">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" className="h-5 w-5"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </div>
+                <div className="text-left">
+                  <h4 className="text-[8px] font-extrabold text-muted-foreground uppercase tracking-wider">SSL Security Shield</h4>
+                  <p className="text-[10px] font-extrabold text-foreground leading-tight">toolchi.online</p>
+                </div>
+              </div>
+              <span className="px-2.5 py-1 bg-blue-500 text-white font-extrabold text-[9px] rounded-lg select-none">
+                SECURE
+              </span>
             </div>
-            <div className="absolute bottom-4 right-8 h-14 w-14 rounded-2xl bg-white dark:bg-[#1c2230] border border-[#e8ddff]/80 dark:border-border/60 card-shadow flex items-center justify-center text-2xl select-none animate-bounce duration-[3.5s]">
-              🎨
-            </div>
-            <div className="absolute bottom-2 left-6 h-14 w-14 rounded-2xl bg-white dark:bg-[#1c2230] border border-[#e8ddff]/80 dark:border-border/60 card-shadow flex items-center justify-center text-2xl select-none animate-bounce duration-[4.5s]">
-              ☑
-            </div>
+
           </div>
 
+        </div>
+      </section>
+
+      {/* 2. Quick Use-Case Filters */}
+      <section id="categories" className="py-12 bg-white dark:bg-card border-b border-border/40 scroll-mt-20">
+        <div className="max-w-6xl mx-auto px-6 w-full flex flex-col gap-6">
+          <div className="flex flex-col gap-1 text-center lg:text-left">
+            <h2 className="text-xl font-bold tracking-tight text-foreground">Browse by Use Case</h2>
+            <p className="text-xs text-muted-foreground leading-normal">Select a category to quickly view corresponding tools.</p>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+            {CATEGORIES.map((cat) => (
+              <a
+                key={cat.id}
+                href={`#${cat.id}`}
+                className="p-4 rounded-xl border border-border bg-neutral-50 dark:bg-[#1a1f2c] hover:border-[#7d4dff]/40 hover:bg-[#7d4dff]/5 dark:hover:bg-[#7d4dff]/10 text-center flex flex-col items-center justify-center gap-2.5 transition-all active:scale-95 group shadow-2xs"
+              >
+                {/* Visual Category badge */}
+                <div className="h-10 w-10 rounded-full bg-[#f3eeff] dark:bg-[#251e1c] text-[#7d4dff] flex items-center justify-center font-bold text-base border border-[#e8ddff]/40 group-hover:scale-105 transition-transform">
+                  {cat.id === "documents" && "📄"}
+                  {cat.id === "webmaster" && "🌐"}
+                  {cat.id === "performance" && "⚡"}
+                  {cat.id === "operational" && "⚙️"}
+                  {cat.id === "developer" && "💻"}
+                  {cat.id === "ai" && "🤖"}
+                </div>
+                <span className="text-[9px] font-extrabold text-foreground group-hover:text-[#7d4dff] transition-colors leading-tight uppercase tracking-wider">{cat.name.replace(" Tools", "").replace(" Utilities", "")}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Popular Tools Grid */}
+      <section id="popular-tools" className="py-12 border-b border-border/40 scroll-mt-20">
+        <div className="max-w-6xl mx-auto px-6 w-full flex flex-col gap-6">
+          <div className="flex flex-col gap-1 text-center lg:text-left">
+            <h2 className="text-xl font-bold tracking-tight text-foreground font-extrabold">Popular Utilities</h2>
+            <p className="text-xs text-muted-foreground leading-normal">Most frequently used tools by returning developers and creators.</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {popularTools.map((tool) => (
+              <ToolCard key={tool.slug} tool={tool} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Recently Added Grid */}
+      <section id="recent-tools" className="py-12 bg-white dark:bg-card border-b border-border/40 scroll-mt-20">
+        <div className="max-w-6xl mx-auto px-6 w-full flex flex-col gap-6">
+          <div className="flex flex-col gap-1 text-center lg:text-left">
+            <h2 className="text-xl font-bold tracking-tight text-foreground font-extrabold">Recently Released</h2>
+            <p className="text-xs text-muted-foreground leading-normal">Fresh utilities recently added to our free online collection.</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {newTools.map((tool) => (
+              <ToolCard key={tool.slug} tool={tool} />
+            ))}
+          </div>
         </div>
       </section>
 

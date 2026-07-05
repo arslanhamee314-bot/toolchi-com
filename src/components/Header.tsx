@@ -43,9 +43,12 @@ export default function Header() {
         </Link>
 
         {/* Navigation links (Desktop) */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-bold text-[#363c48] dark:text-[#a0a8b9]">
+        <nav className="hidden md:flex items-center gap-6 text-xs font-bold text-[#363c48] dark:text-[#a0a8b9]">
           <Link href="/" className="hover:text-[#7d4dff] transition-colors">Home</Link>
           <Link href="/tools" className="hover:text-[#7d4dff] transition-colors">Tools</Link>
+          <Link href="/#categories" className="hover:text-[#7d4dff] transition-colors">Categories</Link>
+          <Link href="/#popular-tools" className="hover:text-[#7d4dff] transition-colors">Popular</Link>
+          <Link href="/#recent-tools" className="hover:text-[#7d4dff] transition-colors">New</Link>
           <Link href="/blog" className="hover:text-[#7d4dff] transition-colors">Blogs</Link>
         </nav>
 
@@ -58,8 +61,6 @@ export default function Header() {
             onKeyDown={(e) => e.key === "Enter" && handleSearchSubmit(searchVal)}
             className="hidden lg:block w-36 px-3 py-1.5 text-xs bg-neutral-100 dark:bg-neutral-800 border border-border rounded-lg outline-none focus:border-primary/50 text-foreground"
           />
-          <button className="locale-btn">US$</button>
-          <button className="locale-btn">EN</button>
           <ThemeToggle />
         </div>
 
@@ -94,23 +95,26 @@ export default function Header() {
             </div>
 
             {/* Mobile Nav Links */}
-            <nav className="flex flex-col gap-4 text-xs font-bold text-[#363c48] dark:text-[#a0a8b9]">
+            <nav className="flex flex-col gap-3.5 text-xs font-bold text-[#363c48] dark:text-[#a0a8b9]">
               <Link href="/" onClick={closeMenu} className="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg hover:text-[#7d4dff] transition-colors">
                 Home
               </Link>
               <Link href="/tools" onClick={closeMenu} className="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg hover:text-[#7d4dff] transition-colors">
                 Tools
               </Link>
+              <Link href="/#categories" onClick={closeMenu} className="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg hover:text-[#7d4dff] transition-colors">
+                Categories
+              </Link>
+              <Link href="/#popular-tools" onClick={closeMenu} className="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg hover:text-[#7d4dff] transition-colors">
+                Popular Tools
+              </Link>
+              <Link href="/#recent-tools" onClick={closeMenu} className="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg hover:text-[#7d4dff] transition-colors">
+                New Releases
+              </Link>
               <Link href="/blog" onClick={closeMenu} className="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg hover:text-[#7d4dff] transition-colors">
                 Blogs
               </Link>
             </nav>
-
-            {/* Locales for Mobile */}
-            <div className="flex gap-3 pt-3 border-t border-border/40">
-              <button className="locale-btn flex-1 py-2">US$</button>
-              <button className="locale-btn flex-1 py-2">EN</button>
-            </div>
           </div>
         </div>
       )}

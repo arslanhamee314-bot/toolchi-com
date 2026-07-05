@@ -1,12 +1,24 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Copy, Check, RotateCcw, AlertTriangle } from "lucide-react";
+import { getSampleBySlug } from "@/lib/tool-samples";
 
 export default function JsonFormatter() {
   const [jsonInput, setJsonInput] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    const handleLoadSampleEvent = (e: any) => {
+      if (e.detail?.slug === "json-formatter") {
+        setJsonInput(getSampleBySlug("json-formatter"));
+        setError(null);
+      }
+    };
+    window.addEventListener("load-sample", handleLoadSampleEvent);
+    return () => window.removeEventListener("load-sample", handleLoadSampleEvent);
+  }, []);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -77,7 +89,7 @@ export default function JsonFormatter() {
         </label>
         <button
           onClick={() => {
-            setJsonInput(JSON.stringify({ name: "Toolchi Platform", version: "2.0.0", active: true, stats: { tools: 36, local: true } }, null, 2));
+            setJsonInput(getSampleBySlug("json-formatter"));
             setError(null);
             import("canvas-confetti").then((m) => m.default({ particleCount: 15, spread: 30, origin: { y: 0.85 } }));
           }}

@@ -2,10 +2,12 @@ import React from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ChevronRight, ArrowLeft, ShieldCheck, Zap } from "lucide-react";
-import { getToolBySlug, TOOLS_REGISTRY } from "@/lib/tools-registry";
+import { getToolBySlug, TOOLS_REGISTRY, ToolItem } from "@/lib/tools-registry";
 import ToolSwitcher from "@/components/tools/ToolSwitcher";
 import LucideIcon from "@/components/tools/LucideIcon";
 import TutorialGallery from "@/components/tools/TutorialGallery";
+import LoadSampleButton from "@/components/tools/LoadSampleButton";
+import ToolCard from "@/components/tools/ToolCard";
 
 interface ToolPageProps {
   params: Promise<{ slug: string }>;
@@ -29,6 +31,13 @@ export async function generateMetadata({ params }: ToolPageProps) {
     alternates: {
       canonical: `/tools/${tool.slug}`,
     },
+    openGraph: {
+      title: tool.seoTitle,
+      description: tool.seoDescription,
+      url: `/tools/${tool.slug}`,
+      siteName: "Toolchi",
+      type: "website"
+    }
   };
 }
 
@@ -47,9 +56,22 @@ export default async function ToolPage({ params }: ToolPageProps) {
     notFound();
   }
 
-  const relatedTools = TOOLS_REGISTRY.filter(
-    (t) => t.category === tool.category && t.slug !== tool.slug
-  ).slice(0, 5);
+  // Resolve related tools based on relatedSlugs priority then category matching
+  const relatedTools: ToolItem[] = (tool.relatedSlugs || [])
+    .map(slug => getToolBySlug(slug))
+    .filter(Boolean) as ToolItem[];
+    
+  if (relatedTools.length < 4) {
+    const catTools = TOOLS_REGISTRY.filter(
+      (t) => t.category === tool.category && t.slug !== tool.slug
+    );
+    for (const t of catTools) {
+      if (relatedTools.length >= 4) break;
+      if (!relatedTools.some(rt => rt.slug === t.slug)) {
+        relatedTools.push(t);
+      }
+    }
+  }
 
   // Pre-compile JSON-LD schemas
   const jsonLd = {
@@ -166,6 +188,9 @@ export default async function ToolPage({ params }: ToolPageProps) {
           </div>
 
           <ToolSwitcher slug={tool.slug} />
+          {tool.sampleSupported && (
+            <LoadSampleButton slug={tool.slug} />
+          )}
         </section>
 
         {/* Educational SEO & E-E-A-T Blocks */}
@@ -205,26 +230,26 @@ export default async function ToolPage({ params }: ToolPageProps) {
               </div>
             </div>
 
-            {relatedTools.length > 0 && (
-              <div className="flex flex-col gap-3 mt-4 pt-6 border-t border-border/40">
-                <h2 className="text-sm font-extrabold text-foreground tracking-tight">Related Tools</h2>
-                <div className="flex flex-col gap-2">
-                  {relatedTools.map((rt) => (
-                    <Link
-                      key={rt.slug}
-                      href={`/tools/${rt.slug}`}
-                      className="flex items-center justify-between p-3 rounded-xl border border-border bg-white dark:bg-card/40 hover:border-[#7d4dff] transition-all text-3xs font-bold text-foreground group"
-                    >
-                      <span className="truncate group-hover:text-[#7d4dff] transition-colors">{rt.name}</span>
-                      <ChevronRight className="h-3.5 w-3.5 text-muted group-hover:text-[#7d4dff] transition-colors" />
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
           </section>
 
         </div>
+
+        {/* Block 5: Related Tools Bottom Grid */}
+        {relatedTools.length > 0 && (
+          <section className="border-t border-border/40 pt-10 mt-6 print:hidden w-full">
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-1 text-center lg:text-left">
+                <h3 className="text-lg font-bold tracking-tight text-foreground font-extrabold">Related Utilities</h3>
+                <p className="text-xs text-muted-foreground leading-normal">Other local developer and webmaster tools you might find useful.</p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                {relatedTools.map((rt) => (
+                  <ToolCard key={rt.slug} tool={rt} />
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
 
       </div>
     </div>
