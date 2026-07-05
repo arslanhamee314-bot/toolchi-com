@@ -17,6 +17,15 @@ export default function ToolsDirectory() {
     setSearchQuery(searchQueryParam);
   }, [searchQueryParam]);
 
+  useEffect(() => {
+    const handleSearchChange = () => {
+      const params = new URLSearchParams(window.location.search);
+      setSearchQuery(params.get("search") || "");
+    };
+    window.addEventListener("searchchange", handleSearchChange);
+    return () => window.removeEventListener("searchchange", handleSearchChange);
+  }, []);
+
   const toggleCategory = (catId: string) => {
     setCollapsedCategories((prev) => ({
       ...prev,
@@ -50,37 +59,7 @@ export default function ToolsDirectory() {
   }, [filteredToolsByCategory]);
 
   return (
-    <div className="flex flex-col w-full gap-10">
-      
-      {/* 1. Toolchi Search Bar Widget (Centered in Hero) */}
-      <div className="relative max-w-2xl mx-auto w-full -mt-20 mb-8 z-30 px-4 sm:px-0">
-        <div className="flex items-center bg-white dark:bg-card border border-border focus-within:border-primary/50 rounded-full px-5 py-2 shadow-lg transition-all duration-200">
-          <Search className="h-5 w-5 text-muted mr-3 shrink-0" />
-          <input
-            id="toolSearch"
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search tools by name (e.g. Sitemap, PDF, QR)..."
-            className="w-full bg-transparent border-0 outline-none text-sm text-foreground placeholder:text-muted/60 py-2.5"
-            aria-label="Search tools"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery("")}
-              className="p-1.5 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-full text-muted hover:text-foreground transition-colors mr-1 cursor-pointer"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
-          <button 
-            type="button"
-            className="px-6 py-2.5 text-xs font-extrabold bg-[#7d4dff] hover:bg-[#6530ef] text-white rounded-full transition-all active:scale-95 cursor-pointer shrink-0 ml-2"
-          >
-            Search
-          </button>
-        </div>
-      </div>
+    <div className="flex flex-col w-full gap-6">
 
       {/* 2. Category Tool Sections */}
       {!isAllEmpty ? (

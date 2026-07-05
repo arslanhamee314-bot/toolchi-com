@@ -1,6 +1,7 @@
 import React, { Suspense } from "react";
 import ToolsDirectory from "@/components/tools/ToolsDirectory";
 import ToolsSlider from "@/components/tools/ToolsSlider";
+import HeroSearch from "@/components/tools/HeroSearch";
 
 // Page level SEO metadata (pre-rendered for Google)
 export const metadata = {
@@ -30,6 +31,13 @@ export default function HomePage() {
             <p className="text-sm md:text-base text-muted max-w-lg leading-relaxed">
               Effective (Free) Tools to Help You Manage and Improve Your Website. Fast, private, and fully local.
             </p>
+            
+            {/* Centered/Left aligned search bar with shortcuts */}
+            <div className="w-full max-w-md mt-4">
+              <Suspense fallback={<div className="h-10 bg-neutral-100 dark:bg-neutral-800 rounded-2xl animate-pulse" />}>
+                <HeroSearch />
+              </Suspense>
+            </div>
           </div>
 
           {/* Hero Decorative Illustration (Right on desktop) */}
