@@ -100,7 +100,7 @@ export default function TutorialGallery({ tool }: TutorialGalleryProps) {
           {isLast && (
             <div className="w-full max-w-[280px] bg-emerald-950/20 border border-emerald-500/40 rounded-xl p-5 flex flex-col items-center justify-center gap-3 text-center">
               <div className="h-10 w-10 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full flex items-center justify-center animate-bounce">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" className="h-5 w-5"><path d="M20 6 9 17l-5-5"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5"><path d="M20 6 9 17l-5-5"/></svg>
               </div>
               <div className="space-y-1">
                 <h4 className="text-2xs font-extrabold text-emerald-400 uppercase tracking-wider">Conversion Successful</h4>
