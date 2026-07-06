@@ -24,19 +24,19 @@ export default function CategoryFilters() {
         >
           {/* Visual Category badge */}
           <div className="h-10 w-10 rounded-full bg-[#f3eeff] dark:bg-[#251e1c] text-[#7d4dff] flex items-center justify-center font-bold text-base border border-[#e8ddff]/40 group-hover:scale-105 transition-transform">
-            {cat.id === "gif-maker" && "🎞️"}
-            {cat.id === "video-tools" && "🎬"}
-            {cat.id === "audio" && "🔊"}
-            {cat.id === "transform" && "📐"}
-            {cat.id === "optimize" && "🧹"}
-            {cat.id === "effects" && "🪄"}
-            {cat.id === "split" && "🔀"}
-            {cat.id === "add-text" && "📝"}
-            {cat.id === "webp" && "🖼️"}
-            {cat.id === "apng" && "🔴"}
-            {cat.id === "avif" && "🟢"}
-            {cat.id === "jxl" && "📊"}
-            {cat.id === "svg" && "🎨"}
+            {cat.id === "gif-maker" && <img src="/images/maker.png" className="h-6 w-6 object-contain" alt="" />}
+            {cat.id === "video-tools" && <img src="/images/video.svg" className="h-6 w-6 object-contain" alt="" />}
+            {cat.id === "audio" && <img src="/images/audio.svg" className="h-6 w-6 object-contain" alt="" />}
+            {cat.id === "transform" && <img src="/images/resize.svg" className="h-6 w-6 object-contain" alt="" />}
+            {cat.id === "optimize" && <img src="/images/optimize.svg" className="h-6 w-6 object-contain" alt="" />}
+            {cat.id === "effects" && <img src="/images/effects.svg" className="h-6 w-6 object-contain" alt="" />}
+            {cat.id === "split" && <img src="/images/split.svg" className="h-6 w-6 object-contain" alt="" />}
+            {cat.id === "add-text" && <img src="/images/insert-text.svg" className="h-6 w-6 object-contain" alt="" />}
+            {cat.id === "webp" && <img src="/images/webp.svg" className="h-6 w-6 object-contain" alt="" />}
+            {cat.id === "apng" && <img src="/images/apng.svg" className="h-6 w-6 object-contain" alt="" />}
+            {cat.id === "avif" && <img src="/images/avif.svg" className="h-6 w-6 object-contain" alt="" />}
+            {cat.id === "jxl" && <img src="/images/jxl.svg" className="h-6 w-6 object-contain" alt="" />}
+            {cat.id === "svg" && <img src="/images/svg.svg" className="h-6 w-6 object-contain" alt="" />}
             {cat.id === "documents" && "📄"}
             {cat.id === "webmaster" && "🌐"}
             {cat.id === "performance" && "⚡"}

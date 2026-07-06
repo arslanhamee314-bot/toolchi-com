@@ -1,0 +1,176 @@
+{
+  "..\\node_modules\\next\\dist\\client\\dev\\hot-reloader\\app\\use-websocket.js -> @vercel/turbopack-ecmascript-runtime/browser/dev/hmr-client/hmr-client.ts": {
+    "id": "..\\node_modules\\next\\dist\\client\\dev\\hot-reloader\\app\\use-websocket.js -> @vercel/turbopack-ecmascript-runtime/browser/dev/hmr-client/hmr-client.ts",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_next_dist_client_dev_noop-turbopack-hmr_js.js"
+    ]
+  },
+  "components\\tools\\AbTestCalculator.tsx -> canvas-confetti": {
+    "id": "components\\tools\\AbTestCalculator.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  },
+  "components\\tools\\AiDetector.tsx -> canvas-confetti": {
+    "id": "components\\tools\\AiDetector.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  },
+  "components\\tools\\AmpValidator.tsx -> canvas-confetti": {
+    "id": "components\\tools\\AmpValidator.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  },
+  "components\\tools\\Base64Converter.tsx -> canvas-confetti": {
+    "id": "components\\tools\\Base64Converter.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  },
+  "components\\tools\\Calculator.tsx -> canvas-confetti": {
+    "id": "components\\tools\\Calculator.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  },
+  "components\\tools\\CaseConverter.tsx -> canvas-confetti": {
+    "id": "components\\tools\\CaseConverter.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  },
+  "components\\tools\\ColorConverter.tsx -> canvas-confetti": {
+    "id": "components\\tools\\ColorConverter.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  },
+  "components\\tools\\DomainExpiration.tsx -> canvas-confetti": {
+    "id": "components\\tools\\DomainExpiration.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  },
+  "components\\tools\\DomainGenerator.tsx -> canvas-confetti": {
+    "id": "components\\tools\\DomainGenerator.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  },
+  "components\\tools\\DummyImageGen.tsx -> canvas-confetti": {
+    "id": "components\\tools\\DummyImageGen.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  },
+  "components\\tools\\FaviconGenerator.tsx -> canvas-confetti": {
+    "id": "components\\tools\\FaviconGenerator.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  },
+  "components\\tools\\GzipCompression.tsx -> canvas-confetti": {
+    "id": "components\\tools\\GzipCompression.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  },
+  "components\\tools\\HashGenerator.tsx -> canvas-confetti": {
+    "id": "components\\tools\\HashGenerator.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  },
+  "components\\tools\\ImageCompressor.tsx -> canvas-confetti": {
+    "id": "components\\tools\\ImageCompressor.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  },
+  "components\\tools\\InvoiceGenerator.tsx -> canvas-confetti": {
+    "id": "components\\tools\\InvoiceGenerator.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  },
+  "components\\tools\\JsonFormatter.tsx -> canvas-confetti": {
+    "id": "components\\tools\\JsonFormatter.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  },
+  "components\\tools\\LoremIpsum.tsx -> canvas-confetti": {
+    "id": "components\\tools\\LoremIpsum.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  },
+  "components\\tools\\Minifier.tsx -> canvas-confetti": {
+    "id": "components\\tools\\Minifier.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  },
+  "components\\tools\\MultipleUrlOpener.tsx -> canvas-confetti": {
+    "id": "components\\tools\\MultipleUrlOpener.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  },
+  "components\\tools\\RedirectChecker.tsx -> canvas-confetti": {
+    "id": "components\\tools\\RedirectChecker.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  },
+  "components\\tools\\RobotsChecker.tsx -> canvas-confetti": {
+    "id": "components\\tools\\RobotsChecker.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  },
+  "components\\tools\\ShareLinkCreator.tsx -> canvas-confetti": {
+    "id": "components\\tools\\ShareLinkCreator.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  },
+  "components\\tools\\SiteDownChecker.tsx -> canvas-confetti": {
+    "id": "components\\tools\\SiteDownChecker.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  },
+  "components\\tools\\SitemapValidator.tsx -> canvas-confetti": {
+    "id": "components\\tools\\SitemapValidator.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  },
+  "components\\tools\\SpellChecker.tsx -> canvas-confetti": {
+    "id": "components\\tools\\SpellChecker.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  },
+  "components\\tools\\SslChecker.tsx -> canvas-confetti": {
+    "id": "components\\tools\\SslChecker.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  },
+  "components\\tools\\Unminifier.tsx -> canvas-confetti": {
+    "id": "components\\tools\\Unminifier.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  },
+  "components\\tools\\UrlEncoder.tsx -> canvas-confetti": {
+    "id": "components\\tools\\UrlEncoder.tsx -> canvas-confetti",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_canvas-confetti_dist_confetti_module_mjs.js"
+    ]
+  }
+}

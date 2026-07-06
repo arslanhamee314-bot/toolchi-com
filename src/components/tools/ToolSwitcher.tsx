@@ -40,6 +40,11 @@ import Unminifier from "./Unminifier";
 import AmpValidator from "./AmpValidator";
 import GifMakerSuite from "./GifMakerSuite";
 import DomainGenerator from "./DomainGenerator";
+import PdfSuite from "./PdfSuite";
+import VideoSuite from "./VideoSuite";
+import AudioSuite from "./AudioSuite";
+import TransformSuite from "./TransformSuite";
+import UtilitySuite from "./UtilitySuite";
 
 interface ToolSwitcherProps {
   slug: string;
@@ -60,6 +65,42 @@ export default function ToolSwitcher({ slug }: ToolSwitcherProps) {
     case "svg-to-gif":
     case "gif-analyzer":
       return <GifMakerSuite slug={slug} />;
+
+    // === PDF & DOCUMENT SUITE ===
+    case "merge-pdf":
+    case "rotate-pdf":
+    case "compress-pdf":
+    case "split-pdf":
+      return <PdfSuite slug={slug} />;
+
+    // === VIDEO WORKSPACE ===
+    case "video-cutter":
+    case "video-cropper":
+    case "video-to-webp":
+    case "resize-video":
+      return <VideoSuite slug={slug} />;
+
+    // === AUDIO WORKSPACE ===
+    case "audio-cutter":
+    case "audio-converter":
+      return <AudioSuite slug={slug} />;
+
+    // === IMAGE TRANSFORM WORKSPACE ===
+    case "resize-image":
+    case "crop-image":
+    case "rotate-image":
+    case "photo-effects":
+    case "image-filters":
+    case "write-on-image":
+    case "watermark-image":
+      return <TransformSuite slug={slug} />;
+
+    // === UTILITY & PRIVACY WORKSPACE ===
+    case "exif-remover":
+    case "view-metadata":
+    case "qr-generator":
+    case "hex-to-rgb":
+      return <UtilitySuite slug={slug} />;
 
     // === 1. WEBMASTER TOOLS ===
     case "robots-txt-checker":
@@ -88,8 +129,6 @@ export default function ToolSwitcher({ slug }: ToolSwitcherProps) {
       return <SiteDownChecker />;
     case "ab-test-calculator":
       return <AbTestCalculator />;
-    case "qr-generator":
-      return <QrGenerator />;
     case "spell-checker":
       return <SpellChecker />;
 
@@ -110,14 +149,6 @@ export default function ToolSwitcher({ slug }: ToolSwitcherProps) {
       return <AmpValidator />;
     case "domain-generator":
       return <DomainGenerator />;
-
-    // === 4. PDF TOOLS (FROM CODEBASE) ===
-    case "merge-pdf":
-    case "rotate-pdf":
-    case "compress-pdf":
-      return <MergePdf />;
-    case "split-pdf":
-      return <SplitPdf />;
 
     // === 5. DEVELOPER & CASING TOOLS (FROM CODEBASE) ===
     case "case-converter":
