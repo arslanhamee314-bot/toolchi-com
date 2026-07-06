@@ -12,6 +12,7 @@ export default function TransformSuite({ slug }: TransformSuiteProps) {
   const [loading, setLoading] = useState(false);
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   // Image Dimensions
   const [originalWidth, setOriginalWidth] = useState(0);
@@ -74,12 +75,33 @@ export default function TransformSuite({ slug }: TransformSuiteProps) {
     setError(null);
   }, [slug]);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  const handleFiles = (fileList: FileList) => {
+    const file = fileList[0];
     if (!file) return;
     setImageUrl(URL.createObjectURL(file));
     setError(null);
     setResultUrl(null);
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) handleFiles(e.target.files);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      handleFiles(e.dataTransfer.files);
+    }
   };
 
   const handleImageLoad = () => {
@@ -218,9 +240,20 @@ export default function TransformSuite({ slug }: TransformSuiteProps) {
         {/* Controls Column */}
         <div className="lg:col-span-7 flex flex-col gap-5">
           {!imageUrl ? (
-            <label className="flex flex-col items-center justify-center border-2 border-dashed border-border/80 hover:border-[#7d4dff] rounded-2xl p-8 text-center cursor-pointer transition-all hover:bg-neutral-50/50 dark:hover:bg-neutral-800/10 select-none">
+            <label 
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              className={`flex flex-col items-center justify-center border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all select-none ${
+                isDragging 
+                  ? "border-[#7d4dff] bg-[#7d4dff]/5 dark:bg-[#7d4dff]/10 scale-[0.99] animate-pulse" 
+                  : "border-border/80 hover:border-[#7d4dff] hover:bg-neutral-50/50 dark:hover:bg-neutral-800/10"
+              }`}
+            >
               <FileImage className="h-8 w-8 text-muted-foreground mb-3" />
-              <span className="text-xs font-bold text-foreground">Upload Image File</span>
+              <span className="text-xs font-bold text-foreground">
+                {isDragging ? "Drop your image here" : "Upload Image File"}
+              </span>
               <span className="text-[10px] text-muted-foreground mt-1">Select PNG, JPG, WebP, or SVG</span>
               <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
             </label>

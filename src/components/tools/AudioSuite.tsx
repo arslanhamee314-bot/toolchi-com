@@ -19,6 +19,7 @@ export default function AudioSuite({ slug }: AudioSuiteProps) {
   const [loading, setLoading] = useState(false);
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   // Audio metrics
   const [duration, setDuration] = useState(0);
@@ -38,27 +39,27 @@ export default function AudioSuite({ slug }: AudioSuiteProps) {
       case "audio-cutter": return "Audio Cutter (Trim mp3/wav/ogg)";
       case "audio-converter": return "Audio Converter (WAV/MP3 Export)";
       case "merge-audio": return "Merge Audio (Concatenate multiple tracks)";
+      case "audio-speed": return "Audio Speed Changer (Resample playback rate)";
+      case "audio-denoise": return "Audio Denoiser (Remove hiss and background noise)";
       default: return "Audio Utility Workspace";
     }
   };
 
-  const handleAudioUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const uploaded = e.target.files;
-    if (!uploaded) return;
+  const handleFiles = async (fileList: FileList) => {
     setError(null);
     setResultUrl(null);
 
     if (slug === "merge-audio") {
       const newFiles: AudioFile[] = [];
-      for (let i = 0; i < uploaded.length; i++) {
-        const buffer = await uploaded[i].arrayBuffer();
-        newFiles.push({ name: uploaded[i].name, size: uploaded[i].size, buffer });
+      for (let i = 0; i < fileList.length; i++) {
+        const buffer = await fileList[i].arrayBuffer();
+        newFiles.push({ name: fileList[i].name, size: fileList[i].size, buffer });
       }
       setMergeFiles((prev) => [...prev, ...newFiles]);
       return;
     }
 
-    const uploadedFile = uploaded[0];
+    const uploadedFile = fileList[0];
     if (!uploadedFile) return;
 
     try {
@@ -76,6 +77,27 @@ export default function AudioSuite({ slug }: AudioSuiteProps) {
       drawWaveform(decodedBuffer);
     } catch (err: any) {
       setError("Failed to parse audio file: " + err.message);
+    }
+  };
+
+  const handleAudioUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) handleFiles(e.target.files);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      handleFiles(e.dataTransfer.files);
     }
   };
 
@@ -140,6 +162,47 @@ export default function AudioSuite({ slug }: AudioSuiteProps) {
 
       if (!file) throw new Error("Please upload an audio file.");
       const sourceBuffer = await audioCtx.decodeAudioData(file.buffer.slice(0));
+
+      // Audio Speed: resample by changing playback rate via OfflineAudioContext
+      if (slug === "audio-speed") {
+        const rate = sourceBuffer.sampleRate;
+        const speed = Math.max(0.25, Math.min(4, speedMultiplier));
+        const outFrames = Math.round(sourceBuffer.length / speed);
+        const offCtx = new OfflineAudioContext(sourceBuffer.numberOfChannels, outFrames, rate);
+        const source = offCtx.createBufferSource();
+        source.buffer = sourceBuffer;
+        source.playbackRate.value = speed;
+        source.connect(offCtx.destination);
+        source.start(0);
+        const rendered = await offCtx.startRendering();
+        setResultUrl(URL.createObjectURL(new Blob([encodeWav(rendered) as any], { type: "audio/wav" })));
+        setLoading(false);
+        return;
+      }
+
+      // Audio Denoise: highpass (cut below 80Hz) + lowpass (cut above 16kHz) filter chain
+      if (slug === "audio-denoise") {
+        const rate = sourceBuffer.sampleRate;
+        const offCtx = new OfflineAudioContext(sourceBuffer.numberOfChannels, sourceBuffer.length, rate);
+        const source = offCtx.createBufferSource();
+        source.buffer = sourceBuffer;
+        const hp = offCtx.createBiquadFilter();
+        hp.type = "highpass";
+        hp.frequency.value = 80;
+        hp.Q.value = 0.7;
+        const lp = offCtx.createBiquadFilter();
+        lp.type = "lowpass";
+        lp.frequency.value = 16000;
+        lp.Q.value = 0.7;
+        source.connect(hp);
+        hp.connect(lp);
+        lp.connect(offCtx.destination);
+        source.start(0);
+        const rendered = await offCtx.startRendering();
+        setResultUrl(URL.createObjectURL(new Blob([encodeWav(rendered) as any], { type: "audio/wav" })));
+        setLoading(false);
+        return;
+      }
 
       const numChannels = sourceBuffer.numberOfChannels;
       const rate = sourceBuffer.sampleRate;
@@ -283,26 +346,60 @@ export default function AudioSuite({ slug }: AudioSuiteProps) {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Controls Column */}
         <div className="lg:col-span-7 flex flex-col gap-5">
-          {!file ? (
-            <label className="flex flex-col items-center justify-center border-2 border-dashed border-border/80 hover:border-[#7d4dff] rounded-2xl p-8 text-center cursor-pointer transition-all hover:bg-neutral-50/50 dark:hover:bg-neutral-800/10 select-none">
+          {(!file && mergeFiles.length === 0) ? (
+            <label 
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              className={`flex flex-col items-center justify-center border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all select-none ${
+                isDragging 
+                  ? "border-[#7d4dff] bg-[#7d4dff]/5 dark:bg-[#7d4dff]/10 scale-[0.99] animate-pulse" 
+                  : "border-border/80 hover:border-[#7d4dff] hover:bg-neutral-50/50 dark:hover:bg-neutral-800/10"
+              }`}
+            >
               <Music className="h-8 w-8 text-muted-foreground mb-3" />
-              <span className="text-xs font-bold text-foreground">Upload Audio File</span>
+              <span className="text-xs font-bold text-foreground">
+                {isDragging ? "Drop your audio files here" : slug === "merge-audio" ? "Upload Multiple Audio Files" : "Upload Audio File"}
+              </span>
               <span className="text-[10px] text-muted-foreground mt-1">Select MP3, WAV, or OGG format</span>
-              <input type="file" accept="audio/*" className="hidden" onChange={handleAudioUpload} />
+              <input type="file" accept="audio/*" multiple={slug === "merge-audio"} className="hidden" onChange={handleAudioUpload} />
             </label>
           ) : (
             <div className="space-y-4 border border-border p-4 rounded-3xl bg-card/10">
               
-              {/* Waveform Canvas */}
-              <div className="space-y-1">
-                <span className="text-3xs font-extrabold text-muted-foreground uppercase">Audio Signal Waveform</span>
-                <canvas 
-                  ref={canvasRef} 
-                  width={400} 
-                  height={80} 
-                  className="w-full bg-neutral-950/20 border border-border rounded-xl"
-                />
-              </div>
+              {slug === "merge-audio" ? (
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="font-bold text-foreground">Tracks to Merge ({mergeFiles.length})</span>
+                    <button onClick={() => setMergeFiles([])} className="text-red-500 hover:underline cursor-pointer">Clear All</button>
+                  </div>
+                  <div className="border border-border rounded-xl divide-y divide-border bg-card/25 max-h-[150px] overflow-y-auto">
+                    {mergeFiles.map((f, idx) => (
+                      <div key={idx} className="px-4 py-2 flex items-center justify-between text-2xs">
+                        <span className="font-bold text-foreground truncate max-w-[200px]">{f.name}</span>
+                        <span className="text-muted-foreground">{(f.size / 1024).toFixed(1)} KB</span>
+                      </div>
+                    ))}
+                  </div>
+                  <label className="block text-center py-2 px-4 border border-dashed border-[#7d4dff]/40 hover:border-[#7d4dff] text-[#7d4dff] hover:bg-[#7d4dff]/5 font-bold text-3xs rounded-xl cursor-pointer transition-all">
+                    + Add More Audio Files
+                    <input type="file" accept="audio/*" multiple className="hidden" onChange={handleAudioUpload} />
+                  </label>
+                </div>
+              ) : (
+                <>
+                  {/* Waveform Canvas */}
+                  <div className="space-y-1">
+                    <span className="text-3xs font-extrabold text-muted-foreground uppercase">Audio Signal Waveform</span>
+                    <canvas 
+                      ref={canvasRef} 
+                      width={400} 
+                      height={80} 
+                      className="w-full bg-neutral-950/20 border border-border rounded-xl"
+                    />
+                  </div>
+                </>
+              )}
 
               {/* Adjust Parameters */}
               <div className="grid grid-cols-2 gap-3 border border-border/50 p-4 rounded-2xl">
@@ -358,6 +455,25 @@ export default function AudioSuite({ slug }: AudioSuiteProps) {
                     className="w-full px-3 py-1.5 text-xs bg-neutral-50 dark:bg-[#1a202c] border border-border rounded-xl outline-none"
                   />
                 </div>
+
+                {/* Speed Multiplier (audio-speed only) */}
+                {slug === "audio-speed" && (
+                  <div className="col-span-2 space-y-1.5 pt-2 border-t border-border/40">
+                    <span className="text-3xs font-extrabold text-muted-foreground uppercase">Playback Speed ({speedMultiplier}x)</span>
+                    <input type="range" min="0.25" max="4" step="0.25" value={speedMultiplier} onChange={(e) => setSpeedMultiplier(Number(e.target.value))} className="w-full accent-[#7d4dff]" />
+                    <div className="flex justify-between text-[9px] text-muted-foreground">
+                      <span>0.25x (Slowest)</span><span>1x (Normal)</span><span>4x (Fastest)</span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Denoise info (audio-denoise only) */}
+                {slug === "audio-denoise" && (
+                  <div className="col-span-2 space-y-1.5 pt-2 border-t border-border/40 bg-purple-500/5 p-3 rounded-xl">
+                    <span className="text-3xs font-extrabold text-[#7d4dff] uppercase">Applying Automatic Filter Chain</span>
+                    <p className="text-[10px] text-muted-foreground leading-relaxed">Highpass filter at 80Hz removes low-frequency rumble. Lowpass filter at 16kHz removes hiss and ultrasonic noise artifacts.</p>
+                  </div>
+                )}
 
               </div>
 

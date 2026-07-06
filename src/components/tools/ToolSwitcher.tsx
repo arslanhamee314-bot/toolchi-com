@@ -84,12 +84,15 @@ export default function ToolSwitcher({ slug }: ToolSwitcherProps) {
     case "reverse-video":
     case "mute-video":
     case "video-speed":
+    case "video-loop":
       return <VideoSuite slug={slug} />;
 
     // === AUDIO WORKSPACE ===
     case "audio-cutter":
     case "audio-converter":
     case "merge-audio":
+    case "audio-speed":
+    case "audio-denoise":
       return <AudioSuite slug={slug} />;
 
     // === IMAGE TRANSFORM WORKSPACE ===
@@ -110,6 +113,8 @@ export default function ToolSwitcher({ slug }: ToolSwitcherProps) {
     case "view-metadata":
     case "qr-generator":
     case "hex-to-rgb":
+    case "barcode-generator":
+    case "image-to-base64":
       return <UtilitySuite slug={slug} />;
 
     // === 1. WEBMASTER TOOLS ===

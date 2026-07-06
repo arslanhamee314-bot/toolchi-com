@@ -13,6 +13,7 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [reversing, setReversing] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   // Video properties
   const [duration, setDuration] = useState(0);
@@ -29,6 +30,7 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
   const [scaleWidth, setScaleWidth] = useState(480);
   const [playbackSpeed, setPlaybackSpeed] = useState(1.0);
   const [muteAudio, setMuteAudio] = useState(false);
+  const [loopCount, setLoopCount] = useState(3);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -43,6 +45,7 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
       case "reverse-video": return "Reverse Video (Play video backwards)";
       case "mute-video": return "Mute Video (Remove audio track)";
       case "video-speed": return "Video Speed (Change playback rate)";
+      case "video-loop": return "Video Loop (Record seamless looped segment)";
       default: return "Video Processing Workspace";
     }
   };
@@ -53,12 +56,33 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
     setError(null);
   }, [slug]);
 
-  const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  const handleFiles = (fileList: FileList) => {
+    const file = fileList[0];
     if (!file) return;
     setVideoUrl(URL.createObjectURL(file));
     setError(null);
     setResultUrl(null);
+  };
+
+  const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) handleFiles(e.target.files);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      handleFiles(e.dataTransfer.files);
+    }
   };
 
   const handleMetadata = () => {
@@ -177,10 +201,22 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
       mediaRecorder.start();
 
       const startMs = Date.now();
-      const runMs = (endTime - startTime) * 1000;
+      const segMs = (endTime - startTime) * 1000;
+      const totalMs = (slug === "video-loop") ? segMs * loopCount : segMs;
+      let loopsDone = 0;
 
-      const drawLoop = setInterval(() => {
-        if (Date.now() - startMs >= runMs || video.currentTime >= endTime || video.paused) {
+      const drawLoop = setInterval(async () => {
+        const elapsed = Date.now() - startMs;
+
+        // For video-loop: reset when one loop segment is done
+        if (slug === "video-loop" && (Date.now() - startMs) >= segMs * (loopsDone + 1)) {
+          loopsDone++;
+          if (loopsDone < loopCount) {
+            video.currentTime = startTime;
+          }
+        }
+
+        if (elapsed >= totalMs || video.paused) {
           clearInterval(drawLoop);
           video.pause();
           mediaRecorder.stop();
@@ -212,9 +248,20 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
         {/* Controls Column */}
         <div className="lg:col-span-7 flex flex-col gap-5">
           {!videoUrl ? (
-            <label className="flex flex-col items-center justify-center border-2 border-dashed border-border/80 hover:border-[#7d4dff] rounded-2xl p-8 text-center cursor-pointer transition-all hover:bg-neutral-50/50 dark:hover:bg-neutral-800/10 select-none">
+            <label 
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              className={`flex flex-col items-center justify-center border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all select-none ${
+                isDragging 
+                  ? "border-[#7d4dff] bg-[#7d4dff]/5 dark:bg-[#7d4dff]/10 scale-[0.99] animate-pulse" 
+                  : "border-border/80 hover:border-[#7d4dff] hover:bg-neutral-50/50 dark:hover:bg-neutral-800/10"
+              }`}
+            >
               <Film className="h-8 w-8 text-muted-foreground mb-3" />
-              <span className="text-xs font-bold text-foreground">Upload Video File</span>
+              <span className="text-xs font-bold text-foreground">
+                {isDragging ? "Drop your video here" : "Upload Video File"}
+              </span>
               <span className="text-[10px] text-muted-foreground mt-1">Select MP4, WebM, or MOV format</span>
               <input type="file" accept="video/*" className="hidden" onChange={handleVideoUpload} />
             </label>
@@ -310,6 +357,15 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
                   <div className="space-y-1.5 col-span-2 pt-2 border-t border-border/40">
                     <span className="text-3xs font-extrabold text-muted-foreground uppercase">Playback Speed ({playbackSpeed}x)</span>
                     <input type="range" min="0.25" max="4" step="0.25" value={playbackSpeed} onChange={(e) => setPlaybackSpeed(Number(e.target.value))} className="w-full accent-[#7d4dff]" />
+                  </div>
+                )}
+
+                {/* Loop count control */}
+                {slug === "video-loop" && (
+                  <div className="space-y-1.5 col-span-2 pt-2 border-t border-border/40">
+                    <span className="text-3xs font-extrabold text-muted-foreground uppercase">Loop Repetitions ({loopCount}x)</span>
+                    <input type="range" min="2" max="8" step="1" value={loopCount} onChange={(e) => setLoopCount(Number(e.target.value))} className="w-full accent-[#7d4dff]" />
+                    <p className="text-[10px] text-muted-foreground">The segment will play {loopCount} times in the output file.</p>
                   </div>
                 )}
 

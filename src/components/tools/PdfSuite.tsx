@@ -21,6 +21,7 @@ export default function PdfSuite({ slug }: PdfSuiteProps) {
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const [resultUrls, setResultUrls] = useState<{ name: string; url: string }[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   // Settings
   const [splitRange, setSplitRange] = useState("1-2");
@@ -41,16 +42,15 @@ export default function PdfSuite({ slug }: PdfSuiteProps) {
 
   const acceptsImages = slug === "jpg-to-pdf";
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) return;
+  const handleFiles = async (fileList: FileList) => {
     setError(null);
     setResultUrl(null);
     setResultUrls([]);
 
     if (acceptsImages) {
       const imgs: File[] = [];
-      for (let i = 0; i < e.target.files.length; i++) {
-        const f = e.target.files[i];
+      for (let i = 0; i < fileList.length; i++) {
+        const f = fileList[i];
         if (!f.type.startsWith("image/")) { setError("Only image files (JPG/PNG) are accepted."); continue; }
         imgs.push(f);
       }
@@ -59,8 +59,8 @@ export default function PdfSuite({ slug }: PdfSuiteProps) {
     }
 
     const newFiles: UploadedFile[] = [];
-    for (let i = 0; i < e.target.files.length; i++) {
-      const file = e.target.files[i];
+    for (let i = 0; i < fileList.length; i++) {
+      const file = fileList[i];
       if (file.type !== "application/pdf") {
         setError("Only valid PDF files are supported.");
         continue;
@@ -77,6 +77,27 @@ export default function PdfSuite({ slug }: PdfSuiteProps) {
       setFiles((prev) => [...prev, ...newFiles]);
     } else {
       setFiles(newFiles.slice(0, 1));
+    }
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) handleFiles(e.target.files);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      handleFiles(e.dataTransfer.files);
     }
   };
 
@@ -206,10 +227,19 @@ export default function PdfSuite({ slug }: PdfSuiteProps) {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Controls Column */}
         <div className="lg:col-span-7 flex flex-col gap-5">
-          <label className="flex flex-col items-center justify-center border-2 border-dashed border-border/80 hover:border-[#7d4dff] rounded-2xl p-8 text-center cursor-pointer transition-all hover:bg-neutral-50/50 dark:hover:bg-neutral-800/10 select-none">
+          <label 
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            className={`flex flex-col items-center justify-center border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all select-none ${
+              isDragging 
+                ? "border-[#7d4dff] bg-[#7d4dff]/5 dark:bg-[#7d4dff]/10 scale-[0.99] animate-pulse" 
+                : "border-border/80 hover:border-[#7d4dff] hover:bg-neutral-50/50 dark:hover:bg-neutral-800/10"
+            }`}
+          >
             {acceptsImages ? <FileImage className="h-8 w-8 text-muted-foreground mb-3" /> : <Upload className="h-8 w-8 text-muted-foreground mb-3" />}
             <span className="text-xs font-bold text-foreground">
-              {acceptsImages ? "Upload JPG / PNG images" : slug === "merge-pdf" ? "Upload Multiple PDF files" : "Upload PDF file"}
+              {isDragging ? "Drop your files here" : acceptsImages ? "Upload JPG / PNG images" : slug === "merge-pdf" ? "Upload Multiple PDF files" : "Upload PDF file"}
             </span>
             <span className="text-[10px] text-muted-foreground mt-1">Files are processed 100% inside your browser</span>
             <input

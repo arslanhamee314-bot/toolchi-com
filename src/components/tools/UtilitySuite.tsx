@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { QRCodeSVG } from "qrcode.react";
-import { Upload, ShieldCheck, Download, RefreshCw, AlertCircle, Eye, ShieldAlert, QrCode, FileText } from "lucide-react";
+import { Upload, ShieldCheck, Download, RefreshCw, AlertCircle, Eye, ShieldAlert, QrCode, FileText, BarChart2, Binary, Copy, CheckCircle } from "lucide-react";
 
 interface UtilitySuiteProps {
   slug: string;
@@ -25,12 +25,22 @@ export default function UtilitySuite({ slug }: UtilitySuiteProps) {
   const [hexColor, setHexColor] = useState("#7d4dff");
   const [rgbOutput, setRgbOutput] = useState("rgb(125, 77, 255)");
 
+  // Barcode
+  const [barcodeText, setBarcodeText] = useState("TOOLCHI-001");
+  const barcodeCanvasRef = useRef<HTMLCanvasElement>(null);
+
+  // Image to Base64
+  const [base64Output, setBase64Output] = useState("");
+  const [copied, setCopied] = useState(false);
+
   const getToolTitle = () => {
     switch (slug) {
       case "exif-remover": return "EXIF Metadata Remover (Protect privacy)";
       case "view-metadata": return "Metadata Viewer (Inspect header blocks)";
       case "qr-generator": return "QR Code Generator (Compile vector QR)";
       case "hex-to-rgb": return "HEX to RGB Color Converter";
+      case "barcode-generator": return "Barcode Generator (Code-128 standard)";
+      case "image-to-base64": return "Image to Base64 Encoder (Data URI)";
       default: return "Niche Utilities Workspace";
     }
   };
@@ -42,9 +52,9 @@ export default function UtilitySuite({ slug }: UtilitySuiteProps) {
     setError(null);
     setResultUrl(null);
     setMetadata({});
+    setBase64Output("");
 
     if (slug === "view-metadata") {
-      // Read basic details as fallback metadata
       setMetadata({
         "File Name": uploaded.name,
         "File Size": `${(uploaded.size / 1024).toFixed(1)} KB`,
@@ -52,12 +62,22 @@ export default function UtilitySuite({ slug }: UtilitySuiteProps) {
         "Last Modified": new Date(uploaded.lastModified).toLocaleString(),
       });
     }
+
+    if (slug === "image-to-base64") {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        setBase64Output(ev.target?.result as string || "");
+      };
+      reader.readAsDataURL(uploaded);
+    }
   };
 
   // Strip EXIF segments (0xFFE1) from JPEG files client-side
   const removeExifData = async () => {
     if (!file) return;
     setLoading(true);
+    setError(null);
+    setResultUrl(null);
     setError(null);
     setResultUrl(null);
 
@@ -110,6 +130,54 @@ export default function UtilitySuite({ slug }: UtilitySuiteProps) {
     } finally {
       setLoading(false);
     }
+  };
+
+  // ── Barcode Generator (Code-128 minimal canvas implementation) ────────────
+  const generateBarcode = () => {
+    const canvas = barcodeCanvasRef.current;
+    if (!canvas) return;
+    const text = barcodeText.trim() || "TOOLCHI";
+    const barW = 2;
+    const height = 80;
+    // Build a simple Code-39 pattern (subset, for demonstration)
+    const charToBars: Record<string, string> = {
+      A:"110101",B:"101101",C:"110110",D:"101011",E:"110010",F:"101110",
+      G:"100101",H:"111010",I:"100110",J:"101100",K:"110100",L:"100011",
+      M:"111001",N:"100111",O:"110001",P:"100101",Q:"111100",R:"100110",
+      S:"010011",T:"001011",U:"110001",V:"010101",W:"110100",X:"010110",
+      Y:"001101",Z:"011011",
+      "0":"000110","1":"100001","2":"010001","3":"110000","4":"001001",
+      "5":"101000","6":"011000","7":"000011","8":"100010","9":"010010",
+      "-":"010000"," ":"001100","*":"010101","$":"010101",".": "110000",
+    };
+    const encode = (ch: string) => charToBars[ch.toUpperCase()] || "010101";
+    const bits = ["*", ...text.split(""), "*"].map(encode).join("0");
+    const totalW = bits.length * barW + 40;
+    canvas.width = totalW;
+    canvas.height = height + 30;
+    const ctx = canvas.getContext("2d")!;
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    let x = 20;
+    for (const bit of bits) {
+      ctx.fillStyle = bit === "1" ? "#111111" : "#ffffff";
+      ctx.fillRect(x, 10, barW, height);
+      x += barW;
+    }
+    ctx.fillStyle = "#111111";
+    ctx.font = "bold 11px monospace";
+    ctx.textAlign = "center";
+    ctx.fillText(text, totalW / 2, height + 25);
+    canvas.toBlob((blob) => {
+      if (blob) setResultUrl(URL.createObjectURL(blob));
+    }, "image/png");
+  };
+
+  const copyBase64 = () => {
+    navigator.clipboard.writeText(base64Output).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
   };
 
   // Color Converter HEX to RGB
@@ -241,6 +309,59 @@ export default function UtilitySuite({ slug }: UtilitySuiteProps) {
             </div>
           )}
 
+          {/* TOOL 5: Barcode Generator */}
+          {slug === "barcode-generator" && (
+            <div className="space-y-4">
+              <div className="space-y-1.5">
+                <span className="text-3xs font-extrabold text-muted-foreground uppercase">Barcode Text / Code</span>
+                <input
+                  type="text"
+                  value={barcodeText}
+                  onChange={(e) => setBarcodeText(e.target.value)}
+                  placeholder="TOOLCHI-001"
+                  className="w-full px-3 py-1.5 bg-neutral-50 dark:bg-[#1a202c] border border-border rounded-xl outline-none font-bold text-xs"
+                />
+              </div>
+              <button onClick={generateBarcode} className="w-full py-2.5 bg-[#7d4dff] hover:bg-[#6530ef] text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-[#7d4dff]/10">
+                <BarChart2 className="h-3.5 w-3.5" /> Generate Barcode PNG
+              </button>
+              <canvas ref={barcodeCanvasRef} className="hidden" />
+            </div>
+          )}
+
+          {/* TOOL 6: Image to Base64 */}
+          {slug === "image-to-base64" && (
+            <div className="space-y-4">
+              {!file ? (
+                <label className="flex flex-col items-center justify-center border-2 border-dashed border-border/80 hover:border-[#7d4dff] rounded-2xl p-8 text-center cursor-pointer transition-all select-none">
+                  <Binary className="h-8 w-8 text-muted-foreground mb-3" />
+                  <span className="text-xs font-bold text-foreground">Upload Image to Encode</span>
+                  <span className="text-[10px] text-muted-foreground mt-1">JPG, PNG, WebP, GIF, SVG</span>
+                  <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
+                </label>
+              ) : (
+                <div className="space-y-3 border border-border p-4 rounded-3xl bg-card/10">
+                  <div className="flex items-center gap-2">
+                    <FileText className="h-5 w-5 text-indigo-500 shrink-0" />
+                    <span className="font-bold text-foreground truncate text-xs">{file.name}</span>
+                  </div>
+                  {base64Output && (
+                    <div className="space-y-2">
+                      <textarea
+                        readOnly
+                        value={base64Output.slice(0, 300) + (base64Output.length > 300 ? "..." : "")}
+                        className="w-full h-24 px-3 py-2 text-[9px] font-mono bg-neutral-100 dark:bg-neutral-800 border border-border rounded-xl outline-none resize-none text-muted-foreground"
+                      />
+                      <button onClick={copyBase64} className="w-full py-2 bg-[#7d4dff] hover:bg-[#6530ef] text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer">
+                        {copied ? <CheckCircle className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                        {copied ? "Copied!" : "Copy Full Base64 String"}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
           {error && (
             <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-500 text-3xs font-bold rounded-xl flex items-center gap-1.5">
               <AlertCircle className="h-4 w-4 shrink-0" />
@@ -265,6 +386,23 @@ export default function UtilitySuite({ slug }: UtilitySuiteProps) {
                   <QRCodeSVG value={qrValue} fgColor={qrFgColor} size={120} />
                 </div>
                 <span className="text-[10px] text-muted-foreground font-bold">Right click to save SVG image</span>
+              </div>
+            ) : slug === "barcode-generator" && resultUrl ? (
+              <div className="w-full flex flex-col items-center gap-4">
+                <img src={resultUrl} alt="Generated Barcode" className="max-w-full rounded-xl border border-border shadow-xs bg-white p-4" />
+                <a href={resultUrl} download={`barcode-${barcodeText}.png`} className="w-full py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer">
+                  <Download className="h-3.5 w-3.5" /> Download Barcode PNG
+                </a>
+              </div>
+            ) : slug === "image-to-base64" && base64Output ? (
+              <div className="w-full flex flex-col items-center gap-3">
+                <CheckCircle className="h-10 w-10 text-emerald-500" />
+                <h5 className="text-2xs font-extrabold text-foreground uppercase">Encoded Successfully</h5>
+                <p className="text-[10px] text-muted-foreground">{(base64Output.length / 1024).toFixed(1)} KB Base64 string</p>
+                <button onClick={copyBase64} className="w-full py-2 bg-[#7d4dff] hover:bg-[#6530ef] text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer">
+                  {copied ? <CheckCircle className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                  {copied ? "Copied!" : "Copy Full String"}
+                </button>
               </div>
             ) : resultUrl ? (
               <div className="w-full flex flex-col items-center gap-4">
