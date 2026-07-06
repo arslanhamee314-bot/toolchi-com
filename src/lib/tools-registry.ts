@@ -24,6 +24,19 @@ export interface ToolItem {
 }
 
 export const CATEGORIES = [
+  { id: "gif-maker", name: "GIF Maker", desc: "Create animated GIFs online from images or video clips." },
+  { id: "video-tools", name: "Video Tools", desc: "Convert video to GIF, cut, crop, and resize video files." },
+  { id: "audio", name: "Audio", desc: "Cut, join, and optimize audio files locally." },
+  { id: "transform", name: "Transform", desc: "Resize, crop, and rotate images or media files." },
+  { id: "optimize", name: "Optimize", desc: "Compress and optimize images, GIFs, and other media." },
+  { id: "effects", name: "Effects", desc: "Add text, overlays, and color effects to images." },
+  { id: "split", name: "Split", desc: "Split animated GIF, APNG, WebP into individual frames." },
+  { id: "add-text", name: "Add Text", desc: "Add text overlays and watermarks to media." },
+  { id: "webp", name: "WebP", desc: "Convert WebP to JPG, PNG, GIF and vice versa." },
+  { id: "apng", name: "APNG", desc: "Assemble or convert APNG (Animated PNG) files." },
+  { id: "avif", name: "AVIF", desc: "Optimize and convert AVIF format images." },
+  { id: "jxl", name: "JXL", desc: "Convert JPEG XL images to common web formats." },
+  { id: "svg", name: "SVG", desc: "Optimize, clean, and convert SVG files." },
   { id: "documents", name: "PDF & Document Tools", desc: "Merge, split, rotate, and compress PDF documents locally." },
   { id: "webmaster", name: "Webmaster Tools", desc: "Check configuration, security, and responsive layouts." },
   { id: "performance", name: "Performance Tools", desc: "Optimize files, verify compression, and measure load times." },
@@ -33,6 +46,36 @@ export const CATEGORIES = [
 ];
 
 const RAW_TOOLS_REGISTRY = [
+  // Media Tools (Pre-wired Stubs)
+  { slug: "gif-maker", name: "GIF Maker", category: "gif-maker", shortDesc: "Create animated GIFs from PNG/JPG or videos.", iconName: "Image" },
+  { slug: "video-to-gif", name: "Video to GIF", category: "gif-maker", shortDesc: "Convert mp4/webm videos into lightweight animated GIFs.", iconName: "Video" },
+  { slug: "gif-resizer", name: "GIF Resizer", category: "gif-maker", shortDesc: "Resize and scale animated GIF files dynamically.", iconName: "Maximize" },
+  { slug: "video-cutter", name: "Video Cutter", category: "video-tools", shortDesc: "Cut and trim video segments online locally.", iconName: "Scissors" },
+  { slug: "video-cropper", name: "Video Cropper", category: "video-tools", shortDesc: "Crop video dimensions and remove borders.", iconName: "Crop" },
+  { slug: "video-to-webp", name: "Video to WebP", category: "video-tools", shortDesc: "Convert video files to animated WebP format.", iconName: "RefreshCw" },
+  { slug: "audio-cutter", name: "Audio Cutter", category: "audio", shortDesc: "Cut, trim, and split audio mp3/wav files locally.", iconName: "Music" },
+  { slug: "audio-converter", name: "Audio Converter", category: "audio", shortDesc: "Convert between common audio formats locally.", iconName: "Volume2" },
+  { slug: "resize-image", name: "Resize Image", category: "transform", shortDesc: "Change dimensions and aspect ratio of images.", iconName: "Maximize2" },
+  { slug: "crop-image", name: "Crop Image", category: "transform", shortDesc: "Trim borders and crop custom areas of images.", iconName: "Crop" },
+  { slug: "rotate-image", name: "Rotate Image", category: "transform", shortDesc: "Flip and rotate images by custom angles.", iconName: "RotateCw" },
+  { slug: "gif-optimizer", name: "GIF Optimizer", category: "optimize", shortDesc: "Reduce file size of animated GIFs with smart compression.", iconName: "Zap" },
+  { slug: "png-optimizer", name: "PNG Optimizer", category: "optimize", shortDesc: "Optimize and compress PNG/JPG files without quality loss.", iconName: "Gauge" },
+  { slug: "photo-effects", name: "Photo Effects", category: "effects", shortDesc: "Apply color adjustments, filters, and effects to images.", iconName: "Sparkles" },
+  { slug: "image-filters", name: "Image Filters", category: "effects", shortDesc: "Adjust brightness, contrast, and saturation of photos.", iconName: "Sliders" },
+  { slug: "gif-splitter", name: "GIF Splitter", category: "split", shortDesc: "Extract individual frames from animated GIFs.", iconName: "Layers" },
+  { slug: "apng-splitter", name: "APNG Splitter", category: "split", shortDesc: "Split animated PNG files into separate frames.", iconName: "Columns" },
+  { slug: "write-on-image", name: "Write on Image", category: "add-text", shortDesc: "Add text labels, captions, and quotes on top of images.", iconName: "Type" },
+  { slug: "watermark-image", name: "Watermark Image", category: "add-text", shortDesc: "Add custom watermarks or logos to protect your images.", iconName: "ShieldAlert" },
+  { slug: "webp-to-jpg", name: "WebP to JPG", category: "webp", shortDesc: "Convert WebP images to JPG format locally.", iconName: "ArrowRightLeft" },
+  { slug: "jpg-to-webp", name: "JPG to WebP", category: "webp", shortDesc: "Convert JPG and PNG images to WebP format.", iconName: "ArrowLeftRight" },
+  { slug: "apng-maker", name: "APNG Maker", category: "apng", shortDesc: "Assemble multiple PNG images into an animated APNG.", iconName: "Flame" },
+  { slug: "apng-to-gif", name: "APNG to GIF", category: "apng", shortDesc: "Convert animated PNG files to animated GIF format.", iconName: "RefreshCw" },
+  { slug: "avif-converter", name: "AVIF Converter", category: "avif", shortDesc: "Convert AVIF images to PNG/JPG format.", iconName: "RefreshCw" },
+  { slug: "jpg-to-avif", name: "JPG to AVIF", category: "avif", shortDesc: "Convert standard images to high-efficiency AVIF format.", iconName: "ArrowRightLeft" },
+  { slug: "jxl-to-png", name: "JXL to PNG", category: "jxl", shortDesc: "Convert JPEG XL files to compatible PNG images.", iconName: "FileImage" },
+  { slug: "svg-optimizer", name: "SVG Optimizer", category: "svg", shortDesc: "Minify and optimize vector SVG files.", iconName: "Activity" },
+  { slug: "png-to-svg", name: "PNG to SVG", category: "svg", shortDesc: "Convert raster images to vector SVG formats.", iconName: "Compass" },
+
   // 1. WEBMASTER TOOLS
   {
     slug: "robots-txt-checker",
@@ -165,7 +208,7 @@ const RAW_TOOLS_REGISTRY = [
   {
     slug: "compress-image",
     name: "Compress PNG/JPG",
-    category: "performance",
+    category: "optimize",
     shortDesc: "Optimize image assets to reduce payload weight and load time.",
     iconName: "ImageDown",
     seoTitle: "Image Compressor - Optimize PNG and JPG files | Toolchi",
@@ -746,6 +789,11 @@ export const TOOLS_REGISTRY: ToolItem[] = RAW_TOOLS_REGISTRY.map(tool => {
   const custom = CUSTOM_TOOL_PROPERTIES[tool.slug] || {};
   return {
     ...tool,
+    seoTitle: tool.seoTitle || `${tool.name} - Free Online Tool | Toolchi`,
+    seoDescription: tool.seoDescription || `Run ${tool.name} locally in your browser. 100% private and secure.`,
+    longDesc: tool.longDesc || `A local client-side tool to process ${tool.name} queries in real-time.`,
+    howToUse: tool.howToUse || ["Input your data in the tool workspace.", "Configure settings.", "Process and save results."],
+    faqs: tool.faqs || [{ question: `Is ${tool.name} free?`, answer: `Yes, it is 100% free and runs entirely inside your browser.` }],
     ctaText: custom.ctaText || "Open Tool",
     sampleSupported: custom.sampleSupported ?? false,
     relatedSlugs: custom.relatedSlugs || [],
@@ -753,7 +801,7 @@ export const TOOLS_REGISTRY: ToolItem[] = RAW_TOOLS_REGISTRY.map(tool => {
     isNew: custom.isNew ?? tool.isNew ?? false,
     tags: custom.tags || [tool.category],
     shortDescription: tool.shortDesc
-  };
+  } as ToolItem;
 });
 
 export const getToolBySlug = (slug: string) => {

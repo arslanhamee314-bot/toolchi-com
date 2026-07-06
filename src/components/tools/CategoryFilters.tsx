@@ -24,6 +24,19 @@ export default function CategoryFilters() {
         >
           {/* Visual Category badge */}
           <div className="h-10 w-10 rounded-full bg-[#f3eeff] dark:bg-[#251e1c] text-[#7d4dff] flex items-center justify-center font-bold text-base border border-[#e8ddff]/40 group-hover:scale-105 transition-transform">
+            {cat.id === "gif-maker" && "🎞️"}
+            {cat.id === "video-tools" && "🎬"}
+            {cat.id === "audio" && "🔊"}
+            {cat.id === "transform" && "📐"}
+            {cat.id === "optimize" && "🧹"}
+            {cat.id === "effects" && "🪄"}
+            {cat.id === "split" && "🔀"}
+            {cat.id === "add-text" && "📝"}
+            {cat.id === "webp" && "🖼️"}
+            {cat.id === "apng" && "🔴"}
+            {cat.id === "avif" && "🟢"}
+            {cat.id === "jxl" && "📊"}
+            {cat.id === "svg" && "🎨"}
             {cat.id === "documents" && "📄"}
             {cat.id === "webmaster" && "🌐"}
             {cat.id === "performance" && "⚡"}
