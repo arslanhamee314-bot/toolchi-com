@@ -81,7 +81,7 @@ export default function InteractiveWorkspace() {
         <div className="border border-border/80 bg-white dark:bg-card rounded-3xl shadow-xs overflow-hidden flex flex-col">
           
           {/* BAR 1: Category Selection Tabs */}
-          <div className="border-b border-[#1e293b] bg-[#0f172a] dark:bg-[#0d111a] px-4 py-3 flex items-center gap-2 overflow-x-auto scrollbar-none select-none">
+          <div className="border-b border-[#1e293b] bg-[#0f172a] dark:bg-[#0d111a] px-4 py-3 flex items-center gap-2 overflow-x-auto scrollbar-none select-none md:flex-wrap md:overflow-visible">
             {CATEGORIES.map((cat) => {
               const isActive = activeCategory === cat.id;
               return (
@@ -109,14 +109,14 @@ export default function InteractiveWorkspace() {
           </div>
 
           {/* BAR 2: Tool Selection Grid / Row */}
-          <div className="border-b border-border/40 px-5 py-4 bg-[#f8fafc] dark:bg-[#141822] flex flex-wrap gap-2 select-none">
+          <div className="border-b border-border/40 px-4 sm:px-5 py-3 flex items-center gap-2 overflow-x-auto scrollbar-none whitespace-nowrap select-none md:flex-wrap md:overflow-visible bg-[#f8fafc] dark:bg-[#141822]">
             {filteredTools.map((tool) => {
               const isActive = activeToolSlug === tool.slug;
               return (
                 <button
                   key={tool.slug}
                   onClick={() => setActiveToolSlug(tool.slug)}
-                  className={`px-3 py-1.5 rounded-xl border text-3xs font-extrabold transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 ${
+                  className={`px-3 py-1.5 rounded-xl border text-3xs font-extrabold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 active:scale-95 ${
                     isActive
                       ? "border-[#7d4dff] text-[#7d4dff] bg-[#7d4dff]/10 dark:bg-[#7d4dff]/20"
                       : "bg-white dark:bg-[#1a202c] border-border/80 text-muted-foreground hover:text-foreground hover:border-[#7d4dff]/30"
@@ -130,9 +130,9 @@ export default function InteractiveWorkspace() {
           </div>
 
           {/* WORKSPACE AREA: Tool Frame & Details */}
-          <div className="p-6 md:p-8 bg-[#fafbfc]/30 dark:bg-neutral-900/5 min-h-[300px] flex flex-col gap-6">
+          <div className="p-3 sm:p-6 md:p-8 bg-[#fafbfc]/30 dark:bg-neutral-900/5 min-h-[300px] flex flex-col gap-4 sm:gap-6">
             {activeToolSlug && activeTool ? (
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-4 sm:gap-6">
                 
                 {/* Embedded Tool Meta Information */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-border/40 pb-4">
@@ -161,7 +161,7 @@ export default function InteractiveWorkspace() {
                 </div>
 
                 {/* Render Selected Live Component Switcher */}
-                <div className="bg-white dark:bg-card border border-border/70 rounded-2xl p-6 shadow-3xs relative overflow-hidden min-h-[160px]">
+                <div className="bg-white dark:bg-card border border-border/70 rounded-2xl p-3 sm:p-6 shadow-3xs relative overflow-hidden min-h-[160px]">
                   <ToolSwitcher slug={activeTool.slug} />
                 </div>
                 
