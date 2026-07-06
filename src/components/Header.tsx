@@ -29,8 +29,8 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-white/90 dark:bg-card/90 backdrop-blur-md print:hidden">
-      <div className="mx-auto max-w-6xl flex items-center justify-between px-6 py-4">
+    <header className="sticky top-4 z-40 max-w-6xl mx-auto w-[calc(100%-2rem)] rounded-2xl border border-border/80 bg-white/70 dark:bg-[#151923]/70 backdrop-blur-xl shadow-xs transition-all duration-300 print:hidden">
+      <div className="flex items-center justify-between px-6 py-3.5">
         
         {/* Logo/Brand link */}
         <Link href="/" onClick={closeMenu} className="flex items-center gap-2.5 group select-none shrink-0">
@@ -54,17 +54,7 @@ export default function Header() {
             <Link href="/blog" className="hover:text-[#7d4dff] transition-colors">Blogs</Link>
           </nav>
 
-          <div className="flex items-center gap-3 shrink-0">
-            <input 
-              type="text" 
-              placeholder="Search..." 
-              value={searchVal}
-              onChange={(e) => setSearchVal(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSearchSubmit(searchVal)}
-              className="hidden lg:block w-36 px-3 py-1.5 text-xs bg-neutral-100 dark:bg-neutral-800 border border-border rounded-lg outline-none focus:border-primary/50 text-foreground"
-            />
-            <ThemeToggle />
-          </div>
+          <ThemeToggle />
         </div>
 
         {/* Mobile Controls Row (Hamburger + ThemeToggle) */}
