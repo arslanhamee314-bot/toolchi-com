@@ -5,6 +5,7 @@ import path from "path";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   devIndicators: false, // Disables development overlay indicators to prevent telemetry/network crashes
+  distDir: process.env.NODE_ENV === "development" ? "../toolchi-next-dev" : ".next",
   webpack: (config, { dev }) => {
     if (dev) {
       // Use OS temp directory for filesystem cache to prevent project-level write locks on Windows
