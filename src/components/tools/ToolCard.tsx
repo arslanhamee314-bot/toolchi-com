@@ -1,5 +1,8 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ToolItem } from "@/lib/tools-registry";
 import LucideIcon from "./LucideIcon";
 
@@ -8,9 +11,26 @@ interface ToolCardProps {
 }
 
 export default function ToolCard({ tool }: ToolCardProps) {
+  const pathname = usePathname();
+  const isHomepage = pathname === "/";
+
+  const handleCardClick = (e: React.MouseEvent) => {
+    if (isHomepage) {
+      e.preventDefault();
+      window.dispatchEvent(
+        new CustomEvent("select-tool", {
+          detail: { slug: tool.slug, category: tool.category },
+        })
+      );
+    }
+  };
+
   return (
     <article
-      className="bg-white dark:bg-card border border-border group-hover:border-[#7d4dff]/50 rounded-[18px] p-6 shadow-xs min-h-[260px] flex flex-col items-start hover:-translate-y-1 active:translate-y-0.5 transition-all duration-200 relative group"
+      onClick={handleCardClick}
+      className={`bg-white dark:bg-card border border-border group-hover:border-[#7d4dff]/50 rounded-[18px] p-6 shadow-xs min-h-[260px] flex flex-col items-start hover:-translate-y-1 active:translate-y-0.5 transition-all duration-200 relative group ${
+        isHomepage ? "cursor-pointer" : ""
+      }`}
     >
       {/* Custom Card Stripe top border */}
       <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#7d4dff] to-[#7d4dff] rounded-t-[18px] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -50,12 +70,24 @@ export default function ToolCard({ tool }: ToolCardProps) {
       </div>
 
       {/* Call to Action Button */}
-      <Link
-        href={`/tools/${tool.slug}`}
-        className="w-full text-center py-2 px-4 bg-[#7d4dff] hover:bg-[#6530ef] text-white font-bold text-xs rounded-xl transition-colors mt-auto select-none shadow-sm shadow-[#7d4dff]/10"
-      >
-        {tool.ctaText || "Open Tool"}
-      </Link>
+      {isHomepage ? (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            handleCardClick(e);
+          }}
+          className="w-full text-center py-2 px-4 bg-[#7d4dff] hover:bg-[#6530ef] text-white font-bold text-xs rounded-xl transition-colors mt-auto select-none shadow-sm shadow-[#7d4dff]/10 cursor-pointer"
+        >
+          {tool.ctaText || "Open Tool"}
+        </button>
+      ) : (
+        <Link
+          href={`/tools/${tool.slug}`}
+          className="w-full text-center py-2 px-4 bg-[#7d4dff] hover:bg-[#6530ef] text-white font-bold text-xs rounded-xl transition-colors mt-auto select-none shadow-sm shadow-[#7d4dff]/10"
+        >
+          {tool.ctaText || "Open Tool"}
+        </Link>
+      )}
     </article>
   );
 }

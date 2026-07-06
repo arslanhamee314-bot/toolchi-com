@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, Sparkles, Combine, ShieldAlert } from "lucide-react";
+import { TOOLS_REGISTRY } from "@/lib/tools-registry";
 
 interface SlideItem {
   id: number;
@@ -17,6 +18,19 @@ interface SlideItem {
 
 export default function ToolsSlider() {
   const [activeSlide, setActiveSlide] = useState(0);
+
+  const handleCtaClick = (e: React.MouseEvent, link: string) => {
+    if (link.startsWith("/tools/")) {
+      e.preventDefault();
+      const slug = link.replace("/tools/", "");
+      const tool = TOOLS_REGISTRY.find((t) => t.slug === slug);
+      window.dispatchEvent(
+        new CustomEvent("select-tool", {
+          detail: { slug, category: tool?.category },
+        })
+      );
+    }
+  };
 
   const slides: SlideItem[] = [
     {
@@ -89,12 +103,21 @@ export default function ToolsSlider() {
               <p className="text-xs md:text-sm text-muted-foreground leading-relaxed max-w-xl">
                 {slide.description}
               </p>
-              <Link 
-                href={slide.ctaLink}
-                className="mt-2 px-5 py-2.5 text-xs font-bold bg-primary text-primary-foreground rounded-xl hover:scale-105 active:scale-95 transition-all shadow-md shadow-primary/15"
-              >
-                {slide.ctaText} →
-              </Link>
+              {slide.ctaLink.startsWith("/tools/") ? (
+                <button
+                  onClick={(e) => handleCtaClick(e, slide.ctaLink)}
+                  className="mt-2 px-5 py-2.5 text-xs font-bold bg-primary text-primary-foreground rounded-xl hover:scale-105 active:scale-95 transition-all shadow-md shadow-primary/15 cursor-pointer"
+                >
+                  {slide.ctaText} →
+                </button>
+              ) : (
+                <Link 
+                  href={slide.ctaLink}
+                  className="mt-2 px-5 py-2.5 text-xs font-bold bg-primary text-primary-foreground rounded-xl hover:scale-105 active:scale-95 transition-all shadow-md shadow-primary/15"
+                >
+                  {slide.ctaText} →
+                </Link>
+              )}
             </div>
 
             <div className="h-24 w-24 shrink-0 rounded-2xl bg-card border border-border/80 flex items-center justify-center shadow-inner">

@@ -9,25 +9,28 @@ import { Sparkles, ArrowRight, ShieldCheck, Zap } from "lucide-react";
 
 export default function InteractiveWorkspace() {
   const [activeCategory, setActiveCategory] = useState(CATEGORIES[0].id);
-  const [activeToolSlug, setActiveToolSlug] = useState<string | null>(null);
+  const [activeToolSlug, setActiveToolSlug] = useState<string | null>(
+    TOOLS_REGISTRY.filter((t) => t.category === CATEGORIES[0].id)[0]?.slug || null
+  );
 
   // Filter tools matching active category
   const filteredTools = TOOLS_REGISTRY.filter((t) => t.category === activeCategory);
 
-  // Automatically select the first tool when category changes
-  useEffect(() => {
-    if (filteredTools.length > 0) {
-      setActiveToolSlug(filteredTools[0].slug);
+  const handleCategoryChange = (catId: string) => {
+    setActiveCategory(catId);
+    const catTools = TOOLS_REGISTRY.filter((t) => t.category === catId);
+    if (catTools.length > 0) {
+      setActiveToolSlug(catTools[0].slug);
     } else {
       setActiveToolSlug(null);
     }
-  }, [activeCategory]);
+  };
 
   // Listen to external category selection events (from header or cards)
   useEffect(() => {
     const handleSelectCategory = (e: any) => {
       if (e.detail?.id) {
-        setActiveCategory(e.detail.id);
+        handleCategoryChange(e.detail.id);
         const element = document.getElementById("workspace");
         if (element) {
           element.scrollIntoView({ behavior: "smooth" });
@@ -36,6 +39,24 @@ export default function InteractiveWorkspace() {
     };
     window.addEventListener("select-category", handleSelectCategory);
     return () => window.removeEventListener("select-category", handleSelectCategory);
+  }, []);
+
+  // Listen to external tool selection events (from card clicks, search, or slides)
+  useEffect(() => {
+    const handleSelectTool = (e: any) => {
+      if (e.detail?.slug) {
+        if (e.detail.category) {
+          setActiveCategory(e.detail.category);
+        }
+        setActiveToolSlug(e.detail.slug);
+        const element = document.getElementById("workspace");
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+    };
+    window.addEventListener("select-tool", handleSelectTool);
+    return () => window.removeEventListener("select-tool", handleSelectTool);
   }, []);
 
   const activeTool = TOOLS_REGISTRY.find((t) => t.slug === activeToolSlug);
@@ -66,7 +87,7 @@ export default function InteractiveWorkspace() {
               return (
                 <button
                   key={cat.id}
-                  onClick={() => setActiveCategory(cat.id)}
+                  onClick={() => handleCategoryChange(cat.id)}
                   className={`px-4 py-2 rounded-xl text-2xs font-extrabold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 active:scale-95 ${
                     isActive
                       ? "bg-[#7d4dff] text-white shadow-sm shadow-[#7d4dff]/20"
