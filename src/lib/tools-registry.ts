@@ -25,6 +25,7 @@ export interface ToolItem {
 
 export const CATEGORIES = [
   { id: "gif-maker", name: "GIF Maker", desc: "Create animated GIFs online from images or video clips." },
+  { id: "documents", name: "PDF & Document Tools", desc: "Merge, split, rotate, and compress PDF documents locally." },
   { id: "video-tools", name: "Video Tools", desc: "Convert video to GIF, cut, crop, and resize video files." },
   { id: "audio", name: "Audio", desc: "Cut, join, and optimize audio files locally." },
   { id: "transform", name: "Transform", desc: "Resize, crop, and rotate images or media files." },
@@ -37,7 +38,6 @@ export const CATEGORIES = [
   { id: "avif", name: "AVIF", desc: "Optimize and convert AVIF format images." },
   { id: "jxl", name: "JXL", desc: "Convert JPEG XL images to common web formats." },
   { id: "svg", name: "SVG", desc: "Optimize, clean, and convert SVG files." },
-  { id: "documents", name: "PDF & Document Tools", desc: "Merge, split, rotate, and compress PDF documents locally." },
   { id: "webmaster", name: "Webmaster Tools", desc: "Check configuration, security, and responsive layouts." },
   { id: "performance", name: "Performance Tools", desc: "Optimize files, verify compression, and measure load times." },
   { id: "operational", name: "Operational Tools", desc: "Utilities to generate mockups, open links, and clean files." },
