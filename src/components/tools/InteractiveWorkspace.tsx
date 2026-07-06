@@ -60,7 +60,7 @@ export default function InteractiveWorkspace() {
         <div className="border border-border/80 bg-white dark:bg-card rounded-3xl shadow-xs overflow-hidden flex flex-col">
           
           {/* BAR 1: Category Selection Tabs */}
-          <div className="border-b border-border/40 bg-neutral-50/50 dark:bg-neutral-900/10 px-4 py-3 flex items-center gap-2 overflow-x-auto scrollbar-none select-none">
+          <div className="border-b border-[#1e293b] bg-[#0f172a] dark:bg-[#0d111a] px-4 py-3 flex items-center gap-2 overflow-x-auto scrollbar-none select-none">
             {CATEGORIES.map((cat) => {
               const isActive = activeCategory === cat.id;
               return (
@@ -69,8 +69,8 @@ export default function InteractiveWorkspace() {
                   onClick={() => setActiveCategory(cat.id)}
                   className={`px-4 py-2 rounded-xl text-2xs font-extrabold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 active:scale-95 ${
                     isActive
-                      ? "bg-[#7d4dff] text-white shadow-sm shadow-[#7d4dff]/15"
-                      : "text-muted-foreground hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800/40"
+                      ? "bg-[#7d4dff] text-white shadow-sm shadow-[#7d4dff]/20"
+                      : "text-neutral-300 hover:text-white hover:bg-white/5"
                   }`}
                 >
                   <span className="text-xs">
@@ -88,7 +88,7 @@ export default function InteractiveWorkspace() {
           </div>
 
           {/* BAR 2: Tool Selection Grid / Row */}
-          <div className="border-b border-border/40 px-5 py-4 bg-white dark:bg-card/45 flex flex-wrap gap-2 select-none">
+          <div className="border-b border-border/40 px-5 py-4 bg-[#f8fafc] dark:bg-[#141822] flex flex-wrap gap-2 select-none">
             {filteredTools.map((tool) => {
               const isActive = activeToolSlug === tool.slug;
               return (
@@ -97,8 +97,8 @@ export default function InteractiveWorkspace() {
                   onClick={() => setActiveToolSlug(tool.slug)}
                   className={`px-3 py-1.5 rounded-xl border text-3xs font-extrabold transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 ${
                     isActive
-                      ? "border-[#7d4dff] text-[#7d4dff] bg-[#7d4dff]/5"
-                      : "border-border/60 text-muted-foreground hover:text-foreground hover:border-border"
+                      ? "border-[#7d4dff] text-[#7d4dff] bg-[#7d4dff]/10 dark:bg-[#7d4dff]/20"
+                      : "bg-white dark:bg-[#1a202c] border-border/80 text-muted-foreground hover:text-foreground hover:border-[#7d4dff]/30"
                   }`}
                 >
                   <LucideIcon name={tool.iconName} className="h-3.5 w-3.5" />
