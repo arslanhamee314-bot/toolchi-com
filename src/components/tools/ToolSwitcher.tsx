@@ -38,6 +38,7 @@ import MultipleUrlOpener from "./MultipleUrlOpener";
 import Minifier from "./Minifier";
 import Unminifier from "./Unminifier";
 import AmpValidator from "./AmpValidator";
+import GifMakerSuite from "./GifMakerSuite";
 import DomainGenerator from "./DomainGenerator";
 
 interface ToolSwitcherProps {
@@ -46,6 +47,20 @@ interface ToolSwitcherProps {
 
 export default function ToolSwitcher({ slug }: ToolSwitcherProps) {
   switch (slug) {
+    // === GIF MAKER SUITE ===
+    case "gif-maker":
+    case "video-to-gif":
+    case "gif-to-mp4":
+    case "gif-to-webm":
+    case "gif-to-mov":
+    case "webp-to-gif":
+    case "apng-to-gif":
+    case "avif-to-gif":
+    case "jxl-to-gif":
+    case "svg-to-gif":
+    case "gif-analyzer":
+      return <GifMakerSuite slug={slug} />;
+
     // === 1. WEBMASTER TOOLS ===
     case "robots-txt-checker":
       return <RobotsChecker />;

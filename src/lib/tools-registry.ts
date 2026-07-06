@@ -47,9 +47,19 @@ export const CATEGORIES = [
 
 const RAW_TOOLS_REGISTRY = [
   // Media Tools (Pre-wired Stubs)
-  { slug: "gif-maker", name: "GIF Maker", category: "gif-maker", shortDesc: "Create animated GIFs from PNG/JPG or videos.", iconName: "Image" },
+  // GIF Maker Suite Tools
+  { slug: "gif-maker", name: "GIF Maker", category: "gif-maker", shortDesc: "Create animated GIFs from PNG/JPG images.", iconName: "Image" },
   { slug: "video-to-gif", name: "Video to GIF", category: "gif-maker", shortDesc: "Convert mp4/webm videos into lightweight animated GIFs.", iconName: "Video" },
-  { slug: "gif-resizer", name: "GIF Resizer", category: "gif-maker", shortDesc: "Resize and scale animated GIF files dynamically.", iconName: "Maximize" },
+  { slug: "gif-to-mp4", name: "GIF to MP4", category: "gif-maker", shortDesc: "Convert animated GIF to standard MP4 video.", iconName: "Film" },
+  { slug: "gif-to-webm", name: "GIF to WebM", category: "gif-maker", shortDesc: "Convert animated GIF to high-efficiency WebM video.", iconName: "Video" },
+  { slug: "gif-to-mov", name: "GIF to MOV", category: "gif-maker", shortDesc: "Convert animated GIF to Apple MOV video format.", iconName: "Film" },
+  { slug: "webp-to-gif", name: "WebP to GIF", category: "gif-maker", shortDesc: "Convert WebP images to animated GIF format.", iconName: "RefreshCw" },
+  { slug: "apng-to-gif", name: "APNG to GIF", category: "gif-maker", shortDesc: "Convert animated PNG (APNG) to standard animated GIF.", iconName: "RefreshCw" },
+  { slug: "avif-to-gif", name: "AVIF to GIF", category: "gif-maker", shortDesc: "Convert AVIF images to animated GIF format.", iconName: "RefreshCw" },
+  { slug: "jxl-to-gif", name: "JXL to GIF", category: "gif-maker", shortDesc: "Convert JPEG XL images to animated GIF format.", iconName: "RefreshCw" },
+  { slug: "svg-to-gif", name: "SVG to GIF", category: "gif-maker", shortDesc: "Convert vector SVG frames to animated GIF format.", iconName: "RefreshCw" },
+  { slug: "gif-analyzer", name: "GIF Analyzer", category: "gif-maker", shortDesc: "Inspect binary metadata, dimensions, and frames of a GIF.", iconName: "BarChart2" },
+
   { slug: "video-cutter", name: "Video Cutter", category: "video-tools", shortDesc: "Cut and trim video segments online locally.", iconName: "Scissors" },
   { slug: "video-cropper", name: "Video Cropper", category: "video-tools", shortDesc: "Crop video dimensions and remove borders.", iconName: "Crop" },
   { slug: "video-to-webp", name: "Video to WebP", category: "video-tools", shortDesc: "Convert video files to animated WebP format.", iconName: "RefreshCw" },
@@ -69,7 +79,6 @@ const RAW_TOOLS_REGISTRY = [
   { slug: "webp-to-jpg", name: "WebP to JPG", category: "webp", shortDesc: "Convert WebP images to JPG format locally.", iconName: "ArrowRightLeft" },
   { slug: "jpg-to-webp", name: "JPG to WebP", category: "webp", shortDesc: "Convert JPG and PNG images to WebP format.", iconName: "ArrowLeftRight" },
   { slug: "apng-maker", name: "APNG Maker", category: "apng", shortDesc: "Assemble multiple PNG images into an animated APNG.", iconName: "Flame" },
-  { slug: "apng-to-gif", name: "APNG to GIF", category: "apng", shortDesc: "Convert animated PNG files to animated GIF format.", iconName: "RefreshCw" },
   { slug: "avif-converter", name: "AVIF Converter", category: "avif", shortDesc: "Convert AVIF images to PNG/JPG format.", iconName: "RefreshCw" },
   { slug: "jpg-to-avif", name: "JPG to AVIF", category: "avif", shortDesc: "Convert standard images to high-efficiency AVIF format.", iconName: "ArrowRightLeft" },
   { slug: "jxl-to-png", name: "JXL to PNG", category: "jxl", shortDesc: "Convert JPEG XL files to compatible PNG images.", iconName: "FileImage" },
