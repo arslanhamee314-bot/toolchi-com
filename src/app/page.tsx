@@ -3,6 +3,8 @@ import ToolsDirectory from "@/components/tools/ToolsDirectory";
 import ToolsSlider from "@/components/tools/ToolsSlider";
 import HeroSearch from "@/components/tools/HeroSearch";
 import ToolCard from "@/components/tools/ToolCard";
+import InteractiveWorkspace from "@/components/tools/InteractiveWorkspace";
+import CategoryFilters from "@/components/tools/CategoryFilters";
 import { CATEGORIES, TOOLS_REGISTRY } from "@/lib/tools-registry";
 import { ShieldCheck, Cpu, UserMinus, Gift } from "lucide-react";
 
@@ -127,33 +129,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 2. Quick Use-Case Filters */}
+      {/* 2. Interactive Live Workspace */}
+      <InteractiveWorkspace />
+
+      {/* 3. Quick Use-Case Filters */}
       <section id="categories" className="py-12 bg-white dark:bg-card border-b border-border/40 scroll-mt-20">
         <div className="max-w-6xl mx-auto px-6 w-full flex flex-col gap-6">
           <div className="flex flex-col gap-1 text-center lg:text-left">
             <h2 className="text-xl font-bold tracking-tight text-foreground">Browse by Use Case</h2>
             <p className="text-xs text-muted-foreground leading-normal">Select a category to quickly view corresponding tools.</p>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-            {CATEGORIES.map((cat) => (
-              <a
-                key={cat.id}
-                href={`#${cat.id}`}
-                className="p-4 rounded-xl border border-border bg-neutral-50 dark:bg-[#1a1f2c] hover:border-[#7d4dff]/40 hover:bg-[#7d4dff]/5 dark:hover:bg-[#7d4dff]/10 text-center flex flex-col items-center justify-center gap-2.5 transition-all active:scale-95 group shadow-2xs"
-              >
-                {/* Visual Category badge */}
-                <div className="h-10 w-10 rounded-full bg-[#f3eeff] dark:bg-[#251e1c] text-[#7d4dff] flex items-center justify-center font-bold text-base border border-[#e8ddff]/40 group-hover:scale-105 transition-transform">
-                  {cat.id === "documents" && "📄"}
-                  {cat.id === "webmaster" && "🌐"}
-                  {cat.id === "performance" && "⚡"}
-                  {cat.id === "operational" && "⚙️"}
-                  {cat.id === "developer" && "💻"}
-                  {cat.id === "ai" && "🤖"}
-                </div>
-                <span className="text-[9px] font-extrabold text-foreground group-hover:text-[#7d4dff] transition-colors leading-tight uppercase tracking-wider">{cat.name.replace(" Tools", "").replace(" Utilities", "")}</span>
-              </a>
-            ))}
-          </div>
+          <CategoryFilters />
         </div>
       </section>
 
