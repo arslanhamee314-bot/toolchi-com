@@ -42,26 +42,29 @@ export default function Header() {
           <span className="font-extrabold text-base text-[#20242d] dark:text-[#f6f7fb] tracking-tight">Toolchi</span>
         </Link>
 
-        {/* Navigation links (Desktop) */}
-        <nav className="hidden md:flex items-center gap-6 text-xs font-bold text-[#363c48] dark:text-[#a0a8b9]">
-          <Link href="/" className="hover:text-[#7d4dff] transition-colors">Home</Link>
-          <Link href="/tools" className="hover:text-[#7d4dff] transition-colors">Tools</Link>
-          <Link href="/#categories" className="hover:text-[#7d4dff] transition-colors">Categories</Link>
-          <Link href="/#popular-tools" className="hover:text-[#7d4dff] transition-colors">Popular</Link>
-          <Link href="/#recent-tools" className="hover:text-[#7d4dff] transition-colors">New</Link>
-          <Link href="/blog" className="hover:text-[#7d4dff] transition-colors">Blogs</Link>
-        </nav>
+        {/* Right side container holding both Nav and Controls */}
+        <div className="hidden md:flex items-center gap-8 ml-auto">
+          {/* Navigation links (Desktop) */}
+          <nav className="flex items-center gap-6 text-xs font-bold text-[#363c48] dark:text-[#a0a8b9]">
+            <Link href="/" className="hover:text-[#7d4dff] transition-colors">Home</Link>
+            <Link href="/tools" className="hover:text-[#7d4dff] transition-colors">Tools</Link>
+            <Link href="/#categories" className="hover:text-[#7d4dff] transition-colors">Categories</Link>
+            <Link href="/#popular-tools" className="hover:text-[#7d4dff] transition-colors">Popular</Link>
+            <Link href="/#recent-tools" className="hover:text-[#7d4dff] transition-colors">New</Link>
+            <Link href="/blog" className="hover:text-[#7d4dff] transition-colors">Blogs</Link>
+          </nav>
 
-        <div className="hidden md:flex items-center gap-3 shrink-0">
-          <input 
-            type="text" 
-            placeholder="Search..." 
-            value={searchVal}
-            onChange={(e) => setSearchVal(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSearchSubmit(searchVal)}
-            className="hidden lg:block w-36 px-3 py-1.5 text-xs bg-neutral-100 dark:bg-neutral-800 border border-border rounded-lg outline-none focus:border-primary/50 text-foreground"
-          />
-          <ThemeToggle />
+          <div className="flex items-center gap-3 shrink-0">
+            <input 
+              type="text" 
+              placeholder="Search..." 
+              value={searchVal}
+              onChange={(e) => setSearchVal(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearchSubmit(searchVal)}
+              className="hidden lg:block w-36 px-3 py-1.5 text-xs bg-neutral-100 dark:bg-neutral-800 border border-border rounded-lg outline-none focus:border-primary/50 text-foreground"
+            />
+            <ThemeToggle />
+          </div>
         </div>
 
         {/* Mobile Controls Row (Hamburger + ThemeToggle) */}
