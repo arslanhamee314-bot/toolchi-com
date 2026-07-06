@@ -29,7 +29,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-4 z-40 max-w-6xl mx-auto w-[calc(100%-2rem)] rounded-2xl border border-border/80 bg-white/70 dark:bg-[#151923]/70 backdrop-blur-xl shadow-xs transition-all duration-300 print:hidden">
+    <header className="sticky top-4 z-40 max-w-6xl mx-auto w-[calc(100%-2rem)] rounded-2xl border border-border/80 bg-white/40 dark:bg-[#151923]/40 backdrop-blur-xl shadow-xs transition-all duration-300 print:hidden">
       <div className="flex items-center justify-between px-6 py-3.5">
         
         {/* Logo/Brand link */}
