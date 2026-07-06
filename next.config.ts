@@ -5,8 +5,10 @@ const nextConfig: NextConfig = {
   devIndicators: false, // Disables development overlay indicators to prevent telemetry/network crashes
   webpack: (config, { dev }) => {
     if (dev) {
-      // Disable webpack filesystem caching on Windows to prevent ENOENT file-locking crashes during hot reloads
-      config.cache = false;
+      // Use memory cache in development to prevent filesystem write locks on Windows
+      config.cache = {
+        type: "memory",
+      };
     }
     return config;
   },
