@@ -41,6 +41,14 @@ export default function TransformSuite({ slug }: TransformSuiteProps) {
   const [textColor, setTextColor] = useState("#ffffff");
   const [watermarkOpacity, setWatermarkOpacity] = useState(0.4);
 
+  // Phase 2: Censor / Rounded Corners
+  const [censorX, setCensorX] = useState(0);
+  const [censorY, setCensorY] = useState(0);
+  const [censorW, setCensorW] = useState(100);
+  const [censorH, setCensorH] = useState(100);
+  const [censorPixelSize, setCensorPixelSize] = useState(12);
+  const [cornerRadius, setCornerRadius] = useState(30);
+
   const imageRef = useRef<HTMLImageElement>(null);
 
   const getToolTitle = () => {
@@ -53,6 +61,9 @@ export default function TransformSuite({ slug }: TransformSuiteProps) {
         return "Image Filters & Creative Effects";
       case "write-on-image": return "Write Text on Image (Captions/Memes)";
       case "watermark-image": return "Watermark Image (Protect creative assets)";
+      case "censor-image": return "Censor / Pixelate Image (Blur sensitive areas)";
+      case "invert-colors": return "Invert Colors (Negate RGB channels)";
+      case "rounded-corners": return "Rounded Corners (Add border radius to image)";
       default: return "Image Transformation Workspace";
     }
   };
@@ -127,8 +138,40 @@ export default function TransformSuite({ slug }: TransformSuiteProps) {
         ctx.translate(w / 2, h / 2);
         ctx.rotate((rotateAngle * Math.PI) / 180);
         ctx.drawImage(img, -originalWidth / 2, -originalHeight / 2, originalWidth, originalHeight);
+      } else if (slug === "rounded-corners") {
+        // Clip to rounded rect then draw
+        ctx.beginPath();
+        ctx.roundRect(0, 0, w, h, cornerRadius);
+        ctx.clip();
+        ctx.drawImage(img, 0, 0, w, h);
       } else {
         ctx.drawImage(img, 0, 0, w, h);
+      }
+
+      // 3b. Invert colors
+      if (slug === "invert-colors") {
+        const imageData = ctx.getImageData(0, 0, w, h);
+        const d = imageData.data;
+        for (let i = 0; i < d.length; i += 4) {
+          d[i] = 255 - d[i];
+          d[i + 1] = 255 - d[i + 1];
+          d[i + 2] = 255 - d[i + 2];
+        }
+        ctx.putImageData(imageData, 0, 0);
+      }
+
+      // 3c. Censor / Pixelate a region
+      if (slug === "censor-image") {
+        const ps = Math.max(1, censorPixelSize);
+        for (let row = censorY; row < censorY + censorH; row += ps) {
+          for (let col = censorX; col < censorX + censorW; col += ps) {
+            const blockW = Math.min(ps, censorX + censorW - col);
+            const blockH = Math.min(ps, censorY + censorH - row);
+            const sample = ctx.getImageData(col, row, 1, 1).data;
+            ctx.fillStyle = `rgb(${sample[0]},${sample[1]},${sample[2]})`;
+            ctx.fillRect(col, row, blockW, blockH);
+          }
+        }
       }
 
       // 4. Apply text or watermark overlays
@@ -259,6 +302,39 @@ export default function TransformSuite({ slug }: TransformSuiteProps) {
                   </div>
                 )}
 
+                {/* Censor tool */}
+                {slug === "censor-image" && (
+                  <div className="space-y-3 col-span-2 grid grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <span className="text-3xs font-extrabold text-muted-foreground uppercase">Censor X</span>
+                      <input type="number" value={censorX} onChange={(e) => setCensorX(Number(e.target.value))} className="w-full px-3 py-1.5 bg-neutral-50 dark:bg-[#1a202c] border border-border rounded-xl outline-none" />
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-3xs font-extrabold text-muted-foreground uppercase">Censor Y</span>
+                      <input type="number" value={censorY} onChange={(e) => setCensorY(Number(e.target.value))} className="w-full px-3 py-1.5 bg-neutral-50 dark:bg-[#1a202c] border border-border rounded-xl outline-none" />
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-3xs font-extrabold text-muted-foreground uppercase">Width</span>
+                      <input type="number" value={censorW} onChange={(e) => setCensorW(Number(e.target.value))} className="w-full px-3 py-1.5 bg-neutral-50 dark:bg-[#1a202c] border border-border rounded-xl outline-none" />
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-3xs font-extrabold text-muted-foreground uppercase">Height</span>
+                      <input type="number" value={censorH} onChange={(e) => setCensorH(Number(e.target.value))} className="w-full px-3 py-1.5 bg-neutral-50 dark:bg-[#1a202c] border border-border rounded-xl outline-none" />
+                    </div>
+                    <div className="space-y-1 col-span-2">
+                      <span className="text-3xs font-extrabold text-muted-foreground uppercase">Pixel Block Size ({censorPixelSize}px)</span>
+                      <input type="range" min="4" max="40" value={censorPixelSize} onChange={(e) => setCensorPixelSize(Number(e.target.value))} className="w-full accent-[#7d4dff]" />
+                    </div>
+                  </div>
+                )}
+
+                {/* Rounded corners */}
+                {slug === "rounded-corners" && (
+                  <div className="space-y-1.5 col-span-2">
+                    <span className="text-3xs font-extrabold text-muted-foreground uppercase">Corner Radius ({cornerRadius}px)</span>
+                    <input type="range" min="0" max="200" value={cornerRadius} onChange={(e) => setCornerRadius(Number(e.target.value))} className="w-full accent-[#7d4dff]" />
+                  </div>
+                )}
                 {/* TOOL: Rotate */}
                 {slug === "rotate-image" && (
                   <div className="space-y-1.5 col-span-2">

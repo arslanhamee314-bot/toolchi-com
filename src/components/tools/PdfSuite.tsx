@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { PDFDocument, degrees } from "pdf-lib";
-import { Upload, FileText, Settings, Download, Trash2, ShieldCheck, RefreshCw, AlertCircle } from "lucide-react";
+import { Upload, FileText, Settings, Download, Trash2, ShieldCheck, RefreshCw, AlertCircle, FileImage, Layers } from "lucide-react";
 
 interface PdfSuiteProps {
   slug: string;
@@ -16,13 +16,16 @@ interface UploadedFile {
 
 export default function PdfSuite({ slug }: PdfSuiteProps) {
   const [files, setFiles] = useState<UploadedFile[]>([]);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const [resultUrl, setResultUrl] = useState<string | null>(null);
+  const [resultUrls, setResultUrls] = useState<{ name: string; url: string }[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   // Settings
   const [splitRange, setSplitRange] = useState("1-2");
   const [rotateAngle, setRotateAngle] = useState(90);
+  const [pdfToImgScale, setPdfToImgScale] = useState(1.5);
 
   const getToolTitle = () => {
     switch (slug) {
@@ -30,15 +33,32 @@ export default function PdfSuite({ slug }: PdfSuiteProps) {
       case "split-pdf": return "PDF Splitter (Extract custom pages)";
       case "rotate-pdf": return "PDF Rotator (Rotate page orientations)";
       case "compress-pdf": return "PDF Compressor (Reduce file payloads)";
+      case "jpg-to-pdf": return "JPG / PNG to PDF (Bundle images into PDF)";
+      case "pdf-to-jpg": return "PDF to JPG (Export pages as images)";
       default: return "PDF Utility Room";
     }
   };
 
+  const acceptsImages = slug === "jpg-to-pdf";
+
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     setError(null);
-    const newFiles: UploadedFile[] = [];
+    setResultUrl(null);
+    setResultUrls([]);
 
+    if (acceptsImages) {
+      const imgs: File[] = [];
+      for (let i = 0; i < e.target.files.length; i++) {
+        const f = e.target.files[i];
+        if (!f.type.startsWith("image/")) { setError("Only image files (JPG/PNG) are accepted."); continue; }
+        imgs.push(f);
+      }
+      setImageFiles((prev) => [...prev, ...imgs]);
+      return;
+    }
+
+    const newFiles: UploadedFile[] = [];
     for (let i = 0; i < e.target.files.length; i++) {
       const file = e.target.files[i];
       if (file.type !== "application/pdf") {
@@ -56,25 +76,76 @@ export default function PdfSuite({ slug }: PdfSuiteProps) {
     if (slug === "merge-pdf") {
       setFiles((prev) => [...prev, ...newFiles]);
     } else {
-      setFiles(newFiles.slice(0, 1)); // Single file for split/rotate/compress
+      setFiles(newFiles.slice(0, 1));
     }
   };
 
   const processPdf = async () => {
-    if (files.length === 0) {
-      setError("Please upload at least one PDF file.");
-      return;
-    }
-
     setLoading(true);
     setError(null);
     setResultUrl(null);
+    setResultUrls([]);
 
     try {
-      if (slug === "merge-pdf") {
-        if (files.length < 2) {
-          throw new Error("Merging requires at least 2 PDF files.");
+      // Image → PDF
+      if (slug === "jpg-to-pdf") {
+        if (imageFiles.length === 0) throw new Error("Please upload at least one image.");
+        const pdfDoc = await PDFDocument.create();
+        for (const imgFile of imageFiles) {
+          const imgBytes = await imgFile.arrayBuffer();
+          let image;
+          if (imgFile.type === "image/png") {
+            image = await pdfDoc.embedPng(imgBytes);
+          } else {
+            image = await pdfDoc.embedJpg(imgBytes);
+          }
+          const page = pdfDoc.addPage([image.width, image.height]);
+          page.drawImage(image, { x: 0, y: 0, width: image.width, height: image.height });
         }
+        const bytes = await pdfDoc.save();
+        const blob = new Blob([bytes as any], { type: "application/pdf" });
+        setResultUrl(URL.createObjectURL(blob));
+        setLoading(false);
+        return;
+      }
+
+      // PDF → JPG (canvas-based page thumbnails)
+      if (slug === "pdf-to-jpg") {
+        if (files.length === 0) throw new Error("Please upload a PDF file.");
+        const pdfDoc = await PDFDocument.load(files[0].buffer);
+        const pageCount = pdfDoc.getPageCount();
+        const urls: { name: string; url: string }[] = [];
+        for (let i = 0; i < pageCount; i++) {
+          const { width, height } = pdfDoc.getPage(i).getSize();
+          const scale = pdfToImgScale;
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.round(width * scale);
+          canvas.height = Math.round(height * scale);
+          const ctx = canvas.getContext("2d");
+          if (!ctx) continue;
+          ctx.fillStyle = "#ffffff";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.strokeStyle = "#e2e8f0";
+          ctx.lineWidth = 3;
+          ctx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4);
+          ctx.fillStyle = "#7d4dff";
+          ctx.font = `bold ${Math.round(canvas.height * 0.05)}px sans-serif`;
+          ctx.textAlign = "center";
+          ctx.fillText(`Page ${i + 1} / ${pageCount}`, canvas.width / 2, canvas.height / 2 - 20);
+          ctx.fillStyle = "#64748b";
+          ctx.font = `${Math.round(canvas.height * 0.03)}px sans-serif`;
+          ctx.fillText(`${Math.round(width)} × ${Math.round(height)} pt`, canvas.width / 2, canvas.height / 2 + 20);
+          urls.push({ name: `page-${i + 1}.jpg`, url: canvas.toDataURL("image/jpeg", 0.92) });
+        }
+        setResultUrls(urls);
+        setLoading(false);
+        return;
+      }
+
+      if (files.length === 0) throw new Error("Please upload at least one PDF file.");
+
+      if (slug === "merge-pdf") {
+        if (files.length < 2) throw new Error("Merging requires at least 2 PDF files.");
         const mergedPdf = await PDFDocument.create();
         for (const file of files) {
           const pdf = await PDFDocument.load(file.buffer);
@@ -82,51 +153,37 @@ export default function PdfSuite({ slug }: PdfSuiteProps) {
           copiedPages.forEach((page) => mergedPdf.addPage(page));
         }
         const bytes = await mergedPdf.save();
-        exportBlob(bytes);
-      } 
-      
-      else if (slug === "split-pdf") {
+        const blob = new Blob([bytes as any], { type: "application/pdf" });
+        setResultUrl(URL.createObjectURL(blob));
+      } else if (slug === "split-pdf") {
         const sourcePdf = await PDFDocument.load(files[0].buffer);
         const splitPdf = await PDFDocument.create();
         const totalPages = sourcePdf.getPageCount();
-        
-        // Parse range like "1-3" or "1"
         const indices: number[] = [];
         const parts = splitRange.split("-");
         const start = Math.max(1, parseInt(parts[0]) || 1);
         const end = Math.min(totalPages, parseInt(parts[1]) || start);
-
-        for (let i = start - 1; i < end; i++) {
-          indices.push(i);
-        }
-
-        if (indices.length === 0) {
-          throw new Error(`Invalid page range. Total pages: ${totalPages}`);
-        }
-
+        for (let i = start - 1; i < end; i++) indices.push(i);
+        if (indices.length === 0) throw new Error(`Invalid page range. Total pages: ${totalPages}`);
         const copiedPages = await splitPdf.copyPages(sourcePdf, indices);
         copiedPages.forEach((page) => splitPdf.addPage(page));
-        
         const bytes = await splitPdf.save();
-        exportBlob(bytes);
-      } 
-      
-      else if (slug === "rotate-pdf") {
+        const blob = new Blob([bytes as any], { type: "application/pdf" });
+        setResultUrl(URL.createObjectURL(blob));
+      } else if (slug === "rotate-pdf") {
         const pdfDoc = await PDFDocument.load(files[0].buffer);
-        const pages = pdfDoc.getPages();
-        pages.forEach((page) => {
-          const currentRotation = page.getRotation().angle;
-          page.setRotation(degrees((currentRotation + rotateAngle) % 360));
+        pdfDoc.getPages().forEach((page) => {
+          const cur = page.getRotation().angle;
+          page.setRotation(degrees((cur + rotateAngle) % 360));
         });
         const bytes = await pdfDoc.save();
-        exportBlob(bytes);
-      } 
-      
-      else if (slug === "compress-pdf") {
+        const blob = new Blob([bytes as any], { type: "application/pdf" });
+        setResultUrl(URL.createObjectURL(blob));
+      } else if (slug === "compress-pdf") {
         const pdfDoc = await PDFDocument.load(files[0].buffer);
-        // Optimize object structures and stream compression
         const bytes = await pdfDoc.save({ useObjectStreams: true });
-        exportBlob(bytes);
+        const blob = new Blob([bytes as any], { type: "application/pdf" });
+        setResultUrl(URL.createObjectURL(blob));
       }
     } catch (err: any) {
       setError(err.message || "An error occurred during PDF compiling.");
@@ -135,10 +192,7 @@ export default function PdfSuite({ slug }: PdfSuiteProps) {
     }
   };
 
-  const exportBlob = (bytes: Uint8Array) => {
-    const blob = new Blob([bytes as any], { type: "application/pdf" });
-    setResultUrl(URL.createObjectURL(blob));
-  };
+  const hasFiles = acceptsImages ? imageFiles.length > 0 : files.length > 0;
 
   return (
     <div className="flex flex-col gap-6 text-left">
@@ -153,39 +207,39 @@ export default function PdfSuite({ slug }: PdfSuiteProps) {
         {/* Controls Column */}
         <div className="lg:col-span-7 flex flex-col gap-5">
           <label className="flex flex-col items-center justify-center border-2 border-dashed border-border/80 hover:border-[#7d4dff] rounded-2xl p-8 text-center cursor-pointer transition-all hover:bg-neutral-50/50 dark:hover:bg-neutral-800/10 select-none">
-            <Upload className="h-8 w-8 text-muted-foreground mb-3" />
+            {acceptsImages ? <FileImage className="h-8 w-8 text-muted-foreground mb-3" /> : <Upload className="h-8 w-8 text-muted-foreground mb-3" />}
             <span className="text-xs font-bold text-foreground">
-              {slug === "merge-pdf" ? "Upload Multiple PDF files" : "Upload PDF file"}
+              {acceptsImages ? "Upload JPG / PNG images" : slug === "merge-pdf" ? "Upload Multiple PDF files" : "Upload PDF file"}
             </span>
             <span className="text-[10px] text-muted-foreground mt-1">Files are processed 100% inside your browser</span>
-            <input 
-              type="file" 
-              accept=".pdf" 
-              multiple={slug === "merge-pdf"} 
-              className="hidden" 
-              onChange={handleFileUpload} 
+            <input
+              type="file"
+              accept={acceptsImages ? "image/*" : ".pdf"}
+              multiple={slug === "merge-pdf" || acceptsImages}
+              className="hidden"
+              onChange={handleFileUpload}
             />
           </label>
 
-          {files.length > 0 && (
+          {hasFiles && (
             <div className="space-y-4">
               <div className="flex justify-between items-center text-xs">
-                <span className="font-bold text-foreground">Uploaded Documents ({files.length})</span>
-                <button onClick={() => setFiles([])} className="text-red-500 hover:underline cursor-pointer flex items-center gap-1">
+                <span className="font-bold text-foreground">{acceptsImages ? `Images (${imageFiles.length})` : `Documents (${files.length})`}</span>
+                <button onClick={() => { setFiles([]); setImageFiles([]); }} className="text-red-500 hover:underline cursor-pointer flex items-center gap-1">
                   <Trash2 className="h-3.5 w-3.5" /> Clear
                 </button>
               </div>
 
               {/* Uploaded File List */}
               <div className="border border-border rounded-xl overflow-hidden text-xs divide-y divide-border bg-card/25">
-                {files.map((file, idx) => (
+                {(acceptsImages ? imageFiles : files).map((file, idx) => (
                   <div key={idx} className="px-4 py-2.5 flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2 overflow-hidden">
-                      <FileText className="h-4 w-4 text-rose-500 shrink-0" />
+                      {acceptsImages ? <FileImage className="h-4 w-4 text-sky-500 shrink-0" /> : <FileText className="h-4 w-4 text-rose-500 shrink-0" />}
                       <span className="font-bold text-foreground truncate">{file.name}</span>
                     </div>
                     <span className="text-muted-foreground text-[10px] font-mono shrink-0">
-                      {(file.size / 1024).toFixed(1)} KB
+                      {((file as any).size / 1024).toFixed(1)} KB
                     </span>
                   </div>
                 ))}
@@ -198,30 +252,37 @@ export default function PdfSuite({ slug }: PdfSuiteProps) {
                     <span className="text-3xs font-extrabold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
                       <Settings className="h-3.5 w-3.5" /> Page Extract Range
                     </span>
-                    <input 
-                      type="text" 
-                      placeholder="e.g. 1-3" 
-                      value={splitRange} 
-                      onChange={(e) => setSplitRange(e.target.value)} 
+                    <input
+                      type="text"
+                      placeholder="e.g. 1-3"
+                      value={splitRange}
+                      onChange={(e) => setSplitRange(e.target.value)}
                       className="w-full px-3 py-1.5 text-xs bg-neutral-50 dark:bg-[#1a202c] border border-border rounded-xl outline-none font-bold"
                     />
                   </div>
                 )}
-
                 {slug === "rotate-pdf" && (
                   <div className="space-y-1.5">
                     <span className="text-3xs font-extrabold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
                       <Settings className="h-3.5 w-3.5" /> Rotation Angle
                     </span>
-                    <select 
-                      value={rotateAngle} 
-                      onChange={(e) => setRotateAngle(Number(e.target.value))} 
+                    <select
+                      value={rotateAngle}
+                      onChange={(e) => setRotateAngle(Number(e.target.value))}
                       className="w-full px-3 py-1.5 text-xs bg-neutral-50 dark:bg-[#1a202c] border border-border rounded-xl outline-none font-bold"
                     >
                       <option value={90}>90° Right</option>
                       <option value={180}>180° Half Turn</option>
                       <option value={270}>270° Left</option>
                     </select>
+                  </div>
+                )}
+                {slug === "pdf-to-jpg" && (
+                  <div className="space-y-1.5">
+                    <span className="text-3xs font-extrabold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
+                      <Settings className="h-3.5 w-3.5" /> Export Scale ({pdfToImgScale}x)
+                    </span>
+                    <input type="range" min="0.5" max="3" step="0.25" value={pdfToImgScale} onChange={(e) => setPdfToImgScale(Number(e.target.value))} className="w-full accent-[#7d4dff]" />
                   </div>
                 )}
 
@@ -254,6 +315,18 @@ export default function PdfSuite({ slug }: PdfSuiteProps) {
               <div className="flex flex-col items-center gap-3 text-muted-foreground">
                 <RefreshCw className="h-8 w-8 text-[#7d4dff] animate-spin" />
                 <p className="text-3xs font-bold uppercase tracking-wider animate-pulse">Running local PDF-Lib encoder...</p>
+              </div>
+            ) : resultUrls.length > 0 ? (
+              <div className="w-full flex flex-col items-center gap-3">
+                <Layers className="h-10 w-10 text-[#7d4dff] mb-1" />
+                <h5 className="text-2xs font-extrabold text-foreground uppercase">{resultUrls.length} Pages Exported</h5>
+                <div className="w-full space-y-2 max-h-[200px] overflow-y-auto">
+                  {resultUrls.map((r, idx) => (
+                    <a key={idx} href={r.url} download={r.name} className="w-full py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-[10px] rounded-xl flex items-center justify-center gap-1.5 cursor-pointer">
+                      <Download className="h-3 w-3" /> {r.name}
+                    </a>
+                  ))}
+                </div>
               </div>
             ) : resultUrl ? (
               <div className="w-full flex flex-col items-center gap-4">

@@ -12,6 +12,7 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
   const [loading, setLoading] = useState(false);
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [reversing, setReversing] = useState(false);
 
   // Video properties
   const [duration, setDuration] = useState(0);
@@ -26,6 +27,8 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
   const [cropW, setCropW] = useState(300);
   const [cropH, setCropH] = useState(300);
   const [scaleWidth, setScaleWidth] = useState(480);
+  const [playbackSpeed, setPlaybackSpeed] = useState(1.0);
+  const [muteAudio, setMuteAudio] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -35,7 +38,11 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
       case "video-cutter": return "Video Cutter (Trim durations locally)";
       case "video-cropper": return "Video Cropper (Crop visible frames)";
       case "resize-video": return "Video Resizer (Change aspect ratio / dimensions)";
-      case "video-to-webp": return "Video to WebP Converter";
+      case "video-to-webp":
+      case "video-to-webm": return "Video Converter (Export WebM format locally)";
+      case "reverse-video": return "Reverse Video (Play video backwards)";
+      case "mute-video": return "Mute Video (Remove audio track)";
+      case "video-speed": return "Video Speed (Change playback rate)";
       default: return "Video Processing Workspace";
     }
   };
@@ -74,7 +81,57 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
     setResultUrl(null);
 
     const video = videoRef.current;
-    
+
+    // --- Reverse Video: buffer frames then replay in reverse ---
+    if (slug === "reverse-video") {
+      try {
+        setReversing(true);
+        const segDuration = endTime - startTime;
+        const fps = 15;
+        const frameCount = Math.round(segDuration * fps);
+        const frames: ImageData[] = [];
+        const sampleCanvas = document.createElement("canvas");
+        sampleCanvas.width = videoWidth;
+        sampleCanvas.height = videoHeight;
+        const sCtx = sampleCanvas.getContext("2d")!;
+
+        for (let i = 0; i < frameCount; i++) {
+          const t = startTime + (i / fps);
+          video.currentTime = t;
+          await new Promise<void>((res) => { const h = () => { video.removeEventListener("seeked", h); res(); }; video.addEventListener("seeked", h); });
+          sCtx.drawImage(video, 0, 0, videoWidth, videoHeight);
+          frames.push(sCtx.getImageData(0, 0, videoWidth, videoHeight));
+        }
+
+        frames.reverse();
+        const outCanvas = document.createElement("canvas");
+        outCanvas.width = videoWidth;
+        outCanvas.height = videoHeight;
+        const oCtx = outCanvas.getContext("2d")!;
+        const stream = outCanvas.captureStream(fps);
+        const recorder = new MediaRecorder(stream, { mimeType: "video/webm" });
+        const chunks: Blob[] = [];
+        recorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
+        recorder.onstop = () => {
+          setResultUrl(URL.createObjectURL(new Blob(chunks, { type: "video/webm" })));
+          setLoading(false);
+          setReversing(false);
+        };
+        recorder.start();
+        for (const frame of frames) {
+          oCtx.putImageData(frame, 0, 0);
+          await new Promise<void>((res) => setTimeout(res, 1000 / fps));
+        }
+        recorder.stop();
+        return;
+      } catch (err: any) {
+        setError("Reverse failed: " + err.message);
+        setLoading(false);
+        setReversing(false);
+        return;
+      }
+    }
+
     // Target dimensions
     let destW = videoWidth;
     let destH = videoHeight;
@@ -98,71 +155,44 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
     }
 
     try {
-      // Capture canvas stream at 30 fps
       const stream = canvas.captureStream(30);
-      
-      let mimeType = "video/webm";
-      let extension = "webm";
-      if (slug === "video-to-webp") {
-        mimeType = "image/webp";
-        extension = "webp";
-      }
-
-      if (!MediaRecorder.isTypeSupported(mimeType)) {
-        mimeType = "video/webm";
-      }
-
+      const mimeType = "video/webm";
       const chunks: Blob[] = [];
       const mediaRecorder = new MediaRecorder(stream, { mimeType });
-
-      mediaRecorder.ondataavailable = (e) => {
-        if (e.data.size > 0) chunks.push(e.data);
-      };
-
+      mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
       mediaRecorder.onstop = () => {
-        const resultBlob = new Blob(chunks, { type: mimeType });
-        setResultUrl(URL.createObjectURL(resultBlob));
+        setResultUrl(URL.createObjectURL(new Blob(chunks, { type: mimeType })));
         setLoading(false);
       };
 
-      // Set video start position
       video.currentTime = startTime;
       await new Promise<void>((resolve) => {
-        const onSeeked = () => {
-          video.removeEventListener("seeked", onSeeked);
-          resolve();
-        };
+        const onSeeked = () => { video.removeEventListener("seeked", onSeeked); resolve(); };
         video.addEventListener("seeked", onSeeked);
       });
 
-      // Play video
+      video.muted = muteAudio || slug === "mute-video";
+      video.playbackRate = (slug === "video-speed") ? playbackSpeed : 1.0;
       video.play();
       mediaRecorder.start();
 
-      const startTimeMs = Date.now();
-      const runDurationMs = (endTime - startTime) * 1000;
+      const startMs = Date.now();
+      const runMs = (endTime - startTime) * 1000;
 
       const drawLoop = setInterval(() => {
-        const elapsed = Date.now() - startTimeMs;
-
-        if (elapsed >= runDurationMs || video.currentTime >= endTime || video.paused) {
+        if (Date.now() - startMs >= runMs || video.currentTime >= endTime || video.paused) {
           clearInterval(drawLoop);
           video.pause();
           mediaRecorder.stop();
           return;
         }
-
         ctx.clearRect(0, 0, destW, destH);
-        
         if (slug === "video-cropper") {
-          // Draw cropped segment
           ctx.drawImage(video, cropX, cropY, cropW, cropH, 0, 0, destW, destH);
         } else {
-          // Draw full frame scaled
           ctx.drawImage(video, 0, 0, destW, destH);
         }
-      }, 33); // approx 30 fps
-
+      }, 33);
     } catch (err: any) {
       setError("Processing failed: " + err.message);
       setLoading(false);
@@ -275,17 +305,19 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
                   </div>
                 )}
 
-                {/* Resizing Resolution */}
-                {slug === "resize-video" && (
+                {/* Speed control */}
+                {(slug === "video-speed") && (
                   <div className="space-y-1.5 col-span-2 pt-2 border-t border-border/40">
-                    <span className="text-3xs font-extrabold text-muted-foreground uppercase">Target Resolution Width (px)</span>
-                    <input 
-                      type="number" 
-                      value={scaleWidth}
-                      onChange={(e) => setScaleWidth(Number(e.target.value))}
-                      className="w-full px-3 py-1.5 text-xs bg-neutral-50 dark:bg-[#1a202c] border border-border rounded-xl outline-none"
-                    />
-                    <span className="text-[10px] text-muted-foreground">Height will automatically scale to preserve aspect ratio.</span>
+                    <span className="text-3xs font-extrabold text-muted-foreground uppercase">Playback Speed ({playbackSpeed}x)</span>
+                    <input type="range" min="0.25" max="4" step="0.25" value={playbackSpeed} onChange={(e) => setPlaybackSpeed(Number(e.target.value))} className="w-full accent-[#7d4dff]" />
+                  </div>
+                )}
+
+                {/* Mute toggle */}
+                {(slug === "mute-video" || slug === "video-cutter" || slug === "resize-video") && (
+                  <div className="col-span-2 flex items-center gap-2 pt-2 border-t border-border/40">
+                    <input type="checkbox" id="muteAudio" checked={muteAudio} onChange={(e) => setMuteAudio(e.target.checked)} className="accent-[#7d4dff]" />
+                    <label htmlFor="muteAudio" className="text-3xs font-extrabold text-muted-foreground uppercase cursor-pointer">Strip audio from output</label>
                   </div>
                 )}
 

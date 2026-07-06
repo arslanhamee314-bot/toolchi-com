@@ -71,18 +71,25 @@ export default function ToolSwitcher({ slug }: ToolSwitcherProps) {
     case "rotate-pdf":
     case "compress-pdf":
     case "split-pdf":
+    case "jpg-to-pdf":
+    case "pdf-to-jpg":
       return <PdfSuite slug={slug} />;
 
     // === VIDEO WORKSPACE ===
     case "video-cutter":
     case "video-cropper":
     case "video-to-webp":
+    case "video-to-webm":
     case "resize-video":
+    case "reverse-video":
+    case "mute-video":
+    case "video-speed":
       return <VideoSuite slug={slug} />;
 
     // === AUDIO WORKSPACE ===
     case "audio-cutter":
     case "audio-converter":
+    case "merge-audio":
       return <AudioSuite slug={slug} />;
 
     // === IMAGE TRANSFORM WORKSPACE ===
@@ -93,6 +100,9 @@ export default function ToolSwitcher({ slug }: ToolSwitcherProps) {
     case "image-filters":
     case "write-on-image":
     case "watermark-image":
+    case "censor-image":
+    case "invert-colors":
+    case "rounded-corners":
       return <TransformSuite slug={slug} />;
 
     // === UTILITY & PRIVACY WORKSPACE ===

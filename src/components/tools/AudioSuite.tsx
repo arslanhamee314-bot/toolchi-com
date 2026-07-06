@@ -15,6 +15,7 @@ interface AudioFile {
 
 export default function AudioSuite({ slug }: AudioSuiteProps) {
   const [file, setFile] = useState<AudioFile | null>(null);
+  const [mergeFiles, setMergeFiles] = useState<AudioFile[]>([]);
   const [loading, setLoading] = useState(false);
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -36,23 +37,37 @@ export default function AudioSuite({ slug }: AudioSuiteProps) {
     switch (slug) {
       case "audio-cutter": return "Audio Cutter (Trim mp3/wav/ogg)";
       case "audio-converter": return "Audio Converter (WAV/MP3 Export)";
+      case "merge-audio": return "Merge Audio (Concatenate multiple tracks)";
       default: return "Audio Utility Workspace";
     }
   };
 
   const handleAudioUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const uploaded = e.target.files?.[0];
+    const uploaded = e.target.files;
     if (!uploaded) return;
     setError(null);
     setResultUrl(null);
 
+    if (slug === "merge-audio") {
+      const newFiles: AudioFile[] = [];
+      for (let i = 0; i < uploaded.length; i++) {
+        const buffer = await uploaded[i].arrayBuffer();
+        newFiles.push({ name: uploaded[i].name, size: uploaded[i].size, buffer });
+      }
+      setMergeFiles((prev) => [...prev, ...newFiles]);
+      return;
+    }
+
+    const uploadedFile = uploaded[0];
+    if (!uploadedFile) return;
+
     try {
-      const buffer = await uploaded.arrayBuffer();
-      setFile({ name: uploaded.name, size: uploaded.size, buffer });
+      const buffer = await uploadedFile.arrayBuffer();
+      setFile({ name: uploadedFile.name, size: uploadedFile.size, buffer });
 
       // Decode metadata using AudioContext
       const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const decodedBuffer = await audioCtx.decodeAudioData(buffer.slice(0)); // Clone buffer to prevent transfer lock
+      const decodedBuffer = await audioCtx.decodeAudioData(buffer.slice(0));
       setDuration(decodedBuffer.duration);
       setEndTime(Math.min(5, decodedBuffer.duration));
       setSampleRate(decodedBuffer.sampleRate);
@@ -95,13 +110,35 @@ export default function AudioSuite({ slug }: AudioSuiteProps) {
 
   // Compile WAV audio file in-browser
   const processAudio = async () => {
-    if (!file) return;
     setLoading(true);
     setError(null);
     setResultUrl(null);
 
     try {
       const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+
+      // Merge Audio: concatenate multiple decoded buffers
+      if (slug === "merge-audio") {
+        if (mergeFiles.length < 2) throw new Error("Please upload at least 2 audio files to merge.");
+        const decoded = await Promise.all(mergeFiles.map((f) => audioCtx.decodeAudioData(f.buffer.slice(0))));
+        const numChannels = Math.max(...decoded.map((b) => b.numberOfChannels));
+        const rate = decoded[0].sampleRate;
+        const totalFrames = decoded.reduce((acc, b) => acc + b.length, 0);
+        const merged = audioCtx.createBuffer(numChannels, totalFrames, rate);
+        let offset = 0;
+        for (const buf of decoded) {
+          for (let ch = 0; ch < numChannels; ch++) {
+            const src = ch < buf.numberOfChannels ? buf.getChannelData(ch) : new Float32Array(buf.length);
+            merged.getChannelData(ch).set(src, offset);
+          }
+          offset += buf.length;
+        }
+        setResultUrl(URL.createObjectURL(new Blob([encodeWav(merged) as any], { type: "audio/wav" })));
+        setLoading(false);
+        return;
+      }
+
+      if (!file) throw new Error("Please upload an audio file.");
       const sourceBuffer = await audioCtx.decodeAudioData(file.buffer.slice(0));
 
       const numChannels = sourceBuffer.numberOfChannels;
