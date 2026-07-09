@@ -18,8 +18,77 @@ export default function HomePage() {
   const popularTools = TOOLS_REGISTRY.filter((t) => t.popular).slice(0, 4);
   const newTools = TOOLS_REGISTRY.filter((t) => t.isNew).slice(0, 4);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://toolchi.online/#organization",
+        "name": "Toolchi",
+        "url": "https://toolchi.online",
+        "logo": {
+          "@type": "ImageObject",
+          "@id": "https://toolchi.online/#logo",
+          "url": "https://toolchi.online/logo.jpg",
+          "caption": "Toolchi"
+        },
+        "image": {
+          "@id": "https://toolchi.online/#logo"
+        },
+        "sameAs": [
+          "https://github.com/arslanhamee314-bot"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://toolchi.online/#website",
+        "url": "https://toolchi.online",
+        "name": "Toolchi",
+        "description": "Explore Toolchi's complete all-in-one suite of free online web, developer, PDF, and productivity tools. 100% secure, local, and private.",
+        "publisher": {
+          "@id": "https://toolchi.online/#organization"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://toolchi.online/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What are the most essential tools for web development?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Highlighted tools on the page include the PNG/JPG compressor, JS & CSS minifier, SSL checker, Responsive checker, Robots.txt checker, and Sitemap validator."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What types of tools do you feature on your website?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The visible categories include webmaster tools, performance tools, operational tools, and design-related utilities."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Will you be updating this page with more tools?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The page messaging indicates that more vetted free tools may be added over time."
+            }
+          }
+        ]
+      }
+    ]
+  };
+
   return (
     <div className="flex-1 flex flex-col bg-[#f6f7fb] dark:bg-[#11141c]">
+      {/* JSON-LD Schema Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       
       {/* 1. Hero Section */}
       <section className="relative overflow-hidden py-16 md:py-24 border-b border-border bg-white dark:bg-card">

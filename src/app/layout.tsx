@@ -9,6 +9,13 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://toolchi.online"),
   alternates: {
     canonical: "/",
+    languages: {
+      "en-US": "/",
+      "en-GB": "/?locale=en-gb",
+      "en-CA": "/?locale=en-ca",
+      "en-AU": "/?locale=en-au",
+      "en-IN": "/?locale=en-in",
+    }
   },
   icons: {
     icon: "/logo.jpg",
@@ -52,7 +59,9 @@ export default function RootLayout({
         <footer className="border-t border-border bg-white dark:bg-card py-8 px-6 print:hidden">
           <div className="mx-auto max-w-6xl flex flex-col sm:flex-row items-center justify-between text-xs text-muted-foreground gap-4 select-none">
             <p>© {new Date().getFullYear()} Toolchi. All-in-one free online tools. All processing occurs locally.</p>
-            <div className="flex gap-4">
+            <div className="flex gap-4 flex-wrap justify-center sm:justify-start">
+              <Link href="/about" className="hover:underline hover:text-foreground">About Us</Link>
+              <Link href="/contact" className="hover:underline hover:text-foreground">Contact Us</Link>
               <Link href="/privacy" className="hover:underline hover:text-foreground">Privacy Policy</Link>
               <Link href="/terms" className="hover:underline hover:text-foreground">Terms of Use</Link>
             </div>
