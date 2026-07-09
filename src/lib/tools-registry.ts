@@ -68,7 +68,7 @@ const RAW_TOOLS_REGISTRY = [
   { slug: "reverse-video", name: "Reverse Video", category: "video-tools", shortDesc: "Play video backwards by buffering and reversing frames.", iconName: "Rewind" },
   { slug: "mute-video", name: "Mute Video", category: "video-tools", shortDesc: "Remove audio track and export a silent video file.", iconName: "VolumeX" },
   { slug: "video-speed", name: "Video Speed", category: "video-tools", shortDesc: "Speed up or slow down video playback rate.", iconName: "Gauge" },
-  { slug: "video-loop", name: "Video Loop", category: "video-tools", shortDesc: "Record a seamless loop of a video segment (2–5 repetitions).", iconName: "Repeat" },
+  { slug: "video-loop", name: "Video Loop", category: "video-tools", shortDesc: "Record a seamless loop of a video segment (2-5 repetitions).", iconName: "Repeat" },
   { slug: "audio-cutter", name: "Audio Cutter", category: "audio", shortDesc: "Cut, trim, and split audio mp3/wav files locally.", iconName: "Music" },
   { slug: "audio-converter", name: "Audio Converter", category: "audio", shortDesc: "Convert between common audio formats locally.", iconName: "Volume2" },
   { slug: "merge-audio", name: "Merge Audio", category: "audio", shortDesc: "Combine multiple audio tracks into one file.", iconName: "Layers" },

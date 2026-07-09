@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: ToolPageProps) {
 
   if (!tool) {
     return {
-      title: "Tool Not Found — Toolchi",
+      title: "Tool Not Found | Toolchi",
       description: "The requested browser utility could not be found.",
     };
   }

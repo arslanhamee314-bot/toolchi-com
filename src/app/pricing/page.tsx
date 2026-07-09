@@ -13,47 +13,49 @@ export default function PricingPage() {
       id: "free",
       name: "Free Sandbox",
       price: 0,
-      description: "Ideal for casual developer diagnostic checks and fast minor edits.",
+      description: "Ideal for basic client-side formatting and light image diagnostics.",
       features: [
         "100% Client-side privacy",
-        "Max 50MB file size uploads",
-        "Access to all 100+ basic tools",
-        "Community support access",
-        "Zero server analytics uploads"
+        "Max 50MB file conversions",
+        "Access to basic coding tools",
+        "Contains sponsors / ads",
+        "Offline local run support"
       ],
       cta: "Current Active Plan",
       popular: false
     },
     {
       id: "pro",
-      name: "Developer Pro",
+      name: "Creator Pro Suite",
       price: billingCycle === "monthly" ? 9 : 7,
-      description: "Built for power users, marketers, and professional web developers.",
+      description: "Perfect for bloggers, content creators, and SEO webmasters.",
       features: [
-        "Everything in Free plan",
-        "Max 2GB file size uploads",
-        "Batch file conversions & merges",
-        "Priority CPU multithread threads",
-        "Pro preset configs for compression",
-        "Priority email assistance (24h)"
+        "Ad-Free Premium Workspace",
+        "Max 2GB bulk file uploads",
+        "Batch conversions & merges",
+        "AI Blogging Outline Creator",
+        "Offline-saved session history",
+        "Priority CPU compression threads",
+        "Priority support assistance (24h)"
       ],
-      cta: "Upgrade to Pro",
+      cta: "Upgrade to Pro Suite",
       popular: true
     },
     {
       id: "enterprise",
-      name: "SaaS Enterprise",
+      name: "Developer API Plus",
       price: billingCycle === "monthly" ? 49 : 39,
-      description: "Designed for business integrations and automated API workflows.",
+      description: "Designed for engineering teams needing automated API integrations.",
       features: [
-        "Everything in Developer Pro",
-        "Unlimited file sizes supported",
-        "Custom REST API integrations",
-        "Dedicated webhook endpoints",
-        "99.9% Uptime compliance SLAs",
-        "Custom contract agreements"
+        "Everything in Creator Pro",
+        "Unlimited file payload volumes",
+        "REST API access credentials",
+        "Custom programmatic Webhooks",
+        "Dedicated workspace dashboard",
+        "99.9% uptime compliance SLAs",
+        "Team seat workspaces (up to 5)"
       ],
-      cta: "Contact Enterprise",
+      cta: "Contact Enterprise API",
       popular: false
     }
   ];

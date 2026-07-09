@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { TOOLS_REGISTRY } from "@/lib/tools-registry";
+import { BLOG_POSTS } from "@/lib/blog-registry";
 
 export async function GET() {
   const baseUrl = "https://toolchi.online";
@@ -7,8 +8,12 @@ export async function GET() {
   const xmlUrls = [
     `  <url>\n    <loc>${baseUrl}</loc>\n    <changefreq>daily</changefreq>\n    <priority>1.0</priority>\n  </url>`,
     `  <url>\n    <loc>${baseUrl}/tools</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`,
+    `  <url>\n    <loc>${baseUrl}/blog</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`,
     ...TOOLS_REGISTRY.map(tool => {
       return `  <url>\n    <loc>${baseUrl}/tools/${tool.slug}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`;
+    }),
+    ...BLOG_POSTS.map(post => {
+      return `  <url>\n    <loc>${baseUrl}/blog/${post.slug}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`;
     })
   ];
 

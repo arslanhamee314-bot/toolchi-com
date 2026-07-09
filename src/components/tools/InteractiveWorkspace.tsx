@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
@@ -82,7 +82,7 @@ export default function InteractiveWorkspace() {
         {showHistory && (
           <div className="bg-card border border-border/70 rounded-2xl p-4 flex flex-col gap-3">
             <div className="flex items-center justify-between">
-              <span className="text-3xs font-extrabold text-muted-foreground uppercase tracking-wider">Recent Tools — This Session</span>
+              <span className="text-3xs font-extrabold text-muted-foreground uppercase tracking-wider">Recent Tools - This Session</span>
               {history.length > 0 && <button onClick={() => setHistory([])} className="text-[9px] text-muted-foreground hover:text-red-400 transition-colors flex items-center gap-1"><X className="h-3 w-3" /> Clear</button>}
             </div>
             {history.length === 0 ? (

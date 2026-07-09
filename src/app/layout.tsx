@@ -62,26 +62,32 @@ export default function RootLayout({
       </head>
       <body className="antialiased min-h-screen flex flex-col bg-[#f6f7fb] dark:bg-[#11141c] text-black dark:text-white">
         {/* Google Analytics (GA4) Tag */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-XXXXXXXXXX');
-          `}
-        </Script>
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
+              `}
+            </Script>
+          </>
+        )}
 
         {/* Google AdSense Script */}
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXX"
-          crossOrigin="anonymous"
-          strategy="lazyOnload"
-        />
+        {process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID && (
+          <Script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID}`}
+            crossOrigin="anonymous"
+            strategy="lazyOnload"
+          />
+        )}
 
         {/* Header Navigation */}
         <Header />
@@ -94,7 +100,7 @@ export default function RootLayout({
         {/* Trust Footer */}
         <footer className="border-t border-border bg-white dark:bg-card py-8 px-6 print:hidden">
           <div className="mx-auto max-w-6xl flex flex-col sm:flex-row items-center justify-between text-xs text-muted-foreground gap-4 select-none">
-            <p>© {new Date().getFullYear()} Toolchi. All-in-one free online tools. All processing occurs locally.</p>
+            <p>&copy; {new Date().getFullYear()} Toolchi. All-in-one free online tools. All processing occurs locally.</p>
             <div className="flex gap-4 flex-wrap justify-center sm:justify-start">
               <Link href="/about" className="hover:underline hover:text-foreground">About Us</Link>
               <Link href="/contact" className="hover:underline hover:text-foreground">Contact Us</Link>

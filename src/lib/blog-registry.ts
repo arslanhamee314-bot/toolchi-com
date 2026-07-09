@@ -39,7 +39,7 @@ export const BLOG_POSTS: BlogPost[] = [
       <p>As the digital landscape evolves, webmasters in 2026 face unprecedented demands for site speed, security, and uptime. Search engine algorithms have shifted focus toward page experience metrics and cryptographic trust. To keep your platform competitive, utilizing a suite of local diagnostics is essential.</p>
       
       <h2>1. The Rise of Client-Side Webmaster Tools</h2>
-      <p>Historically, diagnostic tools required sending server requests, parsing responses remotely, and logging results in databases. This added latency, server costs, and potential data leakage. Modern web tools leverage in-browser APIs—such as Web Crypto, native Canvas, and local fetch loops—to perform critical scans safely on the client side.</p>
+      <p>Historically, diagnostic tools required sending server requests, parsing responses remotely, and logging results in databases. This added latency, server costs, and potential data leakage. Modern web tools leverage in-browser APIs - such as Web Crypto, native Canvas, and local fetch loops - to perform critical scans safely on the client side.</p>
       
       <h2>2. Key Diagnostics Every Site Owner Needs</h2>
       <ul>

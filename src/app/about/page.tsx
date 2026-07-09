@@ -58,7 +58,7 @@ export default function AboutPage() {
             <div className="border border-border p-4 rounded-2xl bg-[#fafbfc]/40 dark:bg-neutral-900/10 space-y-2">
               <CheckCircle2 className="h-5 w-5 text-emerald-500" />
               <h4 className="font-extrabold text-xs text-foreground">Absolute Privacy</h4>
-              <p className="text-[10px] text-muted-foreground leading-normal">GDPR and HIPAA compliance by design—no data is logged or cached on servers.</p>
+              <p className="text-[10px] text-muted-foreground leading-normal">GDPR and HIPAA compliance by design - no data is logged or cached on servers.</p>
             </div>
             <div className="border border-border p-4 rounded-2xl bg-[#fafbfc]/40 dark:bg-neutral-900/10 space-y-2">
               <CheckCircle2 className="h-5 w-5 text-emerald-500" />
@@ -99,7 +99,7 @@ export default function AboutPage() {
                 </p>
                 <div className="flex gap-2.5 text-3xs font-bold text-muted-foreground">
                   <a href="https://github.com/arslanhamee314-bot" className="hover:text-foreground hover:underline">GitHub Profile</a>
-                  <span>•</span>
+                  <span>-</span>
                   <span>Contact: support@toolchi.online</span>
                 </div>
               </div>
@@ -120,7 +120,7 @@ export default function AboutPage() {
                 </p>
                 <div className="flex gap-2.5 text-3xs font-bold text-muted-foreground">
                   <Link href="/privacy" className="hover:text-foreground hover:underline">Privacy Charter</Link>
-                  <span>•</span>
+                  <span>-</span>
                   <span>Compliance: audit@toolchi.online</span>
                 </div>
               </div>
