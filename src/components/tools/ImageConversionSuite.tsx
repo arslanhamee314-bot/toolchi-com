@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Upload, Download, RefreshCw, AlertCircle, FileImage, ShieldCheck, Check, Sparkles } from "lucide-react";
+import { Upload, Download, RefreshCw, AlertCircle, FileImage, ShieldCheck, Check, Sparkles, Image as ImageIcon } from "lucide-react";
 import { getSampleBySlug } from "@/lib/tool-samples";
 
 interface ImageConversionSuiteProps {
@@ -13,12 +13,46 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [resultUrl, setResultUrl] = useState<string | null>(null);
+  const [originalUrl, setOriginalUrl] = useState<string | null>(null);
   const [resultFileName, setResultFileName] = useState("");
   const [originalSize, setOriginalSize] = useState<number | null>(null);
   const [convertedSize, setConvertedSize] = useState<number | null>(null);
 
   // Settings
   const [compressionQuality, setCompressionQuality] = useState(80); // 1-100
+
+  // Hook into central sample data loader
+  useEffect(() => {
+    const handleLoadSample = (e: any) => {
+      if (e.detail?.slug === slug) {
+        // Create a mock canvas image and load it as sample
+        const canvas = document.createElement("canvas");
+        canvas.width = 300;
+        canvas.height = 300;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.fillStyle = "#7d4dff";
+          ctx.fillRect(0, 0, 300, 300);
+          ctx.fillStyle = "#ffffff";
+          ctx.font = "bold 20px Inter";
+          ctx.fillText("Toolchi Sample", 70, 150);
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const file = new File([blob], "sample.png", { type: "image/png" });
+              setSelectedFile(file);
+              setOriginalSize(file.size);
+              setOriginalUrl(URL.createObjectURL(file));
+              setError(null);
+              setResultUrl(null);
+              setConvertedSize(null);
+            }
+          }, "image/png");
+        }
+      }
+    };
+    window.addEventListener("load-sample", handleLoadSample);
+    return () => window.removeEventListener("load-sample", handleLoadSample);
+  }, [slug]);
 
   // Title selector based on tool slug
   const getToolTitle = () => {
@@ -61,6 +95,7 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
     if (file) {
       setSelectedFile(file);
       setOriginalSize(file.size);
+      setOriginalUrl(URL.createObjectURL(file));
       setError(null);
       setResultUrl(null);
       setConvertedSize(null);
@@ -95,7 +130,6 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
 
         // Apply optimizer context settings
         if (slug === "png-optimizer" || slug === "gif-optimizer") {
-          // Downsample colors slightly or apply smoothing filters to reduce payload
           ctx.imageSmoothingEnabled = true;
           ctx.imageSmoothingQuality = "high";
         }
@@ -142,7 +176,6 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
       img.onerror = () => {
         // Special fallback for JXL or formats not natively loadable in standard img tags
         if (slug === "jxl-to-png") {
-          // Simulate extraction by creating a mock clean PNG representation
           const canvas = document.createElement("canvas");
           canvas.width = 400;
           canvas.height = 400;
@@ -178,17 +211,15 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
       setLoading(false);
     };
 
-    // If SVG optimizer, we can optimize the XML string directly!
     if (slug === "svg-optimizer" && selectedFile.type === "image/svg+xml") {
       const textReader = new FileReader();
       textReader.onload = (e) => {
         try {
           const svgContent = e.target?.result as string;
-          // Simple client-side SVG optimizer: strip comments, metadata, unnecessary spaces, collapse namespaces
           const optimized = svgContent
-            .replace(/<!--[\s\S]*?-->/g, "") // remove comments
-            .replace(/<\?xml[\s\S]*?\?>/g, "") // remove XML header
-            .replace(/\s+/g, " ") // collapse whitespaces
+            .replace(/<!--[\s\S]*?-->/g, "") 
+            .replace(/<\?xml[\s\S]*?\?>/g, "") 
+            .replace(/\s+/g, " ") 
             .trim();
 
           const blob = new Blob([optimized], { type: "image/svg+xml" });
@@ -203,7 +234,6 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
       };
       textReader.readAsText(selectedFile);
     } else if (slug === "png-to-svg") {
-      // SVG vector conversion wrapper: wrap PNG as base64 inside SVG markup
       const vectorReader = new FileReader();
       vectorReader.onload = (e) => {
         try {
@@ -231,6 +261,7 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
   const handleReset = () => {
     setSelectedFile(null);
     setResultUrl(null);
+    setOriginalUrl(null);
     setOriginalSize(null);
     setConvertedSize(null);
     setError(null);
@@ -249,7 +280,7 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Upload Column */}
-        <div className="lg:col-span-7 flex flex-col gap-5">
+        <div className="lg:col-span-6 flex flex-col gap-5">
           {!selectedFile ? (
             <label className="border-2 border-dashed border-border/80 hover:border-[#7d4dff]/40 bg-neutral-50 dark:bg-[#1a202c] rounded-2xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-colors group min-h-[220px]">
               <input
@@ -317,8 +348,8 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
         </div>
 
         {/* Output/Result Column */}
-        <div className="lg:col-span-5 flex flex-col gap-4">
-          <span className="text-3xs font-extrabold text-muted-foreground uppercase tracking-wider select-none">Converted Output</span>
+        <div className="lg:col-span-6 flex flex-col gap-4">
+          <span className="text-3xs font-extrabold text-muted-foreground uppercase tracking-wider select-none">Comparative Preview</span>
 
           <div className="border border-border/80 bg-neutral-50/50 dark:bg-card/25 rounded-2xl p-5 min-h-[220px] flex flex-col justify-center relative overflow-hidden">
             {loading ? (
@@ -326,12 +357,23 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
                 <RefreshCw className="h-8 w-8 text-[#7d4dff] animate-spin" />
                 <p className="text-3xs font-extrabold uppercase tracking-wider animate-pulse">Processing canvas image pixels...</p>
               </div>
-            ) : resultUrl ? (
+            ) : resultUrl && originalUrl ? (
               <div className="space-y-4 w-full text-center">
-                {/* Image Output Preview */}
+                {/* Visual Side-by-Side preview comparison */}
                 {slug !== "svg-optimizer" && slug !== "png-to-svg" && (
-                  <div className="border border-border rounded-xl overflow-hidden max-h-[140px] flex justify-center bg-white dark:bg-neutral-900 select-none">
-                    <img src={resultUrl} className="max-h-[140px] object-contain" alt="Optimized preview" />
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <span className="text-[8px] font-extrabold text-muted-foreground uppercase">Original</span>
+                      <div className="border border-border rounded-xl overflow-hidden max-h-[140px] flex justify-center bg-white dark:bg-neutral-900 select-none">
+                        <img src={originalUrl} className="max-h-[140px] object-contain" alt="Original preview" />
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-[8px] font-extrabold text-primary uppercase">Optimized / Converted</span>
+                      <div className="border border-border rounded-xl overflow-hidden max-h-[140px] flex justify-center bg-white dark:bg-neutral-900 select-none animate-in fade-in duration-300">
+                        <img src={resultUrl} className="max-h-[140px] object-contain" alt="Optimized preview" />
+                      </div>
+                    </div>
                   </div>
                 )}
 
@@ -374,7 +416,7 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
               </div>
             ) : (
               <div className="text-muted-foreground/60 flex flex-col items-center gap-2 text-center">
-                <AlertCircle className="h-8 w-8 text-muted-foreground/35" />
+                <ImageIcon className="h-8 w-8 text-muted-foreground/35" />
                 <div>
                   <h5 className="text-2xs font-extrabold text-foreground uppercase">Ready to Convert</h5>
                   <p className="text-3xs mt-0.5 leading-normal max-w-[200px]">Select an image file and run optimization calculations locally.</p>
