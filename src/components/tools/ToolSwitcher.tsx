@@ -46,6 +46,7 @@ import AudioSuite from "./AudioSuite";
 import TransformSuite from "./TransformSuite";
 import UtilitySuite from "./UtilitySuite";
 import AiSuite from "./AiSuite";
+import ImageConversionSuite from "./ImageConversionSuite";
 
 interface ToolSwitcherProps {
   slug: string;
@@ -192,7 +193,20 @@ export default function ToolSwitcher({ slug }: ToolSwitcherProps) {
     case "ai-summarizer":
     case "ai-title-generator":
     case "ai-paragraph-rewriter":
-      return <AiSuite slug={slug} />;
+    // === 7. IMAGE CONVERSION & OPTIMIZER SUITE ===
+    case "gif-optimizer":
+    case "png-optimizer":
+    case "gif-splitter":
+    case "apng-splitter":
+    case "webp-to-jpg":
+    case "jpg-to-webp":
+    case "apng-maker":
+    case "avif-converter":
+    case "jpg-to-avif":
+    case "jxl-to-png":
+    case "svg-optimizer":
+    case "png-to-svg":
+      return <ImageConversionSuite slug={slug} />;
 
     default:
       return (
