@@ -79,14 +79,16 @@ export function InteractionProvider({ children }: { children: React.ReactNode })
     const handleTouchStart = (e: TouchEvent) => {
       lastTouchTime = Date.now();
       const target = e.target as HTMLElement;
-      if (!target) return;
+      if (!target || typeof target.closest !== "function") return;
 
       const interactiveEl = target.closest("a, button, [role='button'], [data-cursor]");
       if (!interactiveEl) return;
 
-      // Create ripple element inside target bounding box
+      // Extract touch coordinates safely to prevent TypeError on touch lifts/simulations
+      const touch = e.touches && e.touches[0];
+      if (!touch) return;
+
       const rect = interactiveEl.getBoundingClientRect();
-      const touch = e.touches[0];
       const x = touch.clientX - rect.left;
       const y = touch.clientY - rect.top;
 
@@ -145,7 +147,7 @@ export function InteractionProvider({ children }: { children: React.ReactNode })
     const handleMouseUp = (e: MouseEvent) => {
       if (Date.now() - lastTouchTime < 500) return;
       const target = e.target as HTMLElement;
-      if (target) {
+      if (target && typeof target.closest === "function") {
         const interactiveEl = target.closest("[data-cursor], a, button, input, textarea, select, [role='button']");
         if (interactiveEl) {
           const customState = interactiveEl.getAttribute("data-cursor") as CursorState;
@@ -161,7 +163,7 @@ export function InteractionProvider({ children }: { children: React.ReactNode })
     const handleMouseOver = (e: MouseEvent) => {
       if (Date.now() - lastTouchTime < 500) return;
       const target = e.target as HTMLElement;
-      if (!target) return;
+      if (!target || typeof target.closest !== "function") return;
 
       const interactiveEl = target.closest("[data-cursor], a, button, input, textarea, select, [role='button']");
       if (!interactiveEl) {

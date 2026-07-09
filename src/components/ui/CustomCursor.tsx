@@ -5,8 +5,13 @@ import { useInteraction } from "./InteractionProvider";
 
 export default function CustomCursor() {
   const { cursorState, cursorLabel, mousePosition, isHovering, isDesktop } = useInteraction();
+  const [mounted, setMounted] = React.useState(false);
 
-  if (!isDesktop || !isHovering) return null;
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted || !isDesktop || !isHovering) return null;
 
   // 1. Establish default styles according to Toolchi Smart Glow Cursor Spec
   let ringStyle: React.CSSProperties = {

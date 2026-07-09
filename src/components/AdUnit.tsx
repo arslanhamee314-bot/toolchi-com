@@ -12,9 +12,11 @@ interface AdUnitProps {
 }
 
 export default function AdUnit({ slot, format = "auto", responsive = true, className = "" }: AdUnitProps) {
+  const [mounted, setMounted] = useState(false);
   const [adBlocked, setAdBlocked] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     // Check if google adsense script has run or been blocked
     try {
       if (typeof window !== "undefined") {
@@ -31,6 +33,10 @@ export default function AdUnit({ slot, format = "auto", responsive = true, class
     process.env.NODE_ENV === "development" || 
     !process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || 
     process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID.includes("XXXXXX");
+
+  if (!mounted) {
+    return <div className={`my-6 mx-auto w-full max-w-4xl text-center select-none ${className}`} style={{ minHeight: "100px" }} />;
+  }
 
   return (
     <div className={`my-6 mx-auto w-full max-w-4xl text-center select-none ${className}`}>
