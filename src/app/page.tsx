@@ -6,7 +6,7 @@ import ToolCard from "@/components/tools/ToolCard";
 import InteractiveWorkspace from "@/components/tools/InteractiveWorkspace";
 import CategoryFilters from "@/components/tools/CategoryFilters";
 import { CATEGORIES, TOOLS_REGISTRY } from "@/lib/tools-registry";
-import { ShieldCheck, Cpu, UserMinus, Gift } from "lucide-react";
+import { ShieldCheck, Cpu, UserMinus, Gift, Video, Layers, Image as ImageIcon, FileJson } from "lucide-react";
 import AdUnit from "@/components/AdUnit";
 
 // Page level SEO metadata (pre-rendered for Google)
@@ -143,23 +143,50 @@ export default function HomePage() {
 
             {/* Competitor Alternatives Banner */}
             <div className="w-full max-w-md mt-4 border border-dashed border-border/80 p-3.5 rounded-2xl bg-neutral-50/50 dark:bg-neutral-900/30 text-left select-none">
-              <span className="text-[9px] font-extrabold text-[#7d4dff] uppercase tracking-wider block mb-2">⚡ Premium Alternatives to Popular Web Tools</span>
-              <div className="grid grid-cols-2 gap-2 text-3xs font-bold leading-normal">
-                <a href="/tools/video-to-gif" className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-card border border-border/60 hover:border-primary/40 transition-colors group">
-                  <span className="text-muted-foreground">Ezgif Alternative</span>
-                  <span className="text-[#6530ef] dark:text-[#a582ff] font-extrabold flex items-center gap-0.5">Video to GIF</span>
+              <span className="text-[9px] font-extrabold text-[#7d4dff] uppercase tracking-wider block mb-2.5">⚡ Premium Alternatives to Popular Web Tools</span>
+              <div className="grid grid-cols-2 gap-2.5 text-3xs font-bold leading-normal">
+                {/* Ezgif Card */}
+                <a href="/tools/video-to-gif" className="flex items-center gap-2.5 p-2 rounded-xl bg-white dark:bg-card border border-border/60 hover:border-primary/40 hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200 group cursor-pointer">
+                  <div className="h-7 w-7 rounded-lg bg-red-500/10 text-red-500 flex items-center justify-center shrink-0">
+                    <Video className="h-4 w-4" />
+                  </div>
+                  <div className="min-w-0">
+                    <span className="text-muted-foreground block text-[8px] uppercase">Ezgif Alt</span>
+                    <span className="text-foreground font-extrabold group-hover:text-primary transition-colors truncate block">Video to GIF</span>
+                  </div>
                 </a>
-                <a href="/tools/merge-pdf" className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-card border border-border/60 hover:border-primary/40 transition-colors group">
-                  <span className="text-muted-foreground">TinyWow Alternative</span>
-                  <span className="text-[#6530ef] dark:text-[#a582ff] font-extrabold flex items-center gap-0.5">Merge PDF</span>
+
+                {/* TinyWow Card */}
+                <a href="/tools/merge-pdf" className="flex items-center gap-2.5 p-2 rounded-xl bg-white dark:bg-card border border-border/60 hover:border-primary/40 hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200 group cursor-pointer">
+                  <div className="h-7 w-7 rounded-lg bg-teal-500/10 text-teal-500 flex items-center justify-center shrink-0">
+                    <Layers className="h-4 w-4" />
+                  </div>
+                  <div className="min-w-0">
+                    <span className="text-muted-foreground block text-[8px] uppercase">TinyWow Alt</span>
+                    <span className="text-foreground font-extrabold group-hover:text-primary transition-colors truncate block">Merge PDF</span>
+                  </div>
                 </a>
-                <a href="/tools/jpg-to-webp" className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-card border border-border/60 hover:border-primary/40 transition-colors group">
-                  <span className="text-muted-foreground">Squoosh Alternative</span>
-                  <span className="text-[#6530ef] dark:text-[#a582ff] font-extrabold flex items-center gap-0.5">JPG to WebP</span>
+
+                {/* Squoosh Card */}
+                <a href="/tools/jpg-to-webp" className="flex items-center gap-2.5 p-2 rounded-xl bg-white dark:bg-card border border-border/60 hover:border-primary/40 hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200 group cursor-pointer">
+                  <div className="h-7 w-7 rounded-lg bg-purple-500/10 text-purple-500 flex items-center justify-center shrink-0">
+                    <ImageIcon className="h-4 w-4" />
+                  </div>
+                  <div className="min-w-0">
+                    <span className="text-muted-foreground block text-[8px] uppercase">Squoosh Alt</span>
+                    <span className="text-foreground font-extrabold group-hover:text-primary transition-colors truncate block">JPG to WebP</span>
+                  </div>
                 </a>
-                <a href="/tools/json-formatter" className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-card border border-border/60 hover:border-primary/40 transition-colors group">
-                  <span className="text-muted-foreground">DevUtils Alternative</span>
-                  <span className="text-[#6530ef] dark:text-[#a582ff] font-extrabold flex items-center gap-0.5">JSON Formatter</span>
+
+                {/* DevUtils Card */}
+                <a href="/tools/json-formatter" className="flex items-center gap-2.5 p-2 rounded-xl bg-white dark:bg-card border border-border/60 hover:border-primary/40 hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200 group cursor-pointer">
+                  <div className="h-7 w-7 rounded-lg bg-[#7d4dff]/10 text-primary flex items-center justify-center shrink-0">
+                    <FileJson className="h-4 w-4" />
+                  </div>
+                  <div className="min-w-0">
+                    <span className="text-muted-foreground block text-[8px] uppercase">DevUtils Alt</span>
+                    <span className="text-foreground font-extrabold group-hover:text-primary transition-colors truncate block">JSON Formatter</span>
+                  </div>
                 </a>
               </div>
             </div>
