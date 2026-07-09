@@ -469,7 +469,7 @@ export default function AiDetector() {
           {/* Output Block */}
           <div className="flex flex-col gap-4">
             <div>
-              <label className="text-xs font-bold text-foreground">Natural Human-Like output</label>
+              <label className="text-xs font-bold text-foreground">Polished Natural Output</label>
               <p className="text-[10px] text-muted-foreground">Restructured sentences with high length variance.</p>
             </div>
             
@@ -486,7 +486,7 @@ export default function AiDetector() {
                 <button
                   onClick={copyToClipboard}
                   className="absolute bottom-4 right-4 p-2 bg-neutral-900 border border-border hover:border-neutral-700 text-white rounded-xl shadow-md transition-colors flex items-center justify-center cursor-pointer z-10"
-                  title="Copy humanized content"
+                  title="Copy polished content"
                 >
                   {isCopied ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
                 </button>

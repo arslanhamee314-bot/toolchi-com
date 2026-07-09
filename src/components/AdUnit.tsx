@@ -33,8 +33,8 @@ export default function AdUnit({ slot, format = "auto", responsive = true, class
       <ins
         className="adsbygoogle block"
         style={{ display: "block" }}
-        data-ad-client="ca-pub-XXXXXXXXXXXXX" // Replace with real publisher ID when active
-        data-ad-slot={slot || "XXXXXXXXXX"}
+        data-ad-client={process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || "ca-pub-XXXXXXXXXXXXX"}
+        data-ad-slot={slot || process.env.NEXT_PUBLIC_ADSENSE_SLOT_ID || "XXXXXXXXXX"}
         data-ad-format={format}
         data-full-width-responsive={responsive ? "true" : "false"}
       />

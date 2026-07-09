@@ -505,21 +505,21 @@ const RAW_TOOLS_REGISTRY = [
   // 4. AI CONTENT TOOLS
   {
     slug: "ai-detector",
-    name: "AI Content Detector & Humanizer",
+    name: "AI Content Pattern Analyst & Reader",
     category: "ai",
-    shortDesc: "Analyze writing patterns to verify AI-generated text, and humanize content to bypass detection tools.",
+    shortDesc: "Analyze writing patterns to inspect AI-like predictability, and improve text structures for clearer readability.",
     iconName: "BrainCircuit",
-    seoTitle: "Free AI Content Detector & Text Humanizer Online | Toolchi",
-    seoDescription: "Detect AI-generated text from GPT-4, Gemini, and Claude. Humanize AI text to 100% human score to bypass checkers instantly and securely.",
-    longDesc: "Analyze text perplexity, syntactic variance, and transition predictable distributions to detect AI content. Convert AI copy into highly natural humanized formats to bypass modern detector algorithms.",
+    seoTitle: "Free AI Writing Pattern Analyst & Readability Polisher | Toolchi",
+    seoDescription: "Inspect writing predictability, sentence length variance, and perplexity scores. Restructure text to improve natural phrasing flow and clarity.",
+    longDesc: "Analyze perplexity metrics, syntactic variance, and transitional patterns to highlight highly predictable distributions. Refine predictable copy structures into highly readable, natural formats natively in your browser.",
     howToUse: [
-      "Enter your article, paper, or email content into the input workspace.",
-      "Click Detect AI Content to check probability distributions and highlight AI sentences.",
-      "Switch to the Humanizer tab and click Humanize to rewrite the copy into 100% human-score structure."
+      "Paste your text or content inside the analyst workspace.",
+      "Click Analyze Writing Patterns to check vocabulary predictability and sentence structures.",
+      "Switch to the Phrasing tab and click Rewrite to polish text for a clearer, natural-reading flow."
     ],
     faqs: [
-      { question: "How does the AI Detector work?", answer: "It checks sentence perplexity variance, word repetitions, and density of typical LLM transition phrases." },
-      { question: "How does the Humanizer work?", answer: "It restructures sentence patterns, increases word variety (burstiness), and swaps predictable AI phrasing with active human colloquialisms." }
+      { question: "How does the Pattern Analyst work?", answer: "It evaluates sentence perplexity, length variation, and repetitive transitional distributions typical of automated copy." },
+      { question: "How does the Phrasing Polisher work?", answer: "It adjusts syntax density, increases sentence length variance (burstiness), and replaces predictable word patterns with clear, active phrasing." }
     ],
     popular: true,
     isNew: true

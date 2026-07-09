@@ -1,4 +1,5 @@
 import React, { Suspense } from "react";
+import Link from "next/link";
 import ToolsDirectory from "@/components/tools/ToolsDirectory";
 import ToolsSlider from "@/components/tools/ToolsSlider";
 import HeroSearch from "@/components/tools/HeroSearch";
@@ -6,12 +7,12 @@ import ToolCard from "@/components/tools/ToolCard";
 import InteractiveWorkspace from "@/components/tools/InteractiveWorkspace";
 import CategoryFilters from "@/components/tools/CategoryFilters";
 import { CATEGORIES, TOOLS_REGISTRY } from "@/lib/tools-registry";
-import { ShieldCheck, Cpu, UserMinus, Gift, Video, Layers, Image as ImageIcon, FileJson } from "lucide-react";
+import { ShieldCheck, Cpu, UserMinus, Gift, Video, Layers, Image as ImageIcon, FileJson, Sparkles } from "lucide-react";
 import AdUnit from "@/components/AdUnit";
 
 // Page level SEO metadata (pre-rendered for Google)
 export const metadata = {
-  title: "Toolchi - Free Online Web & Developer Tools Directory",
+  title: "Free AI, PDF, Image & Developer Tools Online - Toolchi",
   description: "Explore Toolchi's complete all-in-one suite of free online web, developer, PDF, and productivity tools. 100% secure, local, and private.",
 };
 
@@ -111,11 +112,11 @@ export default function HomePage() {
             <p className="text-3xs font-extrabold text-[#6530ef] tracking-widest uppercase">
               All-in-one free online tools
             </p>
-            <h1 className="text-3xl sm:text-5xl font-extrabold text-foreground tracking-tight leading-none">
-              Free Tools Directory
+            <h1 className="text-3xl sm:text-5xl font-extrabold text-foreground tracking-tight leading-none animate-fade-in">
+              Free AI, PDF, Image &amp; Developer Tools Online
             </h1>
             <p className="text-sm md:text-base text-muted max-w-lg leading-relaxed">
-              Effective free tools for developers, webmasters, creators, and daily digital tasks. 100% private, secure, and fast.
+              Fast browser-based tools for bloggers, creators, developers, and webmasters. No upload, no signup.
             </p>
 
             {/* Trust Signals Badges */}
@@ -316,6 +317,35 @@ export default function HomePage() {
         <Suspense fallback={<div className="text-center py-10 text-muted-foreground text-xs">Loading tools directory...</div>}>
           <ToolsDirectory />
         </Suspense>
+      </section>
+
+      {/* SaaS Pro Call to Action */}
+      <section className="py-12 bg-white dark:bg-card border-t border-border/40 select-none">
+        <div className="max-w-4xl mx-auto px-6 w-full text-center space-y-6">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#7d4dff]/10 border border-[#7d4dff]/20 text-[#7d4dff] text-[10px] font-extrabold uppercase rounded-full tracking-wider">
+            <Sparkles className="h-3 w-3" /> Toolchi Pro Suite
+          </div>
+          <h2 className="text-xl sm:text-3xl font-extrabold text-foreground tracking-tight max-w-xl mx-auto leading-tight">
+            Accelerate Your Workflow with Creator Pro Suite
+          </h2>
+          <p className="text-xs sm:text-sm text-muted-foreground max-w-lg mx-auto leading-relaxed">
+            Get ad-free premium workspace, batch file processing, offline session history, and advanced AI blogging outlines.
+          </p>
+          <div className="flex justify-center gap-3">
+            <Link
+              href="/pricing"
+              className="px-5 py-2.5 bg-[#7d4dff] hover:bg-[#6530ef] text-white font-extrabold text-xs rounded-xl shadow-md shadow-[#7d4dff]/15 cursor-pointer active:scale-95 transition-all"
+            >
+              Get Started for $9/mo
+            </Link>
+            <Link
+              href="/tools"
+              className="px-5 py-2.5 border border-border bg-neutral-50 dark:bg-neutral-900/40 hover:bg-neutral-100 dark:hover:bg-neutral-800/80 text-foreground font-bold text-xs rounded-xl transition-all cursor-pointer"
+            >
+              Explore Free Tools
+            </Link>
+          </div>
+        </div>
       </section>
 
       {/* 3. FAQ Section */}
