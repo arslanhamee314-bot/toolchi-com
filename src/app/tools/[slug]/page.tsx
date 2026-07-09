@@ -37,7 +37,21 @@ export async function generateMetadata({ params }: ToolPageProps) {
       description: tool.seoDescription,
       url: `/tools/${tool.slug}`,
       siteName: "Toolchi",
-      type: "website"
+      type: "website",
+      images: [
+        {
+          url: "/logo.jpg",
+          width: 800,
+          height: 800,
+          alt: tool.name,
+        }
+      ]
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: tool.seoTitle,
+      description: tool.seoDescription,
+      images: ["/logo.jpg"],
     }
   };
 }

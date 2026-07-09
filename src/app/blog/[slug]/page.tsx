@@ -15,6 +15,49 @@ export async function generateStaticParams() {
   }));
 }
 
+// Generate dynamic metadata for blog articles for high conversion social cards
+export async function generateMetadata({ params }: BlogPostPageProps) {
+  const resolvedParams = await params;
+  const post = getPostBySlug(resolvedParams.slug);
+
+  if (!post) {
+    return {
+      title: "Article Not Found - Toolchi",
+      description: "The requested blog article could not be found.",
+    };
+  }
+
+  return {
+    title: `${post.title} | Toolchi Blog`,
+    description: post.excerpt,
+    alternates: {
+      canonical: `/blog/${post.slug}`,
+    },
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      url: `/blog/${post.slug}`,
+      siteName: "Toolchi",
+      type: "article",
+      publishedTime: new Date(post.date).toISOString(),
+      images: [
+        {
+          url: "/logo.jpg",
+          width: 800,
+          height: 800,
+          alt: post.title,
+        }
+      ]
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt,
+      images: ["/logo.jpg"],
+    }
+  };
+}
+
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const resolvedParams = await params;
   const post = getPostBySlug(resolvedParams.slug);
