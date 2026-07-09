@@ -48,6 +48,14 @@ export default function HomePage() {
         "description": "Explore Toolchi's complete all-in-one suite of free online web, developer, PDF, and productivity tools. 100% secure, local, and private.",
         "publisher": {
           "@id": "https://toolchi.online/#organization"
+        },
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://toolchi.online/tools?search={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
         }
       },
       {
