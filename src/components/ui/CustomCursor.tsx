@@ -8,48 +8,180 @@ export default function CustomCursor() {
 
   if (!isDesktop || !isHovering) return null;
 
-  // Compute ring style adjustments
-  let ringClasses = "border border-primary bg-primary/5 w-7 h-7";
-  let dotClasses = "bg-primary w-2 h-2";
+  // 1. Establish default styles according to Toolchi Smart Glow Cursor Spec
+  let ringStyle: React.CSSProperties = {
+    width: "28px",
+    height: "28px",
+    borderColor: "rgba(125, 77, 255, 0.35)",
+    backgroundColor: "rgba(125, 77, 255, 0.16)",
+    borderRadius: "9999px"
+  };
 
+  let dotStyle: React.CSSProperties = {
+    width: "6px",
+    height: "6px",
+    backgroundColor: "#7d4dff"
+  };
+
+  let ringClasses = "border flex items-center justify-center";
+  let dotClasses = "flex items-center justify-center";
+  let labelText = cursorLabel;
+
+  // 2. Map states to specific visual parameters
   switch (cursorState) {
     case "hover":
     case "button":
-      ringClasses = "border border-[#7d4dff] bg-[#7d4dff]/10 w-9 h-9 scale-110";
-      dotClasses = "bg-[#7d4dff] w-1.5 h-1.5 opacity-80";
+      ringStyle = {
+        width: "38px",
+        height: "38px",
+        borderColor: "rgba(125, 77, 255, 0.65)",
+        backgroundColor: "rgba(125, 77, 255, 0.22)",
+        borderRadius: "9999px",
+        boxShadow: "0 0 12px rgba(125, 77, 255, 0.25)"
+      };
+      dotStyle = {
+        width: "4px",
+        height: "4px",
+        backgroundColor: "#ffffff",
+        boxShadow: "0 0 4px #ffffff"
+      };
+      if (!labelText) labelText = "Click";
       break;
+
     case "link":
-      ringClasses = "border-b border-l-0 border-r-0 border-t-0 border-[#7d4dff] w-6 h-4 rounded-none scale-y-50 mt-1";
-      dotClasses = "bg-[#7d4dff] w-1 h-1 translate-x-2";
+      ringStyle = {
+        width: "32px",
+        height: "32px",
+        borderColor: "rgba(91, 124, 255, 0.35)",
+        backgroundColor: "rgba(91, 124, 255, 0.1)",
+        borderRadius: "9999px"
+      };
+      dotStyle = {
+        width: "6px",
+        height: "6px",
+        backgroundColor: "#5b7cff"
+      };
+      if (!labelText) labelText = "Open";
       break;
+
     case "card":
-      ringClasses = "border border-[#7d4dff]/40 bg-[#7d4dff]/8 rounded-[8px] w-10 h-10";
-      dotClasses = "bg-[#7d4dff] w-2 h-2";
+      ringStyle = {
+        width: "42px",
+        height: "42px",
+        borderColor: "rgba(125, 77, 255, 0.4)",
+        backgroundColor: "rgba(20, 184, 166, 0.12)",
+        borderRadius: "12px", // rounded-square shape
+        boxShadow: "0 0 10px rgba(125, 77, 255, 0.15)"
+      };
+      dotStyle = {
+        width: "6px",
+        height: "6px",
+        backgroundColor: "#7d4dff"
+      };
+      if (!labelText) labelText = "Explore";
       break;
+
     case "input":
-      ringClasses = "border border-border/80 w-3 h-5 rounded-[2px]";
-      dotClasses = "bg-foreground w-[1px] h-3 rounded-none";
+      ringStyle = {
+        width: "6px",
+        height: "22px",
+        borderColor: "rgba(125, 77, 255, 0.4)",
+        backgroundColor: "rgba(255, 255, 255, 0.1)",
+        borderRadius: "2px"
+      };
+      dotStyle = {
+        width: "1px",
+        height: "14px",
+        backgroundColor: "#7d4dff",
+        borderRadius: "0px"
+      };
       break;
+
     case "upload":
-      ringClasses = "border-2 border-dashed border-teal-500 bg-teal-500/10 w-12 h-12";
-      dotClasses = "bg-teal-500 w-2.5 h-2.5";
+      ringStyle = {
+        width: "44px",
+        height: "44px",
+        borderColor: "#14b8a6",
+        borderStyle: "dashed",
+        backgroundColor: "rgba(20, 184, 166, 0.15)",
+        borderRadius: "9999px"
+      };
+      dotStyle = {
+        width: "6px",
+        height: "6px",
+        backgroundColor: "#14b8a6"
+      };
+      if (!labelText) labelText = "Drop";
       break;
+
     case "loading":
-      ringClasses = "border-2 border-t-transparent border-[#7d4dff] cursor-rotating-spinner w-8 h-8 rounded-full";
-      dotClasses = "bg-[#7d4dff] w-2 h-2 animate-ping";
+      ringStyle = {
+        width: "34px",
+        height: "34px",
+        borderColor: "#7d4dff",
+        borderTopColor: "transparent",
+        borderRightColor: "#14b8a6",
+        borderRadius: "9999px"
+      };
+      dotStyle = {
+        width: "6px",
+        height: "6px",
+        backgroundColor: "#7d4dff"
+      };
+      ringClasses += " cursor-rotating-spinner";
+      dotClasses += " animate-ping";
+      if (!labelText) labelText = "Processing";
       break;
+
     case "success":
-      ringClasses = "border-2 border-emerald-500 bg-emerald-500/15 cursor-pulse-green w-9 h-9";
-      dotClasses = "bg-emerald-500 w-2.5 h-2.5";
+      ringStyle = {
+        width: "34px",
+        height: "34px",
+        borderColor: "#22c55e",
+        backgroundColor: "rgba(34, 197, 94, 0.15)",
+        borderRadius: "9999px"
+      };
+      dotStyle = {
+        width: "6px",
+        height: "6px",
+        backgroundColor: "#22c55e"
+      };
+      ringClasses += " cursor-pulse-green";
+      if (!labelText) labelText = "Success";
       break;
+
     case "error":
-      ringClasses = "border-2 border-red-500 bg-red-500/15 cursor-shake-red w-9 h-9";
-      dotClasses = "bg-red-500 w-2.5 h-2.5";
+      ringStyle = {
+        width: "34px",
+        height: "34px",
+        borderColor: "#ef4444",
+        backgroundColor: "rgba(239, 68, 68, 0.15)",
+        borderRadius: "9999px"
+      };
+      dotStyle = {
+        width: "6px",
+        height: "6px",
+        backgroundColor: "#ef4444"
+      };
+      ringClasses += " cursor-shake-red";
+      if (!labelText) labelText = "Error";
       break;
+
     case "click":
-      ringClasses = "border border-[#7d4dff] bg-[#7d4dff]/30 w-5 h-5 scale-90";
-      dotClasses = "bg-[#7d4dff] w-3 h-3";
+      ringStyle = {
+        width: "20px",
+        height: "20px",
+        borderColor: "rgba(125, 77, 255, 0.7)",
+        backgroundColor: "rgba(125, 77, 255, 0.4)",
+        borderRadius: "9999px"
+      };
+      dotStyle = {
+        width: "8px",
+        height: "8px",
+        backgroundColor: "#7d4dff"
+      };
       break;
+
     default:
       break;
   }
@@ -58,8 +190,9 @@ export default function CustomCursor() {
     <div className="fixed inset-0 pointer-events-none z-[9999] print:hidden">
       {/* Outer tracking ring */}
       <div
-        className={`toolchi-cursor-ring absolute rounded-full -translate-x-1/2 -translate-y-1/2 will-change-transform transition-all duration-200 cubic-bezier(0.1, 0.8, 0.2, 1) flex items-center justify-center ${ringClasses}`}
+        className={`toolchi-cursor-ring absolute -translate-x-1/2 -translate-y-1/2 will-change-transform transition-all duration-200 cubic-bezier(0.1, 0.8, 0.2, 1) ${ringClasses}`}
         style={{
+          ...ringStyle,
           transform: `translate3d(${mousePosition.x}px, ${mousePosition.y}px, 0) ${
             cursorState === "hover" || cursorState === "button" ? "scale(1.15)" : ""
           }`,
@@ -68,21 +201,22 @@ export default function CustomCursor() {
 
       {/* Inner dot */}
       <div
-        className={`toolchi-cursor-dot absolute rounded-full -translate-x-1/2 -translate-y-1/2 will-change-transform transition-all duration-75 ease-out flex items-center justify-center ${dotClasses}`}
+        className={`toolchi-cursor-dot absolute rounded-full -translate-x-1/2 -translate-y-1/2 will-change-transform transition-all duration-75 ease-out ${dotClasses}`}
         style={{
+          ...dotStyle,
           transform: `translate3d(${mousePosition.x}px, ${mousePosition.y}px, 0)`,
         }}
       />
 
       {/* Floating text label */}
-      {cursorLabel && (
+      {labelText && (
         <div
           className="absolute bg-neutral-900/90 text-white text-[9px] font-extrabold px-2 py-1 rounded-md shadow-md backdrop-blur-xs select-none pointer-events-none transition-opacity duration-200"
           style={{
             transform: `translate3d(${mousePosition.x + 16}px, ${mousePosition.y + 16}px, 0)`,
           }}
         >
-          {cursorLabel}
+          {labelText}
         </div>
       )}
     </div>
