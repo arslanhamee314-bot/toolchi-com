@@ -3,6 +3,8 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Link from "next/link";
 import Script from "next/script";
+import { InteractionProvider } from "@/components/ui/InteractionProvider";
+import CustomCursor from "@/components/ui/CustomCursor";
 
 export const metadata: Metadata = {
   title: "Toolchi - Free Online Web & Developer Tools Directory",
@@ -61,55 +63,59 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
       </head>
       <body className="antialiased min-h-screen flex flex-col bg-[#f6f7fb] dark:bg-[#11141c] text-black dark:text-white">
-        {/* Google Analytics (GA4) Tag */}
-        {process.env.NEXT_PUBLIC_GA_ID && (
-          <>
+        <InteractionProvider>
+          {/* Custom Cursor layer for desktop users */}
+          <CustomCursor />
+
+          {/* Google Analytics (GA4) Tag */}
+          {process.env.NEXT_PUBLIC_GA_ID && (
+            <>
+              <Script
+                src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+                strategy="afterInteractive"
+              />
+              <Script id="google-analytics" strategy="afterInteractive">
+                {`
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
+                `}
+              </Script>
+            </>
+          )}
+
+          {/* Google AdSense Script */}
+          {process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID && (
             <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
-              strategy="afterInteractive"
+              async
+              src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID}`}
+              crossOrigin="anonymous"
+              strategy="lazyOnload"
             />
-            <Script id="google-analytics" strategy="afterInteractive">
-              {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
-              `}
-            </Script>
-          </>
-        )}
+          )}
 
-        {/* Google AdSense Script */}
-        {process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID && (
-          <Script
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID}`}
-            crossOrigin="anonymous"
-            strategy="lazyOnload"
-          />
-        )}
+          {/* Header Navigation */}
+          <Header />
 
-        {/* Header Navigation */}
-        <Header />
+          {/* Main Content Area */}
+          <main className="flex-1 flex flex-col">
+            {children}
+          </main>
 
-        {/* Main Content Area */}
-        <main className="flex-1 flex flex-col">
-          {children}
-        </main>
-
-        {/* Trust Footer */}
-        <footer className="border-t border-border bg-white dark:bg-card py-8 px-6 print:hidden">
-          <div className="mx-auto max-w-6xl flex flex-col sm:flex-row items-center justify-between text-xs text-muted-foreground gap-4 select-none">
-            <p>&copy; {new Date().getFullYear()} Toolchi. All-in-one free online tools. All processing occurs locally.</p>
-            <div className="flex gap-4 flex-wrap justify-center sm:justify-start">
-              <Link href="/about" className="hover:underline hover:text-foreground">About Us</Link>
-              <Link href="/contact" className="hover:underline hover:text-foreground">Contact Us</Link>
-              <Link href="/privacy" className="hover:underline hover:text-foreground">Privacy Policy</Link>
-              <Link href="/terms" className="hover:underline hover:text-foreground">Terms of Use</Link>
+          {/* Trust Footer */}
+          <footer className="border-t border-border bg-white dark:bg-card py-8 px-6 print:hidden">
+            <div className="mx-auto max-w-6xl flex flex-col sm:flex-row items-center justify-between text-xs text-muted-foreground gap-4 select-none">
+              <p>&copy; {new Date().getFullYear()} Toolchi. All-in-one free online tools. All processing occurs locally.</p>
+              <div className="flex gap-4 flex-wrap justify-center sm:justify-start">
+                <Link href="/about" className="hover:underline hover:text-foreground">About Us</Link>
+                <Link href="/contact" className="hover:underline hover:text-foreground">Contact Us</Link>
+                <Link href="/privacy" className="hover:underline hover:text-foreground">Privacy Policy</Link>
+                <Link href="/terms" className="hover:underline hover:text-foreground">Terms of Use</Link>
+              </div>
             </div>
-          </div>
-        </footer>
-
+          </footer>
+        </InteractionProvider>
       </body>
     </html>
   );

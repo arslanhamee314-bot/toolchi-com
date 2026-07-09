@@ -124,3 +124,93 @@ input:focus, textarea:focus, select:focus {
   border-color: #7d4dff !important;
   box-shadow: 0 0 0 3px rgba(125, 77, 255, 0.15) !important;
 }
+
+/* Premium Interaction System Styles */
+@media (pointer: fine) {
+  body.toolchi-cursor-active {
+    cursor: none;
+  }
+
+  body.toolchi-cursor-active a,
+  body.toolchi-cursor-active button,
+  body.toolchi-cursor-active select,
+  body.toolchi-cursor-active [role="button"],
+  body.toolchi-cursor-active input[type="submit"],
+  body.toolchi-cursor-active label {
+    cursor: none !important;
+  }
+}
+
+/* Reduced Motion checks */
+@media (prefers-reduced-motion: reduce) {
+  .toolchi-cursor-ring,
+  .toolchi-cursor-dot,
+  .tap-ripple {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Mobile Touch Ripple */
+.tap-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(125, 77, 255, 0.3);
+  transform: scale(0);
+  animation: tap-ripple-animation 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+  pointer-events: none;
+  z-index: 99;
+}
+
+@keyframes tap-ripple-animation {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Cursor loading spin */
+@keyframes cursor-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.cursor-rotating-spinner {
+  animation: cursor-spin 1s linear infinite;
+}
+
+/* Pulse keyframes for success and error */
+@keyframes cursor-pulse-success {
+  0%, 100% {
+    box-shadow: 0 0 0 0px rgba(16, 185, 129, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+  }
+}
+
+.cursor-pulse-green {
+  animation: cursor-pulse-success 0.8s ease-in-out infinite;
+}
+
+@keyframes cursor-pulse-error {
+  0%, 100% {
+    box-shadow: 0 0 0 0px rgba(239, 68, 68, 0.4);
+    transform: translate(0, 0);
+  }
+  20%, 60% {
+    transform: translate(-2px, 0);
+  }
+  40%, 80% {
+    transform: translate(2px, 0);
+  }
+}
+
+.cursor-shake-red {
+  animation: cursor-pulse-error 0.8s ease-in-out infinite;
+}
+
