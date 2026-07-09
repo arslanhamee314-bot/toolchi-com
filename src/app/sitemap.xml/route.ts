@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { TOOLS_REGISTRY } from "@/lib/tools-registry";
 import { BLOG_POSTS } from "@/lib/blog-registry";
+import { COMPETITORS_REGISTRY } from "@/lib/competitors-registry";
 
 export async function GET() {
   const baseUrl = "https://toolchi.online";
@@ -17,6 +18,9 @@ export async function GET() {
     }),
     ...BLOG_POSTS.map(post => {
       return `  <url>\n    <loc>${baseUrl}/blog/${post.slug}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`;
+    }),
+    ...COMPETITORS_REGISTRY.map(comp => {
+      return `  <url>\n    <loc>${baseUrl}/alternatives/${comp.slug}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.85</priority>\n  </url>`;
     })
   ];
 
