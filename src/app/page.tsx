@@ -140,6 +140,29 @@ export default function HomePage() {
                 <HeroSearch />
               </Suspense>
             </div>
+
+            {/* Competitor Alternatives Banner */}
+            <div className="w-full max-w-md mt-4 border border-dashed border-border/80 p-3.5 rounded-2xl bg-neutral-50/50 dark:bg-neutral-900/30 text-left select-none">
+              <span className="text-[9px] font-extrabold text-[#7d4dff] uppercase tracking-wider block mb-2">⚡ Premium Alternatives to Popular Web Tools</span>
+              <div className="grid grid-cols-2 gap-2 text-3xs font-bold leading-normal">
+                <a href="/tools/video-to-gif" className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-card border border-border/60 hover:border-primary/40 transition-colors group">
+                  <span className="text-muted-foreground">Ezgif Alternative</span>
+                  <span className="text-[#6530ef] dark:text-[#a582ff] font-extrabold flex items-center gap-0.5">Video to GIF</span>
+                </a>
+                <a href="/tools/merge-pdf" className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-card border border-border/60 hover:border-primary/40 transition-colors group">
+                  <span className="text-muted-foreground">TinyWow Alternative</span>
+                  <span className="text-[#6530ef] dark:text-[#a582ff] font-extrabold flex items-center gap-0.5">Merge PDF</span>
+                </a>
+                <a href="/tools/jpg-to-webp" className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-card border border-border/60 hover:border-primary/40 transition-colors group">
+                  <span className="text-muted-foreground">Squoosh Alternative</span>
+                  <span className="text-[#6530ef] dark:text-[#a582ff] font-extrabold flex items-center gap-0.5">JPG to WebP</span>
+                </a>
+                <a href="/tools/json-formatter" className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-card border border-border/60 hover:border-primary/40 transition-colors group">
+                  <span className="text-muted-foreground">DevUtils Alternative</span>
+                  <span className="text-[#6530ef] dark:text-[#a582ff] font-extrabold flex items-center gap-0.5">JSON Formatter</span>
+                </a>
+              </div>
+            </div>
           </div>
 
           {/* Hero Decorative Illustration / Visual Proof Mockups (Right on desktop) */}
