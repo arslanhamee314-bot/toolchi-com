@@ -21,6 +21,8 @@ export interface ToolItem {
   relatedSlugs?: string[];
   tags?: string[];
   shortDescription?: string;
+  features?: string[];
+  useCases?: string[];
 }
 
 export const CATEGORIES = [
@@ -895,22 +897,28 @@ const CUSTOM_TOOL_PROPERTIES: Record<string, Partial<ToolItem>> = {
   "invoice-generator": { ctaText: "Create Invoice", sampleSupported: true, relatedSlugs: ["calculator"], popular: true }
 };
 
+import { MONEY_TOOLS_CONTENT } from "./money-tools-content";
+
 export const TOOLS_REGISTRY: ToolItem[] = RAW_TOOLS_REGISTRY.map(tool => {
   const custom = CUSTOM_TOOL_PROPERTIES[tool.slug] || {};
+  const moneyContent = MONEY_TOOLS_CONTENT[tool.slug] || {};
+  
   return {
     ...tool,
-    seoTitle: tool.seoTitle || `${tool.name} - Free Online Tool | Toolchi`,
-    seoDescription: tool.seoDescription || `Run ${tool.name} locally in your browser. 100% private and secure.`,
-    longDesc: tool.longDesc || `A local client-side tool to process ${tool.name} queries in real-time.`,
-    howToUse: tool.howToUse || ["Input your data in the tool workspace.", "Configure settings.", "Process and save results."],
-    faqs: tool.faqs || [{ question: `Is ${tool.name} free?`, answer: `Yes, it is 100% free and runs entirely inside your browser.` }],
-    ctaText: custom.ctaText || "Open Tool",
-    sampleSupported: custom.sampleSupported ?? false,
-    relatedSlugs: custom.relatedSlugs || [],
-    popular: custom.popular ?? tool.popular ?? false,
-    isNew: custom.isNew ?? tool.isNew ?? false,
-    tags: custom.tags || [tool.category],
-    shortDescription: tool.shortDesc
+    seoTitle: moneyContent.seoTitle || tool.seoTitle || `${tool.name} - Free Online Tool | Toolchi`,
+    seoDescription: moneyContent.seoDescription || tool.seoDescription || `Run ${tool.name} locally in your browser. 100% private and secure.`,
+    longDesc: moneyContent.longDesc || tool.longDesc || `A local client-side tool to process ${tool.name} queries in real-time.`,
+    howToUse: moneyContent.howToUse || tool.howToUse || ["Input your data in the tool workspace.", "Configure settings.", "Process and save results."],
+    faqs: moneyContent.faqs || tool.faqs || [{ question: `Is ${tool.name} free?`, answer: `Yes, it is 100% free and runs entirely inside your browser.` }],
+    ctaText: custom.ctaText || moneyContent.ctaText || "Open Tool",
+    sampleSupported: custom.sampleSupported ?? moneyContent.sampleSupported ?? false,
+    relatedSlugs: custom.relatedSlugs || moneyContent.relatedSlugs || [],
+    popular: custom.popular ?? moneyContent.popular ?? tool.popular ?? false,
+    isNew: custom.isNew ?? moneyContent.isNew ?? tool.isNew ?? false,
+    tags: custom.tags || moneyContent.tags || [tool.category],
+    shortDescription: tool.shortDesc,
+    features: moneyContent.features || [],
+    useCases: moneyContent.useCases || []
   } as ToolItem;
 });
 

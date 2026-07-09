@@ -220,6 +220,20 @@ export default async function ToolPage({ params }: ToolPageProps) {
               </p>
             </div>
 
+            {tool.features && tool.features.length > 0 && (
+              <div className="flex flex-col gap-3">
+                <h2 className="text-lg font-bold text-foreground tracking-tight">Key Features</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                  {tool.features.map((feature, idx) => (
+                    <div key={idx} className="p-4 bg-white dark:bg-card border border-border/70 rounded-2xl flex flex-col gap-0.5">
+                      <span className="text-3xs font-extrabold text-primary uppercase tracking-wider">Feature {idx + 1}</span>
+                      <p className="text-xs text-muted-foreground leading-normal mt-0.5">{feature}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className="flex flex-col gap-4">
               <h2 className="text-lg font-bold text-foreground tracking-tight">How to Use the Tool</h2>
               <ol className="list-decimal pl-5 space-y-2 text-xs md:text-sm text-muted-foreground mb-2">
@@ -229,6 +243,17 @@ export default async function ToolPage({ params }: ToolPageProps) {
               </ol>
               <TutorialGallery tool={tool} />
             </div>
+
+            {tool.useCases && tool.useCases.length > 0 && (
+              <div className="flex flex-col gap-3">
+                <h2 className="text-lg font-bold text-foreground tracking-tight">Common Use Cases</h2>
+                <ul className="list-disc pl-5 space-y-2 text-xs md:text-sm text-muted-foreground">
+                  {tool.useCases.map((useCase, idx) => (
+                    <li key={idx} className="leading-relaxed pl-1">{useCase}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </section>
 
           {/* Right Sidebar FAQs Column */}
@@ -238,13 +263,25 @@ export default async function ToolPage({ params }: ToolPageProps) {
               <div className="flex flex-col gap-4">
                 {tool.faqs.map((faq, i) => (
                   <div key={i} className="flex flex-col gap-1.5 border-b border-border/40 pb-4 last:border-b-0 last:pb-0">
-                    <h4 className="font-bold text-foreground text-xs">{faq.question}</h4>
-                    <p className="text-xs text-muted-foreground leading-relaxed">{faq.answer}</p>
+                    <h4 className="font-bold text-foreground text-xs leading-snug">{faq.question}</h4>
+                    <p className="text-2xs text-muted-foreground leading-relaxed">{faq.answer}</p>
                   </div>
                 ))}
               </div>
             </div>
 
+            {/* In-Browser Secure Sandbox Guarantee */}
+            <div className="p-4 bg-emerald-500/5 dark:bg-emerald-500/2 border border-emerald-500/20 rounded-2xl flex flex-col gap-2 mt-4 select-none">
+              <div className="flex items-center gap-2">
+                <div className="h-7 w-7 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center shrink-0">
+                  <ShieldCheck className="h-4 w-4" />
+                </div>
+                <h3 className="text-xs font-extrabold text-foreground">Secure Client-Side Sandbox</h3>
+              </div>
+              <p className="text-[10px] text-muted-foreground leading-relaxed">
+                Toolchi operations are executed fully in your local browser sandbox. Zero files, strings, or image buffers are uploaded to servers, ensuring complete security.
+              </p>
+            </div>
           </section>
 
         </div>
