@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BLOG_POSTS, getPostBySlug } from "@/lib/blog-registry";
 import { Calendar, Clock, User, ChevronRight, ArrowLeft, ArrowRight, ShieldCheck } from "lucide-react";
+import AdUnit from "@/components/AdUnit";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -22,8 +23,44 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     notFound();
   }
 
+  // Pre-compile JSON-LD schema for the blog post
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BlogPosting",
+        "@id": `https://toolchi.online/blog/${post.slug}#blogposting`,
+        "headline": post.title,
+        "description": post.excerpt,
+        "datePublished": new Date(post.date).toISOString(),
+        "author": {
+          "@type": "Person",
+          "name": post.author.name,
+          "jobTitle": post.author.role
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Toolchi",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://toolchi.online/logo.jpg"
+          }
+        },
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": `https://toolchi.online/blog/${post.slug}`
+        }
+      }
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-[#f6f7fb] dark:bg-[#11141c] py-12 px-6">
+      {/* Blog Schema Script */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="max-w-3xl mx-auto flex flex-col gap-8">
         
         {/* Breadcrumbs */}
@@ -68,43 +105,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
         </header>
 
-        {/* Article content markdown mock */}
+        {/* Dynamic HTML rendering */}
         <article className="prose dark:prose-invert max-w-none text-xs sm:text-sm text-foreground/80 leading-relaxed flex flex-col gap-6">
           <p className="font-semibold text-[#20242d] dark:text-[#f6f7fb] text-sm leading-relaxed">
             {post.excerpt}
           </p>
-
-          <h2 className="text-base sm:text-lg font-extrabold text-[#20242d] dark:text-[#f6f7fb] mt-4 tracking-tight">
-            1. Why Client-Side Execution Matters
-          </h2>
-          <p>
-            Standard utility sites process payloads (like your PDFs or JSON configurations) on remote databases. This introduces security liabilities and potential data privacy breaches. By using client-side JavaScript libraries natively, files are processed inside your browser tab without upload pipelines.
-          </p>
-
-          <h2 className="text-base sm:text-lg font-extrabold text-[#20242d] dark:text-[#f6f7fb] mt-4 tracking-tight">
-            2. The Core Optimization checklist
-          </h2>
-          <p>
-            To audit speed and compliance markers, make sure you configure these elements:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li><strong>Robots.txt</strong>: Map allowed directory parameters for index crawlers.</li>
-            <li><strong>SSL Certificates</strong>: Verify handshake encryptions periodically.</li>
-            <li><strong>Responsive Widths</strong>: Audit viewport wraps across layout resolutions.</li>
-            <li><strong>Image Payloads</strong>: Quantize PNG and JPEG weights locally.</li>
-          </ul>
-
-          <div className="p-5 bg-[#f3eeff] dark:bg-[#1a1725] border border-[#e8ddff]/80 dark:border-border/60 rounded-2xl flex items-center gap-3.5 mt-4">
-            <div className="h-10 w-10 rounded-xl bg-[#7d4dff]/10 text-[#7d4dff] flex items-center justify-center border border-[#7d4dff]/20">
-              <ShieldCheck className="h-5 w-5" />
-            </div>
-            <div>
-              <h4 className="text-xs font-extrabold text-foreground">100% Privacy Guarantee</h4>
-              <p className="text-[10px] text-muted leading-relaxed">
-                All checker processes run sandbox-style within your tab viewport. No external requests are triggered.
-              </p>
-            </div>
-          </div>
+          <AdUnit slot="5492810472" />
+          <div dangerouslySetInnerHTML={{ __html: post.content }} className="space-y-4" />
         </article>
 
         {/* Next article link */}

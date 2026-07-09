@@ -52,6 +52,7 @@ export default function Header() {
             <Link href="/#popular-tools" className="hover:text-[#7d4dff] transition-colors">Popular</Link>
             <Link href="/#recent-tools" className="hover:text-[#7d4dff] transition-colors">New</Link>
             <Link href="/blog" className="hover:text-[#7d4dff] transition-colors">Blogs</Link>
+            <Link href="/pricing" className="hover:text-[#7d4dff] transition-colors">Pricing</Link>
           </nav>
 
           <ThemeToggle />
@@ -106,6 +107,9 @@ export default function Header() {
               </Link>
               <Link href="/blog" onClick={closeMenu} className="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg hover:text-[#7d4dff] transition-colors">
                 Blogs
+              </Link>
+              <Link href="/pricing" onClick={closeMenu} className="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg hover:text-[#7d4dff] transition-colors">
+                Pricing
               </Link>
             </nav>
           </div>

@@ -7,6 +7,7 @@ import InteractiveWorkspace from "@/components/tools/InteractiveWorkspace";
 import CategoryFilters from "@/components/tools/CategoryFilters";
 import { CATEGORIES, TOOLS_REGISTRY } from "@/lib/tools-registry";
 import { ShieldCheck, Cpu, UserMinus, Gift } from "lucide-react";
+import AdUnit from "@/components/AdUnit";
 
 // Page level SEO metadata (pre-rendered for Google)
 export const metadata = {
@@ -200,6 +201,9 @@ export default function HomePage() {
 
       {/* 2. Interactive Live Workspace */}
       <InteractiveWorkspace />
+
+      {/* Responsive AdSense Slot */}
+      <AdUnit className="px-6 max-w-6xl mt-4" />
 
       {/* 3. Quick Use-Case Filters */}
       <section id="categories" className="py-12 bg-white dark:bg-card border-b border-border/40 scroll-mt-20">

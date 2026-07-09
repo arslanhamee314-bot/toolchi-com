@@ -8,6 +8,7 @@ import LucideIcon from "@/components/tools/LucideIcon";
 import TutorialGallery from "@/components/tools/TutorialGallery";
 import LoadSampleButton from "@/components/tools/LoadSampleButton";
 import ToolCard from "@/components/tools/ToolCard";
+import AdUnit from "@/components/AdUnit";
 
 interface ToolPageProps {
   params: Promise<{ slug: string }>;
@@ -234,8 +235,11 @@ export default async function ToolPage({ params }: ToolPageProps) {
 
         </div>
 
-        {/* Block 5: Related Tools Bottom Grid */}
-        {relatedTools.length > 0 && (
+      {/* Responsive AdSense Slot */}
+      <AdUnit slot="9018471042" className="mt-4" />
+
+      {/* Block 5: Related Tools Bottom Grid */}
+      {relatedTools.length > 0 && (
           <section className="border-t border-border/40 pt-10 mt-6 print:hidden w-full">
             <div className="flex flex-col gap-6">
               <div className="flex flex-col gap-1 text-center lg:text-left">
