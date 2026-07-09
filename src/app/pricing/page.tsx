@@ -7,6 +7,11 @@ import { ArrowLeft, Check, Sparkles, HelpCircle, ShieldCheck } from "lucide-reac
 export default function PricingPage() {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annually">("monthly");
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+  
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [waitlistLoading, setWaitlistLoading] = useState(false);
 
   const plans = [
     {
@@ -15,61 +20,94 @@ export default function PricingPage() {
       price: 0,
       description: "Ideal for basic client-side formatting and light image diagnostics.",
       features: [
-        "100% Client-side privacy",
-        "Max 50MB file conversions",
-        "Access to basic coding tools",
-        "Contains sponsors / ads",
-        "Offline local run support"
+        "100% Client-Side Sandbox",
+        "Single File conversions",
+        "Standard Image compressor (max 5MB)",
+        "Standard PDF tools (max 3 files)",
+        "Local Secure browser logs only"
       ],
-      cta: "Current Active Plan",
-      popular: false
+      cta: "Current Active Plan"
     },
     {
-      id: "pro",
+      id: "creator",
       name: "Creator Pro Suite",
       price: billingCycle === "monthly" ? 9 : 7,
-      description: "Perfect for bloggers, content creators, and SEO webmasters.",
+      description: "Optimized for bloggers, content marketers, and dynamic publishing engines.",
       features: [
-        "Ad-Free Premium Workspace",
-        "Max 2GB bulk file uploads",
-        "Batch conversions & merges",
-        "AI Blogging Outline Creator",
-        "Offline-saved session history",
-        "Priority CPU compression threads",
-        "Priority support assistance (24h)"
+        "Everything in Free Sandbox",
+        "Batch conversions (up to 20 files)",
+        "Hi-Res bulk compression (max 25MB)",
+        "Batch PDF tools (merge/split unlimited)",
+        "Advanced custom AI outline builders",
+        "No Ad banners (Ad-Free Workspace)",
+        "Secure cloud backups history (optional)"
       ],
-      cta: "Upgrade to Pro Suite",
+      cta: "Join Pro Waitlist",
       popular: true
     },
     {
-      id: "enterprise",
+      id: "developer",
       name: "Developer API Plus",
-      price: billingCycle === "monthly" ? 49 : 39,
-      description: "Designed for engineering teams needing automated API integrations.",
+      price: billingCycle === "monthly" ? 29 : 23,
+      description: "For engineering teams automating file conversions and text statistics.",
       features: [
-        "Everything in Creator Pro",
-        "Unlimited file payload volumes",
-        "REST API access credentials",
-        "Custom programmatic Webhooks",
-        "Dedicated workspace dashboard",
-        "99.9% uptime compliance SLAs",
-        "Team seat workspaces (up to 5)"
+        "Everything in Creator Pro Suite",
+        "Cloud API credentials (25,000 reqs/mo)",
+        "Webhook response receivers",
+        "Priority dedicated API servers",
+        "24/7 Slack support channel",
+        "Multi-user team dashboard settings"
       ],
-      cta: "Contact Enterprise API",
-      popular: false
+      cta: "Request API Access"
     }
   ];
 
   const handleCheckoutSim = (planId: string) => {
+    if (planId === "free") return;
+    
+    // Check if previously registered locally
+    const saved = localStorage.getItem(`waitlist_${planId}`);
+    if (saved) {
+      setEmail(saved);
+      setSubmitted(true);
+    } else {
+      setEmail("");
+      setSubmitted(false);
+    }
+    
     setSelectedPlan(planId);
   };
 
+  const handleSubmitWaitlist = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !email.includes("@")) return;
+
+    setWaitlistLoading(true);
+    setTimeout(() => {
+      setWaitlistLoading(false);
+      setSubmitted(true);
+      
+      // Save locally
+      localStorage.setItem(`waitlist_${selectedPlan}`, email);
+      
+      // Fire confetti effect
+      import("canvas-confetti").then((m) => {
+        m.default({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+      });
+    }, 800);
+  };
+
   return (
-    <div className="py-12 px-4 sm:px-6 max-w-6xl mx-auto w-full relative overflow-hidden">
+    <div className="py-12 px-4 sm:px-6 max-w-5xl mx-auto w-full relative overflow-hidden">
       {/* Background glow checks */}
       <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[550px] h-[550px] bg-[#7d4dff]/5 rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="flex flex-col gap-10 z-10 relative text-center">
+      <div className="flex flex-col gap-8 text-center relative z-10">
+        
         {/* Navigation header */}
         <div className="flex justify-between items-center border-b border-border/40 pb-6 text-left">
           <div className="flex items-center gap-3">
@@ -78,7 +116,7 @@ export default function PricingPage() {
             </div>
             <div>
               <h1 className="text-xl sm:text-2xl font-extrabold text-foreground tracking-tight">Flexible Premium Plans</h1>
-              <p className="text-3xs sm:text-2xs text-muted-foreground mt-0.5">Scale your document, audio, image, and video workflows easily.</p>
+              <p className="text-3xs sm:text-2xs text-muted-foreground mt-0.5">Scale your document, audio, image, and writing workflows easily.</p>
             </div>
           </div>
           <Link 
@@ -89,13 +127,11 @@ export default function PricingPage() {
           </Link>
         </div>
 
-        {/* Title */}
-        <div className="space-y-3 max-w-xl mx-auto mt-4">
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-foreground tracking-tight leading-none">
-            Simple, Transparent Pricing
-          </h2>
+        {/* Pricing Header */}
+        <div className="max-w-2xl mx-auto space-y-3 mt-4">
+          <h2 className="text-2xl sm:text-4xl font-extrabold text-foreground tracking-tight leading-none">Transparent, Flexible Plans</h2>
           <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-            Choose the plan that suits your developer requirements. All local client-side processing remains completely free.
+            All basic local tools are free. Support Toolchi development and unlock high-performance batch pipelines, bigger file capabilities, and ad-free interfaces.
           </p>
         </div>
 
@@ -162,43 +198,89 @@ export default function PricingPage() {
           ))}
         </div>
 
-        {/* Simulated Checkout Modal */}
+        {/* Lead capture / waitlist dialog modal */}
         {selectedPlan && selectedPlan !== "free" && (
           <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-            <div className="bg-white dark:bg-card border border-border rounded-3xl p-6 sm:p-8 max-w-md w-full text-center space-y-4 shadow-2xl animate-in scale-in-95 duration-200">
-              <Check className="h-12 w-12 text-emerald-500 mx-auto bg-emerald-500/10 p-2 rounded-full border border-emerald-500/20" />
-              <div>
-                <h3 className="text-base sm:text-lg font-extrabold text-foreground">Interactive Stripe Sandbox</h3>
-                <p className="text-xs text-muted-foreground leading-relaxed mt-1.5">
-                  This checkout is a simulation. Toolchi's Premium subscriptions can be integrated here using standard Stripe Checkout redirect triggers.
-                </p>
-              </div>
-              <div className="bg-neutral-50 dark:bg-[#1a202c] border border-border p-4 rounded-2xl text-left text-2xs space-y-1.5">
-                <div className="flex justify-between font-bold">
-                  <span>Selected Subscription:</span>
-                  <span className="text-[#7d4dff] uppercase font-extrabold">{selectedPlan} Plan</span>
-                </div>
-                <div className="flex justify-between text-muted-foreground">
-                  <span>Billing Cycle:</span>
-                  <span>{billingCycle === "monthly" ? "Monthly" : "Annually (Save 20%)"}</span>
-                </div>
-              </div>
-              <div className="flex gap-3">
-                <button 
-                  onClick={() => setSelectedPlan(null)}
-                  className="flex-1 py-2.5 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-foreground font-bold text-xs rounded-xl cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <a 
-                  href="https://stripe.com" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex-1 py-2.5 bg-primary hover:bg-[#6530ef] text-white font-extrabold text-xs rounded-xl text-center cursor-pointer shadow-sm shadow-[#7d4dff]/10"
-                >
-                  Visit Stripe website
-                </a>
-              </div>
+            <div className="bg-white dark:bg-card border border-border rounded-3xl p-6 sm:p-8 max-w-md w-full text-center space-y-5 shadow-2xl animate-in scale-in-95 duration-200">
+              
+              {submitted ? (
+                <>
+                  <div className="h-12 w-12 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 rounded-full flex items-center justify-center mx-auto">
+                    <Check className="h-6 w-6" />
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="text-base sm:text-lg font-extrabold text-foreground">You&apos;re on the list! 🎉</h3>
+                    <p className="text-2xs sm:text-xs text-muted-foreground leading-relaxed">
+                      We have registered your waitlist application for the <strong className="text-foreground uppercase">{selectedPlan} plan</strong>. We will notify you at <strong className="text-foreground">{email}</strong> as soon as billing routes open.
+                    </p>
+                  </div>
+                  <button 
+                    onClick={() => {
+                      setSelectedPlan(null);
+                      setSubmitted(false);
+                    }}
+                    className="w-full py-2.5 bg-neutral-900 border border-border hover:border-neutral-700 text-white font-bold text-xs rounded-xl cursor-pointer"
+                  >
+                    Done
+                  </button>
+                </>
+              ) : (
+                <>
+                  <div className="h-12 w-12 bg-[#7d4dff]/10 text-primary border border-[#7d4dff]/20 rounded-full flex items-center justify-center mx-auto">
+                    <Sparkles className="h-6 w-6 animate-pulse" />
+                  </div>
+                  
+                  <div className="space-y-1.5">
+                    <h3 className="text-base sm:text-lg font-extrabold text-foreground">Join the Creator Pro Waitlist</h3>
+                    <p className="text-[11px] text-muted-foreground leading-relaxed">
+                      Toolchi Pro plans are currently in active beta. Leave your email address below to lock in the early bird pricing ($7/mo billed annually) before launch.
+                    </p>
+                  </div>
+
+                  <form onSubmit={handleSubmitWaitlist} className="space-y-4 text-left">
+                    <div className="space-y-1.5">
+                      <label className="text-3xs font-extrabold text-muted-foreground uppercase tracking-wider block">Full Name</label>
+                      <input 
+                        type="text" 
+                        value={name} 
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="e.g. John Doe"
+                        className="w-full px-4 py-2.5 text-xs bg-neutral-50 dark:bg-card border border-border rounded-xl focus:outline-hidden focus:border-primary transition-colors text-foreground animate-none"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-3xs font-extrabold text-muted-foreground uppercase tracking-wider block">Email Address *</label>
+                      <input 
+                        type="email" 
+                        required
+                        value={email} 
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="e.g. john@example.com"
+                        className="w-full px-4 py-2.5 text-xs bg-neutral-50 dark:bg-card border border-border rounded-xl focus:outline-hidden focus:border-primary transition-colors text-foreground animate-none"
+                      />
+                    </div>
+
+                    <div className="flex gap-3 pt-2">
+                      <button 
+                        type="button"
+                        onClick={() => setSelectedPlan(null)}
+                        className="flex-1 py-2.5 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-foreground font-bold text-xs rounded-xl cursor-pointer transition-colors"
+                      >
+                        Cancel
+                      </button>
+                      <button 
+                        type="submit"
+                        disabled={waitlistLoading}
+                        className="flex-1 py-2.5 bg-primary hover:bg-[#6530ef] text-white font-extrabold text-xs rounded-xl shadow-md shadow-[#7d4dff]/15 flex items-center justify-center gap-1 hover:scale-103 active:scale-97 transition-all cursor-pointer disabled:opacity-50"
+                      >
+                        {waitlistLoading ? "Submitting..." : "Secure My Spot"}
+                      </button>
+                    </div>
+                  </form>
+                </>
+              )}
+
             </div>
           </div>
         )}
