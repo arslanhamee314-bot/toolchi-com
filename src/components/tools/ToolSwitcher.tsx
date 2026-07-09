@@ -45,6 +45,7 @@ import VideoSuite from "./VideoSuite";
 import AudioSuite from "./AudioSuite";
 import TransformSuite from "./TransformSuite";
 import UtilitySuite from "./UtilitySuite";
+import AiSuite from "./AiSuite";
 
 interface ToolSwitcherProps {
   slug: string;
@@ -188,6 +189,10 @@ export default function ToolSwitcher({ slug }: ToolSwitcherProps) {
     // === 6. AI UTILITIES ===
     case "ai-detector":
       return <AiDetector />;
+    case "ai-summarizer":
+    case "ai-title-generator":
+    case "ai-paragraph-rewriter":
+      return <AiSuite slug={slug} />;
 
     default:
       return (

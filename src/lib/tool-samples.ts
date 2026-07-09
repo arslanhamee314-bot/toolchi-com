@@ -88,7 +88,13 @@ https://toolchi.online/blog`,
 
   "domain-expiration-checker": `toolchi.online`,
 
-  "ssl-checker": `toolchi.online`
+  "ssl-checker": `toolchi.online`,
+
+  "ai-summarizer": `In modern web performance tuning, visual assets are the single largest source of bloat. Uncompressed high-definition hero banners and blog thumbnails can easily degrade your Core Web Vitals score. Optimizing images locally is the fastest win to double your loading speeds. Historically, diagnostic tools required sending server requests, parsing responses remotely, and logging results in databases. This added latency, server costs, and potential data leakage. Modern web tools leverage in-browser APIs—such as Web Crypto, native Canvas, and local fetch loops—to perform critical scans safely on the client side.`,
+
+  "ai-paragraph-rewriter": `We need to work hard on optimizing our sitemap files because currently search engine crawlers are taking a very long time to find and index all the fresh utility pages that we have published on the website.`,
+
+  "ai-title-generator": `image compression web performance nextjs pagespeed optimization`
 };
 
 export const getSampleBySlug = (slug: string): string => {

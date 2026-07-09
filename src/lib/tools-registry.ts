@@ -524,6 +524,64 @@ const RAW_TOOLS_REGISTRY = [
     popular: true,
     isNew: true
   },
+  {
+    slug: "ai-summarizer",
+    name: "AI Text Summarizer",
+    category: "ai",
+    shortDesc: "Extract key points and summarize long-form articles or essays locally on your device.",
+    iconName: "FileText",
+    seoTitle: "Free AI Text Summarizer Online - Extractive Text Summary | Toolchi",
+    seoDescription: "Summarize paragraphs, essays, and articles on the fly. 100% private client-side processing using advanced sentence heuristics.",
+    longDesc: "Analyze long-form copy and rank sentence scores according to vocabulary term densities. Bypasses external API requests by processing documents entirely inside the browser.",
+    howToUse: [
+      "Paste your long-form text or documents inside the input field.",
+      "Select your target summary length and preferred output format (Bullets or Paragraph).",
+      "Click Process AI Generation to download or copy the computed summary."
+    ],
+    faqs: [
+      { question: "How does the local summarizer work?", answer: "It ranks sentence importance based on keyword frequencies, discarding common stop words." },
+      { question: "Are my documents secure?", answer: "Yes, summarization runs entirely inside your browser sandbox." }
+    ],
+    isNew: true
+  },
+  {
+    slug: "ai-title-generator",
+    name: "AI Title & Headline Generator",
+    category: "ai",
+    shortDesc: "Generate SEO-friendly and viral click-worthy titles for your blogs or YouTube videos.",
+    iconName: "Type",
+    seoTitle: "AI Title & Blog Headline Generator Online - SEO Titles | Toolchi",
+    seoDescription: "Generate catchy, listicle, or SEO-optimized title structures from your keywords instantly and privately.",
+    longDesc: "Input your core topic terms to synthesize multiple prefix, listicle, and viral combinations based on marketing click-through heuristics.",
+    howToUse: [
+      "Enter your main keywords or topic terms.",
+      "Select your preferred headline style (SEO, Viral, How-to, or Listicle).",
+      "Click generate and copy the optimized headlines."
+    ],
+    faqs: [
+      { question: "Can I customize the generated titles?", answer: "Yes, you can edit or customize any title suggestions once copied." }
+    ],
+    isNew: true
+  },
+  {
+    slug: "ai-paragraph-rewriter",
+    name: "AI Paragraph Rewriter",
+    category: "ai",
+    shortDesc: "Rewrite paragraphs in multiple tones (formal, casual, creative, punchy) to polish copy.",
+    iconName: "ListCollapse",
+    seoTitle: "Free AI Paragraph Rewriter Online - Text Tone Changer | Toolchi",
+    seoDescription: "Rewrite copy or emails in professional, casual, or creative tones. Processed locally in-browser.",
+    longDesc: "Modify word structures, substitute synonyms, and adjust readability variables on the fly to shift the tone of paragraphs.",
+    howToUse: [
+      "Paste your original paragraph into the input container.",
+      "Choose your desired output tone from the selector.",
+      "Click process to rewrite the text locally."
+    ],
+    faqs: [
+      { question: "What tones are supported?", answer: "We support Formal, Casual, Creative, and Short/Punchy structures." }
+    ],
+    isNew: true
+  },
 
   // 5. PDF & DOCUMENT TOOLS
   {
