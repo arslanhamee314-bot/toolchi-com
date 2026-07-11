@@ -1,7 +1,18 @@
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const pubId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || "pub-XXXXXXXXXXXXX";
+  const pubId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
+
+  if (!pubId || pubId.includes("XXXXXX")) {
+    return new NextResponse("# Configure NEXT_PUBLIC_ADSENSE_CLIENT_ID to publish ads.txt\n", {
+      status: 200,
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "public, max-age=3600, s-maxage=3600",
+      },
+    });
+  }
+
   // Clean prefix if "ca-pub-" exists to comply with Google standard
   const cleanPubId = pubId.replace(/^ca-/, "");
   

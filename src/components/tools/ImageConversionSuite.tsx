@@ -3,6 +3,10 @@
 import React, { useState, useEffect } from "react";
 import { Upload, Download, RefreshCw, AlertCircle, FileImage, ShieldCheck, Check, Sparkles, Image as ImageIcon } from "lucide-react";
 import { getSampleBySlug } from "@/lib/tool-samples";
+import SmartAssist from "./SmartAssist";
+import PresetSelector from "./PresetSelector";
+import ResultScore from "./ResultScore";
+import NextBestActions from "./NextBestActions";
 
 interface ImageConversionSuiteProps {
   slug: string;
@@ -17,9 +21,13 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
   const [resultFileName, setResultFileName] = useState("");
   const [originalSize, setOriginalSize] = useState<number | null>(null);
   const [convertedSize, setConvertedSize] = useState<number | null>(null);
+  const [selectedPreset, setSelectedPreset] = useState("standard");
+  const [resultScoreValue, setResultScoreValue] = useState<number | null>(null);
 
   // Settings
   const [compressionQuality, setCompressionQuality] = useState(80); // 1-100
+  // New state for output format when applicable
+  const [outputFormat, setOutputFormat] = useState<string>('');
 
   // Hook into central sample data loader
   useEffect(() => {
@@ -73,6 +81,42 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
     }
   };
 
+  const getPresetsForSlug = () => {
+    if (slug === "png-optimizer" || slug === "gif-optimizer" || slug === "jpg-to-webp" || slug === "jpg-to-avif" || slug === "webp-to-jpg") {
+      return [
+        { id: "standard", name: "Standard (80% Quality)", description: "Balanced compression sizing" },
+        { id: "high", name: "Lossless Match (95% Quality)", description: "Crystal clear high-res details" },
+        { id: "economy", name: "High Speed (50% Quality)", description: "Maximum bandwidth optimization" }
+      ];
+    }
+    if (slug === "svg-optimizer") {
+      return [
+        { id: "standard", name: "Aggressive Optimization", description: "Removes namespaces, declarations, and metadata" },
+        { id: "light", name: "Safe Cleanup", description: "Removes only redundant layout comments" }
+      ];
+    }
+    return [];
+  };
+
+  const handleSelectPreset = (presetId: string) => {
+    setSelectedPreset(presetId);
+    setResultUrl(null);
+    setResultScoreValue(null);
+
+    if (slug === "svg-optimizer") {
+      // Custom internal logic flags if needed
+    } else {
+      if (presetId === "high") {
+      setCompressionQuality(95);
+    } else if (presetId === "economy") {
+      setCompressionQuality(50);
+    } else {
+      setCompressionQuality(80);
+    }
+    // Reset output format when preset changes to avoid stale selection
+    setOutputFormat('');  }
+  };
+
   const getAcceptedFormats = () => {
     if (slug === "webp-to-jpg") return ".webp";
     if (slug === "jpg-to-webp" || slug === "jpg-to-avif") return ".jpg,.jpeg";
@@ -81,7 +125,39 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
     if (slug === "apng-splitter" || slug === "apng-maker") return ".png,.apng";
     if (slug === "png-optimizer" || slug === "png-to-svg") return ".png";
     if (slug === "svg-optimizer") return ".svg";
-    return "image/*";
+    // Additional support for WebP and TIFF inputs across all converters
+    return "image/*,.webp,.tiff,.tif";
+  };
+
+  const getSmartAssistDetails = () => {
+    switch (slug) {
+      case "webp-to-jpg":
+      case "jpg-to-webp":
+        return {
+          recommendation: "WebP format loads 30% faster than legacy JPGs.",
+          reason: "Google prioritizes pages using modern WebP formats. Converting reduces bandwidth and boosts Core Web Vitals.",
+          nextStep: "Upload file and click Optimize & Convert"
+        };
+      case "avif-converter":
+      case "jpg-to-avif":
+        return {
+          recommendation: "AVIF provides 50% better compression than JPEG.",
+          reason: "AVIF provides next-gen compression and alpha transparency support, making pages load significantly faster.",
+          nextStep: "Select quality preset and click Optimize & Convert"
+        };
+      case "svg-optimizer":
+        return {
+          recommendation: "Purge XML comments and extra whitespace.",
+          reason: "Vector SVGs contain lots of text redundancy. Removing comments and spacing trims weight instantly.",
+          nextStep: "Run local vector clean"
+        };
+      default:
+        return {
+          recommendation: "Run local compression on all high-def uploads.",
+          reason: "Your data remains safe inside your browser sandbox. No server uploads are performed.",
+          nextStep: "Upload image file and convert"
+        };
+    }
   };
 
   const formatSize = (bytes: number) => {
@@ -100,6 +176,18 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
       setResultUrl(null);
       setConvertedSize(null);
     }
+  };
+
+  const computeAndSetScore = (orig: number, conv: number) => {
+    let score = 100;
+    if (compressionQuality === 100) score -= 15;
+    if (conv >= orig) {
+      score -= 20; // No size savings
+    } else {
+      const saving = (orig - conv) / orig;
+      if (saving > 0.5) score = 100; // Perfect savings
+    }
+    setResultScoreValue(score);
   };
 
   const processImage = () => {
@@ -136,22 +224,66 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
 
         ctx.drawImage(img, 0, 0);
 
-        // Determine target mime-type & suffix
+        // Render branding watermark if enabled
+        try {
+          const { getBrandingConfig } = require("@/components/workspace/BrandingOptions");
+          const brandConfig = getBrandingConfig();
+          if (brandConfig.enabled) {
+            ctx.save();
+            ctx.globalAlpha = brandConfig.opacity;
+            // Proportional font sizing
+            const fontSize = Math.max(12, Math.round(canvas.width * 0.022));
+            ctx.font = `bold ${fontSize}px sans-serif`;
+            ctx.fillStyle = "rgba(120, 120, 120, 0.9)";
+            ctx.textBaseline = "middle";
+            
+            const padding = fontSize * 1.5;
+            let x = canvas.width - padding;
+            let y = canvas.height - padding;
+            let align: CanvasTextAlign = "right";
+
+            if (brandConfig.placement === "bottom-left") {
+              x = padding;
+              align = "left";
+            } else if (brandConfig.placement === "bottom-center") {
+              x = canvas.width / 2;
+              align = "center";
+            } else if (brandConfig.placement === "top-right") {
+              x = canvas.width - padding;
+              y = padding;
+              align = "right";
+            }
+
+            ctx.textAlign = align;
+            // White outline shadow for readability on dark/complex regions
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+            ctx.lineWidth = Math.max(2, Math.round(fontSize * 0.15));
+            ctx.strokeText(brandConfig.text, x, y);
+            ctx.fillText(brandConfig.text, x, y);
+            ctx.restore();
+          }
+        } catch (e) {
+          // ignore
+        }
+
+
+        // Determine target mime-type & suffix based on selected output format or defaults
         let mimeType = "image/jpeg";
         let suffix = ".jpg";
 
-        if (slug === "jpg-to-webp" || slug === "avif-converter") {
-          mimeType = "image/webp";
-          suffix = ".webp";
-        } else if (slug === "jpg-to-avif") {
-          mimeType = "image/avif";
-          suffix = ".avif";
-        } else if (slug === "jxl-to-png" || slug === "png-optimizer" || slug === "apng-maker") {
-          mimeType = "image/png";
-          suffix = ".png";
-        } else if (slug === "webp-to-jpg") {
-          mimeType = "image/jpeg";
-          suffix = ".jpg";
+        // Helper to map format
+        const formatMap = {
+          jpeg: { mime: "image/jpeg", suffix: ".jpg" },
+          png: { mime: "image/png", suffix: ".png" },
+          webp: { mime: "image/webp", suffix: ".webp" },
+          avif: { mime: "image/avif", suffix: ".avif" }
+        };
+
+        const chosenFormat = outputFormat || (slug === "jpg-to-webp" || slug === "avif-converter" ? "webp" : slug === "jpg-to-avif" ? "avif" : slug === "jxl-to-png" || slug === "png-optimizer" || slug === "apng-maker" ? "png" : slug === "webp-to-jpg" ? "jpeg" : "jpeg");
+
+        if (formatMap[chosenFormat as keyof typeof formatMap]) {
+          mimeType = formatMap[chosenFormat as keyof typeof formatMap].mime;
+          suffix = formatMap[chosenFormat as keyof typeof formatMap].suffix;
         }
 
         // Export blob
@@ -161,6 +293,7 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
               const url = URL.createObjectURL(blob);
               setResultUrl(url);
               setConvertedSize(blob.size);
+              computeAndSetScore(selectedFile.size, blob.size);
               const originalBase = selectedFile.name.substring(0, selectedFile.name.lastIndexOf("."));
               setResultFileName(`${originalBase}_optimized${suffix}`);
             } else {
@@ -181,7 +314,7 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
           canvas.height = 400;
           const ctx = canvas.getContext("2d");
           if (ctx) {
-            ctx.fillStyle = "#7d4dff";
+            ctx.fillStyle = "var(--color-primary)";
             ctx.fillRect(0, 0, 400, 400);
             ctx.fillStyle = "#ffffff";
             ctx.font = "bold 14px Inter";
@@ -190,6 +323,7 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
               if (blob) {
                 setResultUrl(URL.createObjectURL(blob));
                 setConvertedSize(blob.size);
+                computeAndSetScore(selectedFile.size, blob.size);
                 setResultFileName("jxl_converted_fallback.png");
               }
               setLoading(false);
@@ -225,6 +359,7 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
           const blob = new Blob([optimized], { type: "image/svg+xml" });
           setResultUrl(URL.createObjectURL(blob));
           setConvertedSize(blob.size);
+          computeAndSetScore(selectedFile.size, blob.size);
           setResultFileName(`${selectedFile.name.replace(".svg", "")}_optimized.svg`);
           setLoading(false);
         } catch (err) {
@@ -245,6 +380,7 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
           const blob = new Blob([svgContent], { type: "image/svg+xml" });
           setResultUrl(URL.createObjectURL(blob));
           setConvertedSize(blob.size);
+          computeAndSetScore(selectedFile.size, blob.size);
           setResultFileName(`${selectedFile.name.replace(".png", "")}_vector.svg`);
           setLoading(false);
         } catch (err) {
@@ -264,6 +400,7 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
     setOriginalUrl(null);
     setOriginalSize(null);
     setConvertedSize(null);
+    setResultScoreValue(null);
     setError(null);
   };
 
@@ -273,23 +410,30 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
         <h4 className="text-sm font-extrabold text-foreground uppercase tracking-wider">
           {getToolTitle()}
         </h4>
-        <span className="inline-flex items-center gap-1 text-[9px] font-bold text-[#7d4dff] bg-[#f3eeff] border border-[#e8ddff] px-2 py-0.5 rounded-lg select-none">
+        <span className="inline-flex items-center gap-1 text-[9px] font-bold text-primary bg-accent border border-accent/50 px-2 py-0.5 rounded-lg select-none">
           <ShieldCheck className="h-3.5 w-3.5" /> 100% Client Sandbox
         </span>
       </div>
+
+      {/* Smart Assist banner */}
+      <SmartAssist
+        recommendation={getSmartAssistDetails().recommendation}
+        reason={getSmartAssistDetails().reason}
+        nextStep={getSmartAssistDetails().nextStep}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Upload Column */}
         <div className="lg:col-span-6 flex flex-col gap-5">
           {!selectedFile ? (
-            <label className="border-2 border-dashed border-border/80 hover:border-[#7d4dff]/40 bg-neutral-50 dark:bg-[#1a202c] rounded-2xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-colors group min-h-[220px]">
+            <label className="border-2 border-dashed border-border/80 hover:border-primary/40 bg-neutral-50 dark:bg-[#1a202c] rounded-2xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-colors group min-h-[220px]">
               <input
                 type="file"
                 accept={getAcceptedFormats()}
                 onChange={handleFileChange}
                 className="hidden"
               />
-              <Upload className="h-9 w-9 text-muted-foreground/60 group-hover:text-[#7d4dff] transition-colors mb-3" />
+              <Upload className="h-9 w-9 text-muted-foreground/60 group-hover:text-primary transition-colors mb-3" />
               <h5 className="text-xs font-bold text-foreground">Upload Image File</h5>
               <p className="text-3xs text-muted-foreground leading-normal mt-1 max-w-[200px]">
                 Drag and drop or click to choose from device. Accepts {getAcceptedFormats()} formats.
@@ -319,12 +463,43 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
             </div>
           )}
 
+          {/* Preset Selector */}
+          {getPresetsForSlug().length > 0 && (
+  <>
+    <PresetSelector
+      presets={getPresetsForSlug()}
+      selectedPresetId={selectedPreset}
+      onSelect={handleSelectPreset}
+    />
+    {selectedFile && (selectedFile.type === 'image/webp' || selectedFile.type === 'image/tiff' || selectedFile.type === 'image/tif') && (
+      <div className="mt-4 border border-border p-4 rounded-2xl bg-card/25">
+        <h5 className="text-3xs font-bold text-muted-foreground uppercase mb-2">Output Format</h5>
+        <div className="flex gap-2">
+          {['jpeg', 'png', 'webp'].map((fmt) => (
+            <label key={fmt} className="flex items-center gap-1">
+              <input
+                type="radio"
+                name="outputFormat"
+                value={fmt}
+                checked={outputFormat === fmt}
+                onChange={() => setOutputFormat(fmt)}
+                className="accent-primary"
+              />
+              <span className="text-xs text-foreground capitalize">{fmt}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+    )}
+  </>
+)}
+
           {/* Compress setting slider */}
-          {(slug === "png-optimizer" || slug === "gif-optimizer" || slug === "jpg-to-webp" || slug === "jpg-to-avif") && selectedFile && (
+          {selectedPreset === "standard" && (slug === "png-optimizer" || slug === "gif-optimizer" || slug === "jpg-to-webp" || slug === "jpg-to-avif" || slug === "svg-optimizer" || slug === "png-to-svg") && selectedFile && (
             <div className="border border-border p-4 rounded-2xl bg-card/25 space-y-2">
               <div className="flex justify-between text-3xs font-extrabold text-muted-foreground uppercase">
                 <span>Output Quality / Compression</span>
-                <span className="text-[#7d4dff]">{compressionQuality}%</span>
+                <span style={{ color: 'var(--color-primary)' }}>{compressionQuality}%</span>
               </div>
               <input
                 type="range"
@@ -332,7 +507,7 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
                 max="100"
                 value={compressionQuality}
                 onChange={(e) => setCompressionQuality(Number(e.target.value))}
-                className="w-full h-1 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-[#7d4dff]"
+                className="w-full h-1 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-primary"
               />
             </div>
           )}
@@ -340,7 +515,7 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
           <button
             onClick={processImage}
             disabled={loading || !selectedFile}
-            className="w-full py-2.5 bg-[#7d4dff] hover:bg-[#6530ef] disabled:bg-[#7d4dff]/40 text-white font-extrabold text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-[#7d4dff]/15"
+            className="w-full py-2.5 bg-primary hover:bg-accent disabled:bg-primary/40 text-white font-extrabold text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-primary/15"
           >
             {loading ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Sparkles className="h-3.5 w-3.5" />}
             <span>Optimize & Convert</span>
@@ -359,6 +534,14 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
               </div>
             ) : resultUrl && originalUrl ? (
               <div className="space-y-4 w-full text-center">
+                {resultScoreValue !== null && (
+                  <ResultScore
+                    score={resultScoreValue}
+                    metricTitle="Clean Compression Index"
+                    details="Evaluates quality loss ratio versus file layout efficiency."
+                  />
+                )}
+
                 {/* Visual Side-by-Side preview comparison */}
                 {slug !== "svg-optimizer" && slug !== "png-to-svg" && (
                   <div className="grid grid-cols-2 gap-3">
@@ -399,9 +582,9 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
 
                 <div className="flex gap-2">
                   <a
-                    href={resultUrl}
-                    download={resultFileName}
-                    className="flex-1 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-500/10 cursor-pointer"
+                     href={resultUrl}
+                     download={resultFileName}
+                     className="flex-1 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-500/10 cursor-pointer"
                   >
                     <Download className="h-3.5 w-3.5" />
                     <span>Download File</span>
@@ -412,6 +595,17 @@ export default function ImageConversionSuite({ slug }: ImageConversionSuiteProps
                   >
                     Reset
                   </button>
+                </div>
+
+                {/* Next Best Actions */}
+                <div className="mt-4 border-t border-border/40 pt-4 text-left">
+                  <NextBestActions
+                    actions={[
+                      { slug: "image-compressor", name: "Compress Image", description: "Optimize file size further" },
+                      { slug: "favicon-generator", name: "Generate Favicon", description: "Build .ico files from output image" },
+                      { slug: "dummy-image-gen", name: "Layout Mockups", description: "Generate placeholder cards with precise dims" }
+                    ]}
+                  />
                 </div>
               </div>
             ) : (

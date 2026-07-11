@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { Sparkles, RefreshCw, Copy, Check, ShieldCheck, AlertCircle, FileText, Type, ListCollapse } from "lucide-react";
 import { getSampleBySlug } from "@/lib/tool-samples";
+import { isProUser } from "@/lib/pro-features";
+
 
 interface AiSuiteProps {
   slug: string;
@@ -255,12 +257,19 @@ export default function AiSuite({ slug }: AiSuiteProps) {
                   <span className="text-3xs font-extrabold text-muted-foreground uppercase block">Summary Length</span>
                   <select 
                     value={summaryLength} 
-                    onChange={(e: any) => setSummaryLength(e.target.value)}
+                    onChange={(e: any) => {
+                      const val = e.target.value;
+                      if (val === "long" && !isProUser()) {
+                        window.dispatchEvent(new CustomEvent("open-pro-checkout"));
+                        return;
+                      }
+                      setSummaryLength(val);
+                    }}
                     className="w-full px-3 py-1.5 text-xs bg-white dark:bg-[#1a202c] border border-border rounded-xl outline-none cursor-pointer"
                   >
                     <option value="short">Short Summary (2 Sentences)</option>
                     <option value="medium">Medium Summary (3 Sentences)</option>
-                    <option value="long">Long Summary (5 Sentences)</option>
+                    <option value="long">Long Summary (5 Sentences) (Pro Only 🔒)</option>
                   </select>
                 </div>
                 <div className="space-y-1.5">
@@ -282,13 +291,20 @@ export default function AiSuite({ slug }: AiSuiteProps) {
                 <span className="text-3xs font-extrabold text-muted-foreground uppercase block">Target Tone</span>
                 <select 
                   value={rewriteTone} 
-                  onChange={(e: any) => setRewriteTone(e.target.value)}
+                  onChange={(e: any) => {
+                    const val = e.target.value;
+                    if ((val === "creative" || val === "punchy") && !isProUser()) {
+                      window.dispatchEvent(new CustomEvent("open-pro-checkout"));
+                      return;
+                    }
+                    setRewriteTone(val);
+                  }}
                   className="w-full px-3 py-1.5 text-xs bg-white dark:bg-[#1a202c] border border-border rounded-xl outline-none cursor-pointer"
                 >
                   <option value="formal">👔 Formal & Professional</option>
                   <option value="casual">💬 Casual & Friendly</option>
-                  <option value="creative">🎨 Creative & Story</option>
-                  <option value="punchy">⚡ Short & Punchy (Listicle-style)</option>
+                  <option value="creative">🎨 Creative & Story (Pro Only 🔒)</option>
+                  <option value="punchy">⚡ Short & Punchy (Pro Only 🔒)</option>
                 </select>
               </div>
             )}
@@ -298,17 +314,25 @@ export default function AiSuite({ slug }: AiSuiteProps) {
                 <span className="text-3xs font-extrabold text-muted-foreground uppercase block">Headline Category Style</span>
                 <select 
                   value={titleStyle} 
-                  onChange={(e: any) => setTitleStyle(e.target.value)}
+                  onChange={(e: any) => {
+                    const val = e.target.value;
+                    if (val === "clickbait" && !isProUser()) {
+                      window.dispatchEvent(new CustomEvent("open-pro-checkout"));
+                      return;
+                    }
+                    setTitleStyle(val);
+                  }}
                   className="w-full px-3 py-1.5 text-xs bg-white dark:bg-[#1a202c] border border-border rounded-xl outline-none cursor-pointer"
                 >
                   <option value="seo">🌐 Search-Engine-Optimized (SEO)</option>
-                  <option value="clickbait">🔥 Clickbait / Viral Marketing</option>
+                  <option value="clickbait">🔥 Clickbait / Viral Marketing (Pro Only 🔒)</option>
                   <option value="how-to">💡 How-to Educational</option>
                   <option value="listicle">🔢 Listicle / Numbers</option>
                 </select>
               </div>
             )}
           </div>
+
 
           <button
             onClick={handleProcess}

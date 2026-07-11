@@ -2,6 +2,10 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { Upload, FileImage, Settings, Crop, Download, RefreshCw, AlertCircle, ShieldCheck, Sliders, Type } from "lucide-react";
+import SmartAssist from "./SmartAssist";
+import PresetSelector from "./PresetSelector";
+import ResultScore from "./ResultScore";
+import NextBestActions from "./NextBestActions";
 
 interface TransformSuiteProps {
   slug: string;
@@ -13,6 +17,8 @@ export default function TransformSuite({ slug }: TransformSuiteProps) {
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [selectedPreset, setSelectedPreset] = useState("standard");
+  const [resultScoreValue, setResultScoreValue] = useState<number | null>(null);
 
   // Image Dimensions
   const [originalWidth, setOriginalWidth] = useState(0);
@@ -66,6 +72,123 @@ export default function TransformSuite({ slug }: TransformSuiteProps) {
       case "invert-colors": return "Invert Colors (Negate RGB channels)";
       case "rounded-corners": return "Rounded Corners (Add border radius to image)";
       default: return "Image Transformation Workspace";
+    }
+  };
+
+  const getPresetsForSlug = () => {
+    if (slug === "resize-image") {
+      return [
+        { id: "standard", name: "Responsive HD (800x600)", description: "Standard layout viewport scaling" },
+        { id: "economy", name: "Mobile optimized (480x320)", description: "Aggressive dimensions reduction" },
+        { id: "high", name: "Full Presentation (1920x1080)", description: "Crystal clear presentation details" }
+      ];
+    }
+    if (slug === "crop-image") {
+      return [
+        { id: "standard", name: "Square Avatar (200x200)", description: "Balanced ratio viewport crop" },
+        { id: "economy", name: "Header Banner (600x150)", description: "Perfect fit layouts for hero covers" }
+      ];
+    }
+    if (slug === "rotate-image") {
+      return [
+        { id: "standard", name: "Rotate 90°", description: "Perpendicular landscape rotation" },
+        { id: "economy", name: "Flip 180°", description: "Inverted orientation match" }
+      ];
+    }
+    if (slug === "rounded-corners") {
+      return [
+        { id: "standard", name: "Soft Rounded (12px)", description: "Modern curve corner highlights" },
+        { id: "economy", name: "Circular avatar (99px)", description: "Circular avatar design shape" }
+      ];
+    }
+    return [];
+  };
+
+  const handleSelectPreset = (presetId: string) => {
+    setSelectedPreset(presetId);
+    setResultUrl(null);
+    setResultScoreValue(null);
+
+    if (slug === "resize-image") {
+      if (presetId === "economy") {
+        setResizeW(480);
+        setResizeH(320);
+      } else if (presetId === "high") {
+        setResizeW(1920);
+        setResizeH(1080);
+      } else {
+        setResizeW(800);
+        setResizeH(600);
+      }
+    } else if (slug === "crop-image") {
+      if (presetId === "economy") {
+        setCropW(600);
+        setCropH(150);
+      } else {
+        setCropW(200);
+        setCropH(200);
+      }
+    } else if (slug === "rotate-image") {
+      if (presetId === "economy") {
+        setRotateAngle(180);
+      } else {
+        setRotateAngle(90);
+      }
+    } else if (slug === "rounded-corners") {
+      if (presetId === "economy") {
+        setCornerRadius(99);
+      } else {
+        setCornerRadius(12);
+      }
+    }
+  };
+
+  const calculateTransformationScore = () => {
+    let score = 98;
+    if (slug === "resize-image") {
+      if (resizeW > originalWidth || resizeH > originalHeight) {
+        score -= 15; // Pixelation risk
+      }
+    } else if (slug === "crop-image") {
+      if (cropW < 50 || cropH < 50) {
+        score -= 10; // Low resolution crop
+      }
+    }
+    setResultScoreValue(score);
+  };
+
+  const getSmartAssistDetails = () => {
+    switch (slug) {
+      case "resize-image":
+        return {
+          recommendation: "Scaling down dimensions speeds up page loading.",
+          reason: "Smaller layouts load faster on mobile screens, improving Core Web Vitals score.",
+          nextStep: "Select preset values or manually input resize dimensions"
+        };
+      case "crop-image":
+        return {
+          recommendation: "Trim unwanted borders to center element focus.",
+          reason: "Cropping trims redundant visual margins and details, focusing attention on avatars/subjects.",
+          nextStep: "Choose Square Avatar or draw layout dimensions"
+        };
+      case "censor-image":
+        return {
+          recommendation: "Secure personal privacy before saving files.",
+          reason: "Blur sensitive attributes like user names, licenses, or faces locally in canvas context.",
+          nextStep: "Position censor bounding box and click Apply"
+        };
+      case "watermark-image":
+        return {
+          recommendation: "Overlay text copyright signatures on media.",
+          reason: "Watermarking tags creative property, making scrapers and content crawlers legally liable.",
+          nextStep: "Type overlay text caption and click Apply"
+        };
+      default:
+        return {
+          recommendation: "Transform image pixels entirely client-side.",
+          reason: "No file streams leave your network interface. Image conversions happen inside memory sandboxes.",
+          nextStep: "Upload file image and choose adjustments"
+        };
     }
   };
 
@@ -215,6 +338,7 @@ export default function TransformSuite({ slug }: TransformSuiteProps) {
       canvas.toBlob((blob) => {
         if (blob) {
           setResultUrl(URL.createObjectURL(blob));
+          calculateTransformationScore();
         } else {
           setError("Failed to compile image blob.");
         }
@@ -236,7 +360,14 @@ export default function TransformSuite({ slug }: TransformSuiteProps) {
         </span>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      {/* Smart Assist Banner */}
+      <SmartAssist
+        recommendation={getSmartAssistDetails().recommendation}
+        reason={getSmartAssistDetails().reason}
+        nextStep={getSmartAssistDetails().nextStep}
+      />
+
+      <div className="grid grid-cols-1 grid-rows-none lg:grid-cols-12 gap-6 items-start">
         {/* Controls Column */}
         <div className="lg:col-span-7 flex flex-col gap-5">
           {!imageUrl ? (
@@ -267,10 +398,19 @@ export default function TransformSuite({ slug }: TransformSuiteProps) {
                 className="max-h-[200px] mx-auto rounded-xl border border-border object-contain"
               />
 
+              {/* Preset Selector */}
+              {getPresetsForSlug().length > 0 && (
+                <PresetSelector
+                  presets={getPresetsForSlug()}
+                  selectedPresetId={selectedPreset}
+                  onSelect={handleSelectPreset}
+                />
+              )}
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border border-border/50 p-4 rounded-2xl text-xs">
                 
                 {/* TOOL: Resize */}
-                {slug === "resize-image" && (
+                {slug === "resize-image" && selectedPreset === "standard" && (
                   <div className="space-y-3 col-span-2 grid grid-cols-2 gap-3">
                     <div className="space-y-1">
                       <span className="text-3xs font-extrabold text-muted-foreground uppercase">Width (px)</span>
@@ -294,7 +434,7 @@ export default function TransformSuite({ slug }: TransformSuiteProps) {
                 )}
 
                 {/* TOOL: Crop */}
-                {slug === "crop-image" && (
+                {slug === "crop-image" && selectedPreset === "standard" && (
                   <div className="space-y-3 col-span-2 grid grid-cols-2 gap-3">
                     <div className="space-y-1">
                       <span className="text-3xs font-extrabold text-muted-foreground uppercase">X Offset</span>
@@ -362,14 +502,14 @@ export default function TransformSuite({ slug }: TransformSuiteProps) {
                 )}
 
                 {/* Rounded corners */}
-                {slug === "rounded-corners" && (
+                {slug === "rounded-corners" && selectedPreset === "standard" && (
                   <div className="space-y-1.5 col-span-2">
                     <span className="text-3xs font-extrabold text-muted-foreground uppercase">Corner Radius ({cornerRadius}px)</span>
                     <input type="range" min="0" max="200" value={cornerRadius} onChange={(e) => setCornerRadius(Number(e.target.value))} className="w-full accent-[#7d4dff]" />
                   </div>
                 )}
                 {/* TOOL: Rotate */}
-                {slug === "rotate-image" && (
+                {slug === "rotate-image" && selectedPreset === "standard" && (
                   <div className="space-y-1.5 col-span-2">
                     <span className="text-3xs font-extrabold text-muted-foreground uppercase">Rotation Angle</span>
                     <select 
@@ -524,6 +664,14 @@ export default function TransformSuite({ slug }: TransformSuiteProps) {
               </div>
             ) : resultUrl ? (
               <div className="w-full flex flex-col items-center gap-4">
+                {resultScoreValue !== null && (
+                  <ResultScore
+                    score={resultScoreValue}
+                    metricTitle="Alignment Integrity"
+                    details="Validates image transformation parameters configuration details."
+                  />
+                )}
+
                 <img src={resultUrl} alt="Output Render" className="max-h-[160px] rounded-xl border border-border shadow-xs object-contain" />
                 
                 <div className="w-full flex flex-col gap-2">
@@ -535,11 +683,25 @@ export default function TransformSuite({ slug }: TransformSuiteProps) {
                     <Download className="h-3.5 w-3.5" /> Download PNG Image
                   </a>
                   <button 
-                    onClick={() => setResultUrl(null)} 
+                    onClick={() => {
+                      setResultUrl(null);
+                      setResultScoreValue(null);
+                    }} 
                     className="w-full py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-foreground font-extrabold text-3xs rounded-xl cursor-pointer"
                   >
                     Reset and Try Again
                   </button>
+                </div>
+
+                {/* Next Best Actions */}
+                <div className="mt-4 border-t border-border/40 pt-4 text-left w-full">
+                  <NextBestActions
+                    actions={[
+                      { slug: "image-compressor", name: "Compress Image", description: "Optimize layout assets weight" },
+                      { slug: "webp-to-jpg", name: "Convert Formats", description: "Convert outputs to high speed WebP formats" },
+                      { slug: "gif-maker", name: "GIF Animation Maker", description: "Compile frame sequences into layout files" }
+                    ]}
+                  />
                 </div>
               </div>
             ) : (

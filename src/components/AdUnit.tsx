@@ -14,10 +14,15 @@ interface AdUnitProps {
 export default function AdUnit({ slot, format = "auto", responsive = true, className = "" }: AdUnitProps) {
   const [mounted, setMounted] = useState(false);
   const [adBlocked, setAdBlocked] = useState(false);
+  const clientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
+  const slotId = slot || process.env.NEXT_PUBLIC_ADSENSE_SLOT_ID;
 
   useEffect(() => {
     setMounted(true);
-    // Check if google adsense script has run or been blocked
+    if (!clientId || !slotId || clientId.includes("XXXXXX") || slotId.includes("XXXXXX")) {
+      return;
+    }
+
     try {
       if (typeof window !== "undefined") {
         const w = window as any;
@@ -29,10 +34,13 @@ export default function AdUnit({ slot, format = "auto", responsive = true, class
     }
   }, []);
 
-  const isDev = 
+  const isDev =
     process.env.NODE_ENV === "development" || 
-    !process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || 
-    process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID.includes("XXXXXX");
+    !clientId ||
+    !slotId ||
+    clientId.includes("XXXXXX") ||
+    slotId.includes("XXXXXX") ||
+    adBlocked;
 
   if (!mounted) {
     return <div className={`my-6 mx-auto w-full max-w-4xl text-center select-none ${className}`} style={{ minHeight: "100px" }} />;
@@ -40,15 +48,16 @@ export default function AdUnit({ slot, format = "auto", responsive = true, class
 
   return (
     <div className={`my-6 mx-auto w-full max-w-4xl text-center select-none ${className}`}>
-      {/* AdSense ins element */}
-      <ins
-        className="adsbygoogle block"
-        style={{ display: "block" }}
-        data-ad-client={process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || "ca-pub-XXXXXXXXXXXXX"}
-        data-ad-slot={slot || process.env.NEXT_PUBLIC_ADSENSE_SLOT_ID || "XXXXXXXXXX"}
-        data-ad-format={format}
-        data-full-width-responsive={responsive ? "true" : "false"}
-      />
+      {!isDev && (
+        <ins
+          className="adsbygoogle block"
+          style={{ display: "block" }}
+          data-ad-client={clientId}
+          data-ad-slot={slotId}
+          data-ad-format={format}
+          data-full-width-responsive={responsive ? "true" : "false"}
+        />
+      )}
       
       {/* Dev Mode Placeholder / Fallback Sponsor Card */}
       {isDev && (
@@ -74,5 +83,4 @@ export default function AdUnit({ slot, format = "auto", responsive = true, class
     </div>
   );
 }
-
 

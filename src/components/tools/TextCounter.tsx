@@ -2,9 +2,21 @@
 
 import React, { useState, useMemo } from "react";
 import { RotateCcw } from "lucide-react";
+import SmartAssist from "./SmartAssist";
+import PresetSelector from "./PresetSelector";
+import ResultScore from "./ResultScore";
+import NextBestActions from "./NextBestActions";
 
 export default function TextCounter() {
   const [text, setText] = useState("");
+  const [selectedPreset, setSelectedPreset] = useState("blog");
+
+  const presets = [
+    { id: "blog", name: "Blog Post", description: "Target: 600-1500 words" },
+    { id: "seo_meta", name: "SEO Meta", description: "Target: 120-160 chars" },
+    { id: "social", name: "Social Post", description: "Target: under 280 chars" },
+    { id: "email", name: "Cold Email", description: "Target: 50-150 words" }
+  ];
 
   // Counts analysis
   const metrics = useMemo(() => {
@@ -47,6 +59,29 @@ export default function TextCounter() {
     const speakingTimeSeconds = Math.round((wordCount / 130) * 60);
     const speakingTimeStr = speakingTimeSeconds < 60 ? `${speakingTimeSeconds}s` : `~${Math.ceil(speakingTimeSeconds / 60)}m`;
 
+    // Dynamic quality score calculation
+    let targetScore = 100;
+    if (selectedPreset === "seo_meta") {
+      if (charsWithSpaces < 120 || charsWithSpaces > 160) {
+        targetScore = 50;
+      }
+    } else if (selectedPreset === "blog") {
+      if (wordCount < 300) {
+        targetScore = 50;
+      } else if (wordCount < 600) {
+        targetScore = 80;
+      }
+    } else if (selectedPreset === "social") {
+      if (charsWithSpaces > 280) {
+        targetScore = 40;
+      }
+    } else if (selectedPreset === "email") {
+      if (wordCount < 50 || wordCount > 150) {
+        targetScore = 70;
+      }
+    }
+    if (text.length === 0) targetScore = 0;
+
     return {
       charsWithSpaces,
       charsNoSpaces,
@@ -56,18 +91,75 @@ export default function TextCounter() {
       avgWordLength,
       topKeywords,
       readingTimeStr,
-      speakingTimeStr
+      speakingTimeStr,
+      targetScore
     };
-  }, [text]);
+  }, [text, selectedPreset]);
+
+  // Dynamic Smart Assist details
+  let recommendation = "Select a target preset to analyze layout boundaries.";
+  let reason = "Different channels (Blogs, Meta description snippets, Socials) enforce exact character rules.";
+  let nextStep = "Select a preset above";
+
+  if (selectedPreset === "blog") {
+    if (metrics.wordCount < 600) {
+      recommendation = "Blog post word count is too short.";
+      reason = "Search engines favor comprehensive write-ups. We recommend expanding content to 800+ words.";
+      nextStep = "Expand post details";
+    } else {
+      recommendation = "Excellent blog post length.";
+      reason = "Word counts over 600 are optimized for standard crawlers and reader retention.";
+      nextStep = "Review keyword density map below";
+    }
+  } else if (selectedPreset === "seo_meta") {
+    if (metrics.charsWithSpaces < 120 || metrics.charsWithSpaces > 160) {
+      recommendation = "SEO Meta description falls out of optimal limits.";
+      reason = "Keep meta description between 120 and 160 characters to prevent truncation on search result cards.";
+      nextStep = "Adjust description length";
+    } else {
+      recommendation = "Meta description is search-engine optimized.";
+      reason = "Matches perfect limits for both desktop and mobile snippets.";
+      nextStep = "Copy to website settings";
+    }
+  } else if (selectedPreset === "social") {
+    if (metrics.charsWithSpaces > 280) {
+      recommendation = "Social post exceeds 280 characters.";
+      reason = "Posts exceeding X / Twitter standard length require truncation. Shorten to maintain quick readability.";
+      nextStep = "Shorten paragraph details";
+    } else {
+      recommendation = "Social post length is optimized.";
+      reason = "Meets standard post parameters for Twitter/X, LinkedIn feeds, and Facebook updates.";
+      nextStep = "Copy post text";
+    }
+  }
+
+  const nextActions = [
+    { slug: "spell-checker", name: "Spell Checker", description: "Verify spelling and correct typing mistakes in your draft." },
+    { slug: "case-converter", name: "Case Converter", description: "Format titles, camelCases, slugs, or programming text variables." },
+    { slug: "domain-generator", name: "Domain Generator", description: "Brainstorm high ranking brandable domain names from text ideas." }
+  ];
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5 text-foreground text-xs text-left">
+      {/* Smart Assist Panel */}
+      <SmartAssist recommendation={recommendation} reason={reason} nextStep={nextStep} />
+
+      {/* Preset Selector */}
+      <div className="border-b border-border/40 pb-3">
+        <PresetSelector presets={presets} selectedPresetId={selectedPreset} onSelect={setSelectedPreset} />
+      </div>
+
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Type or paste your text content to count..."
         className="w-full min-h-36 bg-neutral-950 border border-border focus:border-primary/50 outline-hidden rounded-xl p-4 text-sm text-white placeholder-muted-foreground resize-y transition-colors"
       />
+
+      {/* Quality Score component */}
+      {text.length > 0 && (
+        <ResultScore score={metrics.targetScore} metricTitle="SEO Length Suggestion Score" details="Evaluates character boundaries and word density suitability according to targets." />
+      )}
 
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
         <div className="glass p-3 rounded-xl border border-border/40 text-center">
@@ -107,7 +199,7 @@ export default function TextCounter() {
       <div className="flex justify-end">
         <button
           onClick={() => setText("")}
-          className="px-4 py-2 text-xs font-semibold bg-neutral-900 border border-border hover:border-neutral-700 hover:text-white rounded-xl transition-colors flex items-center gap-1.5"
+          className="px-4 py-2 text-xs font-semibold bg-neutral-900 border border-border hover:border-neutral-700 hover:text-white rounded-xl transition-colors flex items-center gap-1.5 cursor-pointer"
         >
           <RotateCcw className="h-3.5 w-3.5" /> Clear Text
         </button>
@@ -125,6 +217,9 @@ export default function TextCounter() {
           </div>
         </div>
       )}
+
+      {/* Next Best Actions */}
+      <NextBestActions actions={nextActions} />
     </div>
   );
 }

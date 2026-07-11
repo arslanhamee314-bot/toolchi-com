@@ -3,6 +3,8 @@
 import React, { useState, useMemo } from "react";
 import { Plus, Trash2, Printer, CheckCircle } from "lucide-react";
 import Image from "next/image";
+import BrandingOptions, { getBrandingConfig } from "@/components/workspace/BrandingOptions";
+
 
 interface InvoiceItem {
   description: string;
@@ -270,9 +272,21 @@ export default function InvoiceGenerator() {
           onClick={handlePrint}
           className="px-5 py-2.5 text-xs font-bold bg-[#7d4dff] border border-[#7d4dff] text-white hover:bg-[#6530ef] rounded-xl transition-all active:scale-95 shadow-md shadow-[#7d4dff]/10 flex items-center gap-1.5 cursor-pointer"
         >
-          <Printer className="h-4 w-4" /> Generate & Print Invoice
+          <Printer className="h-4 w-4" /> Generate &amp; Print Invoice
         </button>
       </div>
+
+      {/* Branding Settings Option Panel */}
+      <div className="border-t border-border/40 pt-6 mt-6 print:hidden w-full">
+        <BrandingOptions />
+      </div>
+
+      {/* Printable Watermark Footer */}
+      {getBrandingConfig().enabled && (
+        <div className="hidden print:flex items-center justify-center border-t border-dashed border-neutral-200 pt-4 mt-12 text-[9px] text-neutral-400 font-bold select-none uppercase tracking-widest w-full">
+          {getBrandingConfig().text}
+        </div>
+      )}
 
     </div>
   );

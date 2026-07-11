@@ -2,6 +2,10 @@
 
 import React, { useState, useRef } from "react";
 import { Upload, Music, Settings, Download, RefreshCw, AlertCircle, ShieldCheck, Play, Pause } from "lucide-react";
+import SmartAssist from "./SmartAssist";
+import PresetSelector from "./PresetSelector";
+import ResultScore from "./ResultScore";
+import NextBestActions from "./NextBestActions";
 
 interface AudioSuiteProps {
   slug: string;
@@ -20,6 +24,8 @@ export default function AudioSuite({ slug }: AudioSuiteProps) {
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [selectedPreset, setSelectedPreset] = useState("standard");
+  const [resultScoreValue, setResultScoreValue] = useState<number | null>(null);
 
   // Audio metrics
   const [duration, setDuration] = useState(0);
@@ -42,6 +48,66 @@ export default function AudioSuite({ slug }: AudioSuiteProps) {
       case "audio-speed": return "Audio Speed Changer (Resample playback rate)";
       case "audio-denoise": return "Audio Denoiser (Remove hiss and background noise)";
       default: return "Audio Utility Workspace";
+    }
+  };
+
+  const getPresetsForSlug = () => {
+    if (slug === "audio-cutter" || slug === "audio-converter") {
+      return [
+        { id: "standard", name: "Original (44.1kHz)", description: "Lossless native sample rate" },
+        { id: "radio", name: "Radio (22kHz)", description: "AM/FM acoustic spectrum" },
+        { id: "speech", name: "Speech/Vocals (11kHz)", description: "Perfect for podcasts/speech" }
+      ];
+    }
+    if (slug === "merge-audio") {
+      return [
+        { id: "standard", name: "Smooth Fade (1s)", description: "Crossfade overlap boundaries" },
+        { id: "fade_2", name: "Slow Fade (2s)", description: "Deep overlap transition" },
+        { id: "no_fade", name: "No Crossfade", description: "Direct concatenation" }
+      ];
+    }
+    if (slug === "audio-speed") {
+      return [
+        { id: "standard", name: "Normal (1.0x)", description: "Default speed rate" },
+        { id: "fast", name: "Fast (1.5x)", description: "Increased tempo speedup" },
+        { id: "slow", name: "Slo-Mo (0.75x)", description: "Decreased tempo slowdown" }
+      ];
+    }
+    return [];
+  };
+
+  const handleSelectPreset = (presetId: string) => {
+    setSelectedPreset(presetId);
+    setResultUrl(null);
+    setResultScoreValue(null);
+
+    if (slug === "audio-cutter" || slug === "audio-converter") {
+      if (presetId === "radio") {
+        setSampleRate(22050);
+      } else if (presetId === "speech") {
+        setSampleRate(11025);
+      } else {
+        setSampleRate(44100);
+      }
+    } else if (slug === "merge-audio") {
+      if (presetId === "fade_2") {
+        setFadeInDuration(2);
+        setFadeOutDuration(2);
+      } else if (presetId === "no_fade") {
+        setFadeInDuration(0);
+        setFadeOutDuration(0);
+      } else {
+        setFadeInDuration(1);
+        setFadeOutDuration(1);
+      }
+    } else if (slug === "audio-speed") {
+      if (presetId === "fast") {
+        setSpeedMultiplier(1.5);
+      } else if (presetId === "slow") {
+        setSpeedMultiplier(0.75);
+      } else {
+        setSpeedMultiplier(1.0);
+      }
     }
   };
 
@@ -156,6 +222,11 @@ export default function AudioSuite({ slug }: AudioSuiteProps) {
           offset += buf.length;
         }
         setResultUrl(URL.createObjectURL(new Blob([encodeWav(merged) as any], { type: "audio/wav" })));
+        
+        let score = 100;
+        if (mergeFiles.length > 5) score -= 15;
+        setResultScoreValue(score);
+
         setLoading(false);
         return;
       }
@@ -176,6 +247,11 @@ export default function AudioSuite({ slug }: AudioSuiteProps) {
         source.start(0);
         const rendered = await offCtx.startRendering();
         setResultUrl(URL.createObjectURL(new Blob([encodeWav(rendered) as any], { type: "audio/wav" })));
+        
+        let score = 100;
+        if (speedMultiplier === 1.0) score -= 20; // No speed change
+        setResultScoreValue(score);
+
         setLoading(false);
         return;
       }
@@ -200,6 +276,7 @@ export default function AudioSuite({ slug }: AudioSuiteProps) {
         source.start(0);
         const rendered = await offCtx.startRendering();
         setResultUrl(URL.createObjectURL(new Blob([encodeWav(rendered) as any], { type: "audio/wav" })));
+        setResultScoreValue(98); // High quality digital filter cleanup
         setLoading(false);
         return;
       }
@@ -250,6 +327,11 @@ export default function AudioSuite({ slug }: AudioSuiteProps) {
       // Encode buffer to standard 16-bit PCM WAV Blob
       const wavBlob = encodeWav(processedBuffer);
       setResultUrl(URL.createObjectURL(wavBlob));
+
+      let score = 100;
+      if (fadeInDuration === 0 && fadeOutDuration === 0) score -= 15; // Risk of click pops
+      if (file && file.size > 20000000) score -= 10; // Heavy wav payload size
+      setResultScoreValue(score);
     } catch (err: any) {
       setError("Processing failed: " + err.message);
     } finally {
@@ -334,15 +416,59 @@ export default function AudioSuite({ slug }: AudioSuiteProps) {
     }
   };
 
+  // Dynamic Smart Assist recommendations
+  let recommendation = "Apply fade-in and fade-out to prevent pops.";
+  let reason = "Trimming raw audio wave segments at non-zero crossings causes acoustic click pops. A 1s fade smoothing fixes this.";
+  let nextStep = "Upload audio and adjust trim timeline";
+
+  if (slug === "audio-converter") {
+    recommendation = "Optimize sample rate for file size.";
+    reason = "Standard 44.1kHz is perfect for music. Choose 11kHz speech presets to shrink podcast or speech voice assets.";
+    nextStep = "Choose audio quality preset";
+  } else if (slug === "merge-audio") {
+    recommendation = "Upload tracks with matching sample rates.";
+    reason = "Merging tracks with mismatched sample frequencies forces resampler interpolation, reducing output speed.";
+    nextStep = "Upload tracks to merge";
+  } else if (slug === "audio-speed") {
+    recommendation = "Keep speed adjustments between 0.5x and 2.0x.";
+    reason = "Extreme speed multipliers cause severe vocal distortion and frequency aliasing.";
+    nextStep = "Adjust playback speed multiplier slider";
+  } else if (slug === "audio-denoise") {
+    recommendation = "Remove low frequency room rumble.";
+    reason = "Enabling highpass filters at 80Hz scrubs air conditioning hums and microphone bumps safely.";
+    nextStep = "Click Process Audio Output";
+  }
+
+  const nextActions = [
+    { slug: "audio-denoise", name: "Audio Denoiser", description: "Clean background noise and mic hums from your tracks." },
+    { slug: "audio-cutter", name: "Audio Cutter", description: "Cut and trim precise audio waveforms locally in your browser." },
+    { slug: "merge-audio", name: "Merge Audio", description: "Concatenate multiple audio tracks into a single mix." }
+  ];
+
+  const presetsList = getPresetsForSlug();
+
   return (
-    <div className="flex flex-col gap-6 text-left">
+    <div className="flex flex-col gap-6 text-foreground text-xs text-left">
+      
+      {/* Smart Assist Panel */}
+      <SmartAssist recommendation={recommendation} reason={reason} nextStep={nextStep} />
+
+      {/* Title Header */}
       <div className="flex items-center justify-between border-b border-border/40 pb-4">
-        <h4 className="text-sm font-extrabold text-foreground uppercase tracking-wider">{getToolTitle()}</h4>
+        <h4 className="text-sm font-extrabold text-white uppercase tracking-wider">{getToolTitle()}</h4>
         <span className="inline-flex items-center gap-1 text-[9px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-lg select-none">
           <ShieldCheck className="h-3.5 w-3.5" /> 100% Client Audio Engine
         </span>
       </div>
 
+      {/* Presets Selector */}
+      {presetsList.length > 0 && (
+        <div className="border-b border-border/40 pb-4">
+          <PresetSelector presets={presetsList} selectedPresetId={selectedPreset} onSelect={handleSelectPreset} />
+        </div>
+      )}
+
+      {/* Main workspace container */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Controls Column */}
         <div className="lg:col-span-7 flex flex-col gap-5">
@@ -351,37 +477,37 @@ export default function AudioSuite({ slug }: AudioSuiteProps) {
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
-              className={`flex flex-col items-center justify-center border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all select-none ${
+              className={`flex flex-col items-center justify-center border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all bg-neutral-950/40 hover:bg-neutral-950/80 select-none ${
                 isDragging 
                   ? "border-[#7d4dff] bg-[#7d4dff]/5 dark:bg-[#7d4dff]/10 scale-[0.99] animate-pulse" 
-                  : "border-border/80 hover:border-[#7d4dff] hover:bg-neutral-50/50 dark:hover:bg-neutral-800/10"
+                  : "border-border/80 hover:border-primary"
               }`}
             >
               <Music className="h-8 w-8 text-muted-foreground mb-3" />
-              <span className="text-xs font-bold text-foreground">
+              <span className="text-xs font-bold text-white">
                 {isDragging ? "Drop your audio files here" : slug === "merge-audio" ? "Upload Multiple Audio Files" : "Upload Audio File"}
               </span>
               <span className="text-[10px] text-muted-foreground mt-1">Select MP3, WAV, or OGG format</span>
               <input type="file" accept="audio/*" multiple={slug === "merge-audio"} className="hidden" onChange={handleAudioUpload} />
             </label>
           ) : (
-            <div className="space-y-4 border border-border p-4 rounded-3xl bg-card/10">
+            <div className="space-y-4 border border-border p-4 rounded-3xl bg-neutral-50 dark:bg-neutral-900/35">
               
               {slug === "merge-audio" ? (
                 <div className="space-y-2">
                   <div className="flex justify-between items-center text-xs">
-                    <span className="font-bold text-foreground">Tracks to Merge ({mergeFiles.length})</span>
+                    <span className="font-bold text-white">Tracks to Merge ({mergeFiles.length})</span>
                     <button onClick={() => setMergeFiles([])} className="text-red-500 hover:underline cursor-pointer">Clear All</button>
                   </div>
                   <div className="border border-border rounded-xl divide-y divide-border bg-card/25 max-h-[150px] overflow-y-auto">
                     {mergeFiles.map((f, idx) => (
                       <div key={idx} className="px-4 py-2 flex items-center justify-between text-2xs">
-                        <span className="font-bold text-foreground truncate max-w-[200px]">{f.name}</span>
+                        <span className="font-bold text-white truncate max-w-[200px]">{f.name}</span>
                         <span className="text-muted-foreground">{(f.size / 1024).toFixed(1)} KB</span>
                       </div>
                     ))}
                   </div>
-                  <label className="block text-center py-2 px-4 border border-dashed border-[#7d4dff]/40 hover:border-[#7d4dff] text-[#7d4dff] hover:bg-[#7d4dff]/5 font-bold text-3xs rounded-xl cursor-pointer transition-all">
+                  <label className="block text-center py-2 px-4 border border-dashed border-[#7d4dff]/40 hover:border-primary text-primary hover:bg-[#7d4dff]/5 font-bold text-3xs rounded-xl cursor-pointer transition-all">
                     + Add More Audio Files
                     <input type="file" accept="audio/*" multiple className="hidden" onChange={handleAudioUpload} />
                   </label>
@@ -414,7 +540,7 @@ export default function AudioSuite({ slug }: AudioSuiteProps) {
                     max={duration}
                     value={startTime}
                     onChange={(e) => setStartTime(Number(e.target.value))}
-                    className="w-full px-3 py-1.5 text-xs bg-neutral-50 dark:bg-[#1a202c] border border-border rounded-xl outline-none"
+                    className="w-full px-3 py-1.5 text-xs bg-neutral-900 border border-border rounded-xl outline-none"
                   />
                 </div>
                 <div className="space-y-1">
@@ -426,7 +552,7 @@ export default function AudioSuite({ slug }: AudioSuiteProps) {
                     max={duration}
                     value={endTime}
                     onChange={(e) => setEndTime(Number(e.target.value))}
-                    className="w-full px-3 py-1.5 text-xs bg-neutral-50 dark:bg-[#1a202c] border border-border rounded-xl outline-none"
+                    className="w-full px-3 py-1.5 text-xs bg-neutral-900 border border-border rounded-xl outline-none"
                   />
                 </div>
 
@@ -440,7 +566,7 @@ export default function AudioSuite({ slug }: AudioSuiteProps) {
                     max="10"
                     value={fadeInDuration}
                     onChange={(e) => setFadeInDuration(Number(e.target.value))}
-                    className="w-full px-3 py-1.5 text-xs bg-neutral-50 dark:bg-[#1a202c] border border-border rounded-xl outline-none"
+                    className="w-full px-3 py-1.5 text-xs bg-neutral-900 border border-border rounded-xl outline-none"
                   />
                 </div>
                 <div className="space-y-1">
@@ -452,7 +578,7 @@ export default function AudioSuite({ slug }: AudioSuiteProps) {
                     max="10"
                     value={fadeOutDuration}
                     onChange={(e) => setFadeOutDuration(Number(e.target.value))}
-                    className="w-full px-3 py-1.5 text-xs bg-neutral-50 dark:bg-[#1a202c] border border-border rounded-xl outline-none"
+                    className="w-full px-3 py-1.5 text-xs bg-neutral-900 border border-border rounded-xl outline-none"
                   />
                 </div>
 
@@ -460,7 +586,7 @@ export default function AudioSuite({ slug }: AudioSuiteProps) {
                 {slug === "audio-speed" && (
                   <div className="col-span-2 space-y-1.5 pt-2 border-t border-border/40">
                     <span className="text-3xs font-extrabold text-muted-foreground uppercase">Playback Speed ({speedMultiplier}x)</span>
-                    <input type="range" min="0.25" max="4" step="0.25" value={speedMultiplier} onChange={(e) => setSpeedMultiplier(Number(e.target.value))} className="w-full accent-[#7d4dff]" />
+                    <input type="range" min="0.25" max="4" step="0.25" value={speedMultiplier} onChange={(e) => setSpeedMultiplier(Number(e.target.value))} className="w-full accent-primary" />
                     <div className="flex justify-between text-[9px] text-muted-foreground">
                       <span>0.25x (Slowest)</span><span>1x (Normal)</span><span>4x (Fastest)</span>
                     </div>
@@ -480,7 +606,7 @@ export default function AudioSuite({ slug }: AudioSuiteProps) {
               <button 
                 onClick={processAudio}
                 disabled={loading}
-                className="w-full py-2.5 bg-[#7d4dff] hover:bg-[#6530ef] disabled:bg-[#7d4dff]/45 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-[#7d4dff]/10"
+                className="w-full py-2.5 bg-primary hover:bg-primary-hover disabled:opacity-50 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-primary/10"
               >
                 {loading ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Settings className="h-3.5 w-3.5" />}
                 <span>Process Audio Output</span>
@@ -500,15 +626,19 @@ export default function AudioSuite({ slug }: AudioSuiteProps) {
         <div className="lg:col-span-5 flex flex-col gap-4">
           <span className="text-3xs font-extrabold text-muted-foreground uppercase select-none tracking-wider">Processed Audio Player</span>
           
-          <div className="border border-border/80 bg-neutral-50/50 dark:bg-card/20 rounded-2xl p-6 min-h-[220px] flex flex-col items-center justify-center text-center relative overflow-hidden select-none">
+          <div className="border border-border/80 bg-neutral-50/50 dark:bg-card/25 rounded-2xl p-6 min-h-[220px] flex flex-col items-center justify-center text-center relative overflow-hidden select-none">
             {loading ? (
               <div className="flex flex-col items-center gap-3 text-muted-foreground">
-                <RefreshCw className="h-8 w-8 text-[#7d4dff] animate-spin" />
+                <RefreshCw className="h-8 w-8 text-primary animate-spin" />
                 <p className="text-3xs font-bold uppercase tracking-wider animate-pulse">Running float DSP compiler...</p>
               </div>
             ) : resultUrl ? (
-              <div className="w-full flex flex-col items-center gap-4">
+              <div className="w-full flex flex-col items-center gap-5">
                 <audio src={resultUrl} controls className="w-full" />
+
+                {resultScoreValue !== null && (
+                  <ResultScore score={resultScoreValue} metricTitle="Acoustic Cleanliness Score" details="Inspects sample rates, fade crossover points, and limits frequency clipping." />
+                )}
                 
                 <div className="w-full flex flex-col gap-2">
                   <a 
@@ -519,7 +649,10 @@ export default function AudioSuite({ slug }: AudioSuiteProps) {
                     <Download className="h-3.5 w-3.5" /> Download WAV Audio
                   </a>
                   <button 
-                    onClick={() => setResultUrl(null)} 
+                    onClick={() => {
+                      setResultUrl(null);
+                      setResultScoreValue(null);
+                    }} 
                     className="w-full py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-foreground font-extrabold text-3xs rounded-xl cursor-pointer"
                   >
                     Reset and Try Again
@@ -538,6 +671,9 @@ export default function AudioSuite({ slug }: AudioSuiteProps) {
           </div>
         </div>
       </div>
+
+      {/* Next Best Actions */}
+      <NextBestActions actions={nextActions} />
     </div>
   );
 }

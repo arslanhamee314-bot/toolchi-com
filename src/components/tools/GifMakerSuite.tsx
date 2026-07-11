@@ -3,6 +3,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import { GIFEncoder } from "@/lib/gif-encoder";
 import { Upload, Film, FileImage, ShieldCheck, Download, Play, Pause, RefreshCw, AlertCircle, BarChart2 } from "lucide-react";
+import SmartAssist from "./SmartAssist";
+import PresetSelector from "./PresetSelector";
+import ResultScore from "./ResultScore";
+import NextBestActions from "./NextBestActions";
+import BrandingOptions from "@/components/workspace/BrandingOptions";
+
 
 interface GifMakerSuiteProps {
   slug: string;
@@ -21,6 +27,8 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [delay, setDelay] = useState<number>(200); // Frame delay in ms
+  const [selectedPreset, setSelectedPreset] = useState("standard");
+  const [resultScoreValue, setResultScoreValue] = useState<number | null>(null);
 
   // Video-to-GIF states
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
@@ -34,6 +42,7 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
   const [gifUrl, setGifUrl] = useState<string | null>(null);
   const [gifWidth, setGifWidth] = useState<number>(300);
   const [gifHeight, setGifHeight] = useState<number>(300);
+  const [videoRecordDuration, setVideoRecordDuration] = useState<number>(3000); // ms
   
   // GIF Analyzer states
   const [analysisReport, setAnalysisReport] = useState<{
@@ -55,6 +64,8 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
     setVideoUrl(null);
     setGifUrl(null);
     setAnalysisReport(null);
+    setSelectedPreset("standard");
+    setResultScoreValue(null);
   }, [slug]);
 
   // Translate Slug into title
@@ -72,6 +83,64 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
       case "svg-to-gif": return "SVG to GIF Converter";
       case "gif-analyzer": return "GIF Analyzer & Info Inspector";
       default: return "GIF Tool Room";
+    }
+  };
+
+  const getPresetsForSlug = () => {
+    if (slug === "video-to-gif") {
+      return [
+        { id: "standard", name: "Standard (10 FPS)", description: "Balanced size and fluidity" },
+        { id: "smooth", name: "Smooth (15 FPS)", description: "High framerate, larger file weight" },
+        { id: "economy", name: "Economy (5 FPS)", description: "Minimal weight for site speed" }
+      ];
+    }
+    if (slug.includes("gif-to-")) {
+      return [
+        { id: "standard", name: "3s Loop", description: "Standard preview length" },
+        { id: "loop_5", name: "5s Loop", description: "Extended duration loop" },
+        { id: "loop_10", name: "10s Loop", description: "Maximum duration loop" }
+      ];
+    }
+    if (slug === "gif-analyzer") {
+      return []; // No presets for analyzer
+    }
+    // Default image to GIF or converts
+    return [
+      { id: "standard", name: "Medium Speed", description: "200ms frame delay" },
+      { id: "fast", name: "Fast Speed", description: "100ms frame delay" },
+      { id: "slow", name: "Slow Speed", description: "500ms frame delay" }
+    ];
+  };
+
+  const handleSelectPreset = (presetId: string) => {
+    setSelectedPreset(presetId);
+    setResultUrl(null);
+    setResultScoreValue(null);
+
+    if (slug === "video-to-gif") {
+      if (presetId === "smooth") {
+        setFps(15);
+      } else if (presetId === "economy") {
+        setFps(5);
+      } else {
+        setFps(10);
+      }
+    } else if (slug.includes("gif-to-")) {
+      if (presetId === "loop_5") {
+        setVideoRecordDuration(5000);
+      } else if (presetId === "loop_10") {
+        setVideoRecordDuration(10000);
+      } else {
+        setVideoRecordDuration(3000);
+      }
+    } else {
+      if (presetId === "fast") {
+        setDelay(100);
+      } else if (presetId === "slow") {
+        setDelay(500);
+      } else {
+        setDelay(200);
+      }
     }
   };
 
@@ -130,18 +199,65 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
       // Initialize encoder
       const encoder = new GIFEncoder(width, height, delay, 0);
 
-      // Draw and add each frame
       loadedImages.forEach((img) => {
         ctx.clearRect(0, 0, width, height);
         ctx.drawImage(img, 0, 0, width, height);
+
+        // Render branding watermark if enabled
+        try {
+          const { getBrandingConfig } = require("@/components/workspace/BrandingOptions");
+          const brandConfig = getBrandingConfig();
+          if (brandConfig.enabled) {
+            ctx.save();
+            ctx.globalAlpha = brandConfig.opacity;
+            const fontSize = Math.max(10, Math.round(width * 0.024));
+            ctx.font = `bold ${fontSize}px sans-serif`;
+            ctx.fillStyle = "rgba(120, 120, 120, 0.9)";
+            ctx.textBaseline = "middle";
+            
+            const padding = fontSize * 1.5;
+            let x = width - padding;
+            let y = height - padding;
+            let align: CanvasTextAlign = "right";
+
+            if (brandConfig.placement === "bottom-left") {
+              x = padding;
+              align = "left";
+            } else if (brandConfig.placement === "bottom-center") {
+              x = width / 2;
+              align = "center";
+            } else if (brandConfig.placement === "top-right") {
+              x = width - padding;
+              y = padding;
+              align = "right";
+            }
+
+            ctx.textAlign = align;
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+            ctx.lineWidth = Math.max(2, Math.round(fontSize * 0.15));
+            ctx.strokeText(brandConfig.text, x, y);
+            ctx.fillText(brandConfig.text, x, y);
+            ctx.restore();
+          }
+        } catch (e) {
+          // ignore
+        }
+
         const imgData = ctx.getImageData(0, 0, width, height);
         encoder.addFrame(imgData.data);
       });
+
 
       // Export blob
       const gifBlob = encoder.build();
       const gifUrl = URL.createObjectURL(gifBlob);
       setResultUrl(gifUrl);
+      
+      // Calculate GIF Quality Score
+      let score = 100;
+      if (files.length > 30) score -= 20;
+      if (delay < 100) score -= 15;
+      setResultScoreValue(score);
     } catch (err: any) {
       setError("An error occurred during GIF generation: " + err.message);
     } finally {
@@ -201,12 +317,59 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
         });
 
         ctx.drawImage(video, 0, 0, width, height);
+
+        // Render branding watermark if enabled
+        try {
+          const { getBrandingConfig } = require("@/components/workspace/BrandingOptions");
+          const brandConfig = getBrandingConfig();
+          if (brandConfig.enabled) {
+            ctx.save();
+            ctx.globalAlpha = brandConfig.opacity;
+            const fontSize = Math.max(10, Math.round(width * 0.024));
+            ctx.font = `bold ${fontSize}px sans-serif`;
+            ctx.fillStyle = "rgba(120, 120, 120, 0.9)";
+            ctx.textBaseline = "middle";
+            
+            const padding = fontSize * 1.5;
+            let x = width - padding;
+            let y = height - padding;
+            let align: CanvasTextAlign = "right";
+
+            if (brandConfig.placement === "bottom-left") {
+              x = padding;
+              align = "left";
+            } else if (brandConfig.placement === "bottom-center") {
+              x = width / 2;
+              align = "center";
+            } else if (brandConfig.placement === "top-right") {
+              x = width - padding;
+              y = padding;
+              align = "right";
+            }
+
+            ctx.textAlign = align;
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+            ctx.lineWidth = Math.max(2, Math.round(fontSize * 0.15));
+            ctx.strokeText(brandConfig.text, x, y);
+            ctx.fillText(brandConfig.text, x, y);
+            ctx.restore();
+          }
+        } catch (e) {
+          // ignore
+        }
+
         const imgData = ctx.getImageData(0, 0, width, height);
         encoder.addFrame(imgData.data);
       }
 
+
       const gifBlob = encoder.build();
       setResultUrl(URL.createObjectURL(gifBlob));
+      
+      let score = 100;
+      if (duration > 5) score -= 20;
+      if (fps > 12) score -= 10;
+      setResultScoreValue(score);
     } catch (err: any) {
       setError("Failed to convert video: " + err.message);
     } finally {
@@ -284,6 +447,7 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
       mediaRecorder.onstop = () => {
         const videoBlob = new Blob(chunks, { type: mimeType });
         setResultUrl(URL.createObjectURL(videoBlob));
+        setResultScoreValue(100);
         setLoading(false);
       };
 
@@ -295,6 +459,47 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
         // Redraw canvas
         ctx.clearRect(0, 0, gifWidth, gifHeight);
         ctx.drawImage(img, 0, 0, gifWidth, gifHeight);
+
+        // Render branding watermark if enabled
+        try {
+          const { getBrandingConfig } = require("@/components/workspace/BrandingOptions");
+          const brandConfig = getBrandingConfig();
+          if (brandConfig.enabled) {
+            ctx.save();
+            ctx.globalAlpha = brandConfig.opacity;
+            const fontSize = Math.max(10, Math.round(gifWidth * 0.024));
+            ctx.font = `bold ${fontSize}px sans-serif`;
+            ctx.fillStyle = "rgba(120, 120, 120, 0.9)";
+            ctx.textBaseline = "middle";
+            
+            const padding = fontSize * 1.5;
+            let x = gifWidth - padding;
+            let y = gifHeight - padding;
+            let align: CanvasTextAlign = "right";
+
+            if (brandConfig.placement === "bottom-left") {
+              x = padding;
+              align = "left";
+            } else if (brandConfig.placement === "bottom-center") {
+              x = gifWidth / 2;
+              align = "center";
+            } else if (brandConfig.placement === "top-right") {
+              x = gifWidth - padding;
+              y = padding;
+              align = "right";
+            }
+
+            ctx.textAlign = align;
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+            ctx.lineWidth = Math.max(2, Math.round(fontSize * 0.15));
+            ctx.strokeText(brandConfig.text, x, y);
+            ctx.fillText(brandConfig.text, x, y);
+            ctx.restore();
+          }
+        } catch (e) {
+          // ignore
+        }
+
         
         if (Date.now() - startTimeStamp > 3000) {
           clearInterval(interval);
@@ -335,6 +540,47 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
 
       // Draw image
       ctx.drawImage(img, 0, 0, width, height);
+
+      // Render branding watermark if enabled
+      try {
+        const { getBrandingConfig } = require("@/components/workspace/BrandingOptions");
+        const brandConfig = getBrandingConfig();
+        if (brandConfig.enabled) {
+          ctx.save();
+          ctx.globalAlpha = brandConfig.opacity;
+          const fontSize = Math.max(10, Math.round(width * 0.024));
+          ctx.font = `bold ${fontSize}px sans-serif`;
+          ctx.fillStyle = "rgba(120, 120, 120, 0.9)";
+          ctx.textBaseline = "middle";
+          
+          const padding = fontSize * 1.5;
+          let x = width - padding;
+          let y = height - padding;
+          let align: CanvasTextAlign = "right";
+
+          if (brandConfig.placement === "bottom-left") {
+            x = padding;
+            align = "left";
+          } else if (brandConfig.placement === "bottom-center") {
+            x = width / 2;
+            align = "center";
+          } else if (brandConfig.placement === "top-right") {
+            x = width - padding;
+            y = padding;
+            align = "right";
+          }
+
+          ctx.textAlign = align;
+          ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+          ctx.lineWidth = Math.max(2, Math.round(fontSize * 0.15));
+          ctx.strokeText(brandConfig.text, x, y);
+          ctx.fillText(brandConfig.text, x, y);
+          ctx.restore();
+        }
+      } catch (e) {
+        // ignore
+      }
+
       
       // Simple 2-frame animation to loop static asset (or draw single frame)
       const encoder = new GIFEncoder(width, height, delay, 0);
@@ -442,6 +688,11 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
           isAnimated: frameCount > 1,
           fileSize: file.size,
         });
+
+        let animScore = 100;
+        if (frameCount === 1) animScore = 50; // Static GIF
+        if (file.size > 15000000) animScore -= 20; // Heavy GIF
+        setResultScoreValue(animScore);
       } catch (err: any) {
         setError(err.message);
       }
@@ -449,16 +700,53 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
     reader.readAsArrayBuffer(file);
   };
 
+  // Dynamic Smart Assist recommendations
+  let recommendation = "Upload multiple image frames to combine.";
+  let reason = "GIF Maker compiles PNG, JPEG, and WebP frame arrays locally into high-performance looping graphics.";
+  let nextStep = "Upload source frames";
+
+  if (slug === "video-to-gif") {
+    recommendation = "Trim video clip duration below 5s.";
+    reason = "GIF format files lack modern vector video compression codecs. Keep loops short to save bandwidth.";
+    nextStep = "Upload video and select range";
+  } else if (slug.includes("gif-to-")) {
+    recommendation = "Export loop segments to video formats.";
+    reason = "Videos (like MP4/WebM) are up to 90% lighter than raw looping GIF banners on web pages.";
+    nextStep = "Upload GIF to convert";
+  } else if (slug === "gif-analyzer") {
+    recommendation = "Upload any animated GIF to audit frame rates.";
+    reason = "Scans frame delay buffers, dimensions, logical colors, and reports overall compatibility.";
+    nextStep = "Upload target GIF";
+  }
+
+  const nextActions = [
+    { slug: "gif-analyzer", name: "GIF Analyzer", description: "Audit frame loop timing buffers and metadata segments." },
+    { slug: "image-compressor", name: "Image Compressor", description: "Reduce payload sizes for web-readiness speed gains." },
+    { slug: "video-to-gif", name: "Video to GIF", description: "Stitch short video clips into high quality looping frames." }
+  ];
+
+  const presetsList = getPresetsForSlug();
+
   return (
-    <div className="flex flex-col gap-6 text-left">
+    <div className="flex flex-col gap-6 text-foreground text-xs text-left">
       
+      {/* Smart Assist Panel */}
+      <SmartAssist recommendation={recommendation} reason={reason} nextStep={nextStep} />
+
       {/* Title Header */}
       <div className="flex items-center justify-between border-b border-border/40 pb-4">
-        <h4 className="text-sm font-extrabold text-foreground uppercase tracking-wider">{getToolTitle()}</h4>
+        <h4 className="text-sm font-extrabold text-white uppercase tracking-wider">{getToolTitle()}</h4>
         <span className="inline-flex items-center gap-1 text-[9px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-lg select-none">
           <ShieldCheck className="h-3.5 w-3.5" /> 100% Secure Client Run
         </span>
       </div>
+
+      {/* Presets Selector */}
+      {presetsList.length > 0 && (
+        <div className="border-b border-border/40 pb-4">
+          <PresetSelector presets={presetsList} selectedPresetId={selectedPreset} onSelect={handleSelectPreset} />
+        </div>
+      )}
 
       {/* Main workspace container */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
@@ -469,9 +757,9 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
           {/* TOOL 1: GIF Maker */}
           {slug === "gif-maker" && (
             <div className="space-y-4">
-              <label className="flex flex-col items-center justify-center border-2 border-dashed border-border/80 hover:border-[#7d4dff] rounded-2xl p-8 text-center cursor-pointer transition-all hover:bg-neutral-50/50 dark:hover:bg-neutral-800/10 select-none">
+              <label className="flex flex-col items-center justify-center border-2 border-dashed border-border/80 hover:border-[#7d4dff] bg-neutral-950/40 hover:bg-neutral-950/80 rounded-2xl p-8 text-center cursor-pointer transition-all select-none">
                 <FileImage className="h-8 w-8 text-muted-foreground mb-3" />
-                <span className="text-xs font-bold text-foreground">Upload Multiple Images</span>
+                <span className="text-xs font-bold text-white">Upload Multiple Images</span>
                 <span className="text-[10px] text-muted-foreground mt-1">Select PNG/JPG/WebP files to stitch into GIF</span>
                 <input type="file" multiple accept="image/*" className="hidden" onChange={handleImageUpload} />
               </label>
@@ -479,7 +767,7 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
               {files.length > 0 && (
                 <div className="space-y-4">
                   <div className="flex justify-between items-center text-xs">
-                    <span className="font-bold text-foreground">Uploaded Frames ({files.length})</span>
+                    <span className="font-bold text-white">Uploaded Frames ({files.length})</span>
                     <button onClick={() => setFiles([])} className="text-red-500 hover:underline cursor-pointer">Clear All</button>
                   </div>
                   
@@ -496,7 +784,7 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
                   </div>
 
                   {/* Tuning Parameters */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border border-border p-4 rounded-2xl">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border border-border p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-900/35">
                     <div className="space-y-1.5">
                       <span className="text-3xs font-extrabold text-muted-foreground uppercase">Frame Delay (ms)</span>
                       <input 
@@ -510,7 +798,7 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
                       <button 
                         onClick={compileGifFromImages}
                         disabled={loading}
-                        className="w-full py-2 bg-[#7d4dff] hover:bg-[#6530ef] disabled:bg-[#7d4dff]/45 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-[#7d4dff]/10"
+                        className="w-full py-2 bg-primary hover:bg-primary-hover disabled:opacity-50 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-primary/10"
                       >
                         {loading ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Play className="h-3.5 w-3.5" />}
                         <span>Compile Animated GIF</span>
@@ -526,15 +814,14 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
           {slug === "video-to-gif" && (
             <div className="space-y-4">
               {!videoUrl ? (
-                <label className="flex flex-col items-center justify-center border-2 border-dashed border-border/80 hover:border-[#7d4dff] rounded-2xl p-8 text-center cursor-pointer transition-all hover:bg-neutral-50/50 dark:hover:bg-neutral-800/10 select-none">
+                <label className="flex flex-col items-center justify-center border-2 border-dashed border-border/80 hover:border-primary bg-neutral-950/40 hover:bg-neutral-950/80 rounded-2xl p-8 text-center cursor-pointer transition-all select-none">
                   <Film className="h-8 w-8 text-muted-foreground mb-3" />
-                  <span className="text-xs font-bold text-foreground">Upload Video File</span>
+                  <span className="text-xs font-bold text-white">Upload Video File</span>
                   <span className="text-[10px] text-muted-foreground mt-1">Select MP4, WebM, or MOV formats</span>
                   <input type="file" accept="video/*" className="hidden" onChange={handleVideoUpload} />
                 </label>
               ) : (
-                <div className="space-y-4 border border-border p-4 rounded-3xl">
-                  {/* Invisible / Hidden Video tag to capture canvas frames */}
+                <div className="space-y-4 border border-border p-4 rounded-3xl bg-neutral-50 dark:bg-neutral-900/35">
                   <video 
                     ref={videoRef} 
                     src={videoUrl} 
@@ -554,7 +841,7 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
                         max={videoDuration}
                         value={startTime} 
                         onChange={(e) => setStartTime(Number(e.target.value))} 
-                        className="w-full px-3 py-1.5 text-xs bg-neutral-50 dark:bg-[#1a202c] border border-border rounded-xl outline-none"
+                        className="w-full px-3 py-1.5 text-xs bg-neutral-900 border border-border rounded-xl outline-none"
                       />
                     </div>
                     <div className="space-y-1">
@@ -566,7 +853,7 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
                         max={videoDuration}
                         value={endTime} 
                         onChange={(e) => setEndTime(Number(e.target.value))} 
-                        className="w-full px-3 py-1.5 text-xs bg-neutral-50 dark:bg-[#1a202c] border border-border rounded-xl outline-none"
+                        className="w-full px-3 py-1.5 text-xs bg-neutral-900 border border-border rounded-xl outline-none"
                       />
                     </div>
                     <div className="space-y-1">
@@ -577,7 +864,7 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
                         max="15"
                         value={fps} 
                         onChange={(e) => setFps(Number(e.target.value))} 
-                        className="w-full px-3 py-1.5 text-xs bg-neutral-50 dark:bg-[#1a202c] border border-border rounded-xl outline-none"
+                        className="w-full px-3 py-1.5 text-xs bg-neutral-900 border border-border rounded-xl outline-none"
                       />
                     </div>
                   </div>
@@ -585,7 +872,7 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
                   <button 
                     onClick={compileVideoToGif}
                     disabled={loading}
-                    className="w-full py-2.5 bg-[#7d4dff] hover:bg-[#6530ef] disabled:bg-[#7d4dff]/45 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-[#7d4dff]/10"
+                    className="w-full py-2.5 bg-primary hover:bg-primary-hover disabled:opacity-50 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-primary/10"
                   >
                     {loading ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Play className="h-3.5 w-3.5" />}
                     <span>Compile Video into GIF</span>
@@ -598,21 +885,21 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
           {/* TOOL 3-5: GIF to Video (MP4 / WebM / MOV) */}
           {(slug === "gif-to-mp4" || slug === "gif-to-webm" || slug === "gif-to-mov") && (
             <div className="space-y-4">
-              <label className="flex flex-col items-center justify-center border-2 border-dashed border-border/80 hover:border-[#7d4dff] rounded-2xl p-8 text-center cursor-pointer transition-all hover:bg-neutral-50/50 dark:hover:bg-neutral-800/10 select-none">
+              <label className="flex flex-col items-center justify-center border-2 border-dashed border-border/80 hover:border-primary bg-neutral-950/40 hover:bg-neutral-950/80 rounded-2xl p-8 text-center cursor-pointer transition-all select-none">
                 <FileImage className="h-8 w-8 text-muted-foreground mb-3" />
-                <span className="text-xs font-bold text-foreground">Upload Animated GIF</span>
+                <span className="text-xs font-bold text-white">Upload Animated GIF</span>
                 <span className="text-[10px] text-muted-foreground mt-1">Select .gif file to record into video format</span>
                 <input type="file" accept="image/gif" className="hidden" onChange={handleGifUpload} />
               </label>
 
               {gifUrl && (
-                <div className="space-y-4 border border-border p-4 rounded-3xl text-center">
+                <div className="space-y-4 border border-border p-4 rounded-3xl text-center bg-neutral-50 dark:bg-neutral-900/35">
                   <img src={gifUrl} alt="Source GIF" className="max-h-[160px] mx-auto rounded-xl border border-border" />
                   
                   <button 
                     onClick={recordGifToVideo}
                     disabled={loading}
-                    className="w-full py-2.5 bg-[#7d4dff] hover:bg-[#6530ef] disabled:bg-[#7d4dff]/45 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-[#7d4dff]/10"
+                    className="w-full py-2.5 bg-primary hover:bg-primary-hover disabled:opacity-50 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-primary/10"
                   >
                     {loading ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Play className="h-3.5 w-3.5" />}
                     <span>Compile into {slug.replace("gif-to-", "").toUpperCase()} Video</span>
@@ -625,9 +912,9 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
           {/* TOOL 6-10: WebP/APNG/AVIF/JXL/SVG to GIF */}
           {(slug === "webp-to-gif" || slug === "apng-to-gif" || slug === "avif-to-gif" || slug === "jxl-to-gif" || slug === "svg-to-gif") && (
             <div className="space-y-4">
-              <label className="flex flex-col items-center justify-center border-2 border-dashed border-border/80 hover:border-[#7d4dff] rounded-2xl p-8 text-center cursor-pointer transition-all hover:bg-neutral-50/50 dark:hover:bg-neutral-800/10 select-none">
+              <label className="flex flex-col items-center justify-center border-2 border-dashed border-border/80 hover:border-primary bg-neutral-950/40 hover:bg-neutral-950/80 rounded-2xl p-8 text-center cursor-pointer transition-all select-none">
                 <FileImage className="h-8 w-8 text-muted-foreground mb-3" />
-                <span className="text-xs font-bold text-foreground">Upload {slug.split("-to-")[0].toUpperCase()} File</span>
+                <span className="text-xs font-bold text-white">Upload {slug.split("-to-")[0].toUpperCase()} File</span>
                 <span className="text-[10px] text-muted-foreground mt-1">Select source file to convert to animated GIF format</span>
                 <input type="file" accept={`image/${slug.split("-to-")[0]}, image/*`} className="hidden" onChange={handleGenericImageToGifUpload} />
               </label>
@@ -637,31 +924,31 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
           {/* TOOL 11: GIF Analyzer */}
           {slug === "gif-analyzer" && (
             <div className="space-y-4">
-              <label className="flex flex-col items-center justify-center border-2 border-dashed border-border/80 hover:border-[#7d4dff] rounded-2xl p-8 text-center cursor-pointer transition-all hover:bg-neutral-50/50 dark:hover:bg-neutral-800/10 select-none">
+              <label className="flex flex-col items-center justify-center border-2 border-dashed border-border/80 hover:border-primary bg-neutral-950/40 hover:bg-neutral-950/80 rounded-2xl p-8 text-center cursor-pointer transition-all select-none">
                 <BarChart2 className="h-8 w-8 text-muted-foreground mb-3" />
-                <span className="text-xs font-bold text-foreground">Upload GIF for Analysis</span>
+                <span className="text-xs font-bold text-white">Upload GIF for Analysis</span>
                 <span className="text-[10px] text-muted-foreground mt-1">Select .gif file to inspect header and frames metadata</span>
                 <input type="file" accept="image/gif" className="hidden" onChange={handleGifAnalysisUpload} />
               </label>
 
               {analysisReport && (
-                <div className="border border-border rounded-2xl overflow-hidden text-xs">
-                  <div className="bg-[#f8fafc] dark:bg-[#1a202c] px-4 py-3 border-b border-border font-bold text-foreground flex items-center gap-1.5">
+                <div className="border border-border rounded-2xl overflow-hidden text-xs bg-neutral-50 dark:bg-neutral-900/35">
+                  <div className="bg-neutral-100 dark:bg-[#1a202c] px-4 py-3 border-b border-border font-bold text-white flex items-center gap-1.5">
                     <BarChart2 className="h-4 w-4 text-primary" /> Analysis Metadata Report
                   </div>
                   <div className="p-4 space-y-3">
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-0.5">
                         <span className="text-[10px] text-muted-foreground uppercase font-bold">Image Resolution</span>
-                        <p className="font-extrabold text-foreground">{analysisReport.width} x {analysisReport.height} px</p>
+                        <p className="font-extrabold text-white">{analysisReport.width} x {analysisReport.height} px</p>
                       </div>
                       <div className="space-y-0.5">
                         <span className="text-[10px] text-muted-foreground uppercase font-bold">Total Frames</span>
-                        <p className="font-extrabold text-foreground">{analysisReport.frameCount} frames</p>
+                        <p className="font-extrabold text-white">{analysisReport.frameCount} frames</p>
                       </div>
                       <div className="space-y-0.5">
                         <span className="text-[10px] text-muted-foreground uppercase font-bold">File Size</span>
-                        <p className="font-extrabold text-foreground">{(analysisReport.fileSize / 1024).toFixed(1)} KB</p>
+                        <p className="font-extrabold text-white">{(analysisReport.fileSize / 1024).toFixed(1)} KB</p>
                       </div>
                       <div className="space-y-0.5">
                         <span className="text-[10px] text-muted-foreground uppercase font-bold">Is Animated?</span>
@@ -673,7 +960,7 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
                     {analysisReport.delays.length > 0 && (
                       <div className="pt-2.5 border-t border-border/40">
                         <span className="text-[10px] text-muted-foreground uppercase font-bold">Frame Delays</span>
-                        <p className="font-extrabold text-foreground mt-1 max-h-[80px] overflow-y-auto leading-relaxed">
+                        <p className="font-extrabold text-white mt-1 max-h-[80px] overflow-y-auto leading-relaxed">
                           {analysisReport.delays.slice(0, 10).map((d, i) => `Frame #${i + 1}: ${d}ms`).join(", ")}
                           {analysisReport.delays.length > 10 && " ..."}
                         </p>
@@ -692,26 +979,36 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
             </div>
           )}
 
+          {/* Branding Settings Option Panel */}
+          <div className="border-t border-border/40 pt-4 mt-2">
+            <BrandingOptions />
+          </div>
+
         </div>
+
 
         {/* Workspace Live output area (Right) */}
         <div className="lg:col-span-5 flex flex-col gap-4">
           <span className="text-3xs font-extrabold text-muted-foreground uppercase select-none tracking-wider">Live Workspace Output</span>
           
-          <div className="border border-border/80 bg-neutral-50/50 dark:bg-card/20 rounded-2xl p-6 min-h-[220px] flex flex-col items-center justify-center text-center relative overflow-hidden select-none">
+          <div className="border border-border/80 bg-neutral-50/50 dark:bg-card/25 rounded-2xl p-6 min-h-[220px] flex flex-col items-center justify-center text-center relative overflow-hidden select-none">
             {loading ? (
               <div className="flex flex-col items-center gap-3 text-muted-foreground">
-                <RefreshCw className="h-8 w-8 text-[#7d4dff] animate-spin" />
+                <RefreshCw className="h-8 w-8 text-primary animate-spin" />
                 <p className="text-3xs font-bold uppercase tracking-wider animate-pulse">Encoding Binary Blob...</p>
               </div>
             ) : resultUrl ? (
-              <div className="w-full flex flex-col items-center gap-4">
+              <div className="w-full flex flex-col gap-5 items-center">
                 
                 {/* Result view */}
                 {slug.includes("to-mp4") || slug.includes("to-webm") || slug.includes("to-mov") ? (
                   <video src={resultUrl} controls autoPlay loop className="max-h-[160px] rounded-xl border border-border shadow-xs bg-black" />
                 ) : (
                   <img src={resultUrl} alt="Output Render" className="max-h-[160px] rounded-xl border border-border shadow-xs object-contain" />
+                )}
+
+                {resultScoreValue !== null && (
+                  <ResultScore score={resultScoreValue} metricTitle="GIF Optimization Score" details="Evaluates frame delay balance, overall resolution weight, and memory boundaries." />
                 )}
 
                 <div className="w-full flex flex-col gap-2 print:hidden">
@@ -727,7 +1024,10 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
                     <Download className="h-3.5 w-3.5" /> Download Result File
                   </a>
                   <button 
-                    onClick={() => setResultUrl(null)} 
+                    onClick={() => {
+                      setResultUrl(null);
+                      setResultScoreValue(null);
+                    }} 
                     className="w-full py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-foreground font-extrabold text-3xs rounded-xl cursor-pointer"
                   >
                     Reset and Try Again
@@ -735,11 +1035,17 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
                 </div>
               </div>
             ) : (
-              <div className="text-muted-foreground/60 flex flex-col items-center gap-2">
-                <AlertCircle className="h-8 w-8 text-muted-foreground/35" />
-                <div>
-                  <h5 className="text-2xs font-extrabold text-foreground uppercase">Waiting for data</h5>
-                  <p className="text-3xs mt-0.5 leading-normal max-w-[200px]">Upload files and click Compile to inspect output render here.</p>
+              <div className="w-full flex flex-col gap-5 items-center">
+                {analysisReport && resultScoreValue !== null && (
+                  <ResultScore score={resultScoreValue} metricTitle="GIF Integrity Score" details="Checks structure and frame timing compliance." />
+                )}
+                
+                <div className="text-muted-foreground/60 flex flex-col items-center gap-2">
+                  <AlertCircle className="h-8 w-8 text-muted-foreground/35" />
+                  <div>
+                    <h5 className="text-2xs font-extrabold text-foreground uppercase">Waiting for data</h5>
+                    <p className="text-3xs mt-0.5 leading-normal max-w-[200px]">Upload files and click Compile to inspect output render here.</p>
+                  </div>
                 </div>
               </div>
             )}
@@ -748,6 +1054,8 @@ export default function GifMakerSuite({ slug }: GifMakerSuiteProps) {
 
       </div>
 
+      {/* Next Best Actions */}
+      <NextBestActions actions={nextActions} />
     </div>
   );
 }

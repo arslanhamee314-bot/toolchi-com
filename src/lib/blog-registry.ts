@@ -241,11 +241,78 @@ export const BLOG_POSTS: BlogPost[] = [
     content: `
       <p>Starting a new blog does not have to be expensive. You can build a complete, professional writing and optimization workflow using free client-side tools. By focusing on site performance, readability, and secure diagnostics, you can rank higher and grow your traffic without paying for complex subscriptions.</p>
       
-      <h2>1. Capitalization & Editing Tools</h2>
+      <h2>1. Capitalization &amp; Editing Tools</h2>
       <p>Formatting H1 titles and subheadings manually takes time. Use the <a href="/tools/case-converter" class="text-[#7d4dff] font-extrabold hover:underline">Case Converter</a> to instantly convert titles into UPPERCASE, lowercase, or Title Case structures. You can also clean extra spacing artifacts and double-check layouts.</p>
       
       <h2>2. Technical SEO Checkers</h2>
       <p>Ensure that search engine bots can crawl your pages correctly. Verify sitemaps via the <a href="/tools/xml-sitemap-validator" class="text-[#7d4dff] font-extrabold hover:underline">XML Sitemap Validator</a>, audit indexing blocks using the <a href="/tools/robots-txt-checker" class="text-[#7d4dff] font-extrabold hover:underline">Robots.txt Checker</a>, and ensure there are no redirect chains on your site with our <a href="/tools/redirect-checker" class="text-[#7d4dff] font-extrabold hover:underline">Redirect Checker</a>.</p>
+    `
+  },
+  {
+    slug: "toolchi-workspace-multi-tool-productivity",
+    title: "How to Use Toolchi Workspace: The Multi-Tool Dashboard for Creators & Developers",
+    excerpt: "Stop switching browser tabs. Toolchi Workspace lets you open multiple tools simultaneously — follow guided workflows, track recent tools, and finish tasks 3x faster.",
+    category: "ai",
+    readTime: "6 min read",
+    date: "July 11, 2026",
+    author: {
+      name: "Sara Mitchell",
+      role: "Product Educator",
+      avatar: "SM"
+    },
+    thumbnailGradient: "from-violet-500 to-purple-700",
+    content: `
+      <p>Most online tool websites work the same way: you open a tool, do a task, close the tab, then search for the next tool. This context-switching kills productivity. <strong>Toolchi Workspace</strong> was built to solve exactly this problem.</p>
+
+      <h2>What is Toolchi Workspace?</h2>
+      <p>Toolchi Workspace is a free multi-tool dashboard at <a href="/workspace" class="text-[#7d4dff] font-extrabold hover:underline">toolchi.online/workspace</a>. Instead of one tool per page, you get a full three-column layout: a tool navigator on the left, your active tools in the center (in tabs), and a Smart Assist panel on the right for suggestions and quality scoring.</p>
+
+      <h2>Opening Multiple Tools in Tabs</h2>
+      <p>On the free plan, you can open up to 3 tools simultaneously in tabs at the top of the workspace. For example, open <a href="/tools/json-formatter" class="text-[#7d4dff] font-extrabold hover:underline">JSON Formatter</a> in tab 1, <a href="/tools/compress-image" class="text-[#7d4dff] font-extrabold hover:underline">Image Compressor</a> in tab 2, and <a href="/tools/word-counter" class="text-[#7d4dff] font-extrabold hover:underline">Word Counter</a> in tab 3 — all without leaving the page.</p>
+
+      <h2>Using Keyboard Shortcuts</h2>
+      <p>Toolchi Workspace has a full keyboard shortcut system. Press <strong>Ctrl+K</strong> to open the global command palette and jump to any tool instantly. Press <strong>?</strong> to see all available shortcuts. Use <strong>Ctrl+1, Ctrl+2, Ctrl+3</strong> to switch between open tabs.</p>
+
+      <h2>Smart Assist Panel</h2>
+      <p>The right-side Smart Assist panel analyzes your current tool and suggests related tools, shows relevant workflow chains, and provides a quality score for your task. For example, if you have the Image Compressor open, it will recommend the <a href="/tools/resize-image" class="text-[#7d4dff] font-extrabold hover:underline">Image Resizer</a> and WebP Converter as next steps.</p>
+
+      <h2>Workflows: Guided Step-by-Step Pipelines</h2>
+      <p>Workflows connect multiple tools into a single pipeline. The <a href="/workflows/blog-image-optimization" class="text-[#7d4dff] font-extrabold hover:underline">Blog Image Optimization workflow</a> guides you through Resize → Compress → Convert to WebP → Generate Alt Text. Each step links directly to the tool, and the current step is highlighted so you never lose your place.</p>
+
+      <h2>Mobile Experience</h2>
+      <p>On mobile, Toolchi Workspace shows a clean bottom action bar with your open tabs as scrollable pills. Tap the purple "Tools" button to open a full-screen tool drawer with search, recent tools, popular tools, and a category browser.</p>
+    `
+  },
+  {
+    slug: "blog-image-optimization-workflow",
+    title: "The Complete Blog Image Optimization Workflow: Resize, Compress & Convert to WebP",
+    excerpt: "A step-by-step guide for bloggers and content creators to optimize every image before publishing — reduce file size by 70% while keeping visual quality sharp.",
+    category: "performance",
+    readTime: "5 min read",
+    date: "July 11, 2026",
+    author: {
+      name: "James Park",
+      role: "Web Performance Engineer",
+      avatar: "JP"
+    },
+    thumbnailGradient: "from-teal-500 to-emerald-600",
+    content: `
+      <p>Unoptimized images are the #1 cause of slow blog page speeds. A single 4MB JPEG from your phone camera can slow your page load by 3-5 seconds — destroying your Core Web Vitals score and bounce rate. Here's the complete workflow to fix this, entirely in your browser for free.</p>
+
+      <h2>Step 1: Resize to the Right Dimensions</h2>
+      <p>Most blog content areas are 800-1200px wide. Uploading a 4000px wide image just makes browsers scale it down — wasting bandwidth. Use the <a href="/tools/resize-image" class="text-[#7d4dff] font-extrabold hover:underline">Image Resizer</a> to set the exact width you need. For blog post feature images, 1200x630px is the ideal size for both web display and social media sharing.</p>
+
+      <h2>Step 2: Compress Without Losing Quality</h2>
+      <p>After resizing, run the image through the <a href="/tools/compress-image" class="text-[#7d4dff] font-extrabold hover:underline">Image Compressor</a>. Set quality to 75-80% — this typically reduces file size by 60-70% with no visible quality difference. For a photo that was 800KB after resizing, you should achieve 200-300KB.</p>
+
+      <h2>Step 3: Convert to WebP</h2>
+      <p>WebP is Google's modern image format — 25-35% smaller than JPEG at equivalent quality, and supported by all modern browsers. Use the <a href="/tools/jpg-to-webp" class="text-[#7d4dff] font-extrabold hover:underline">JPG to WebP Converter</a> for the final compression step. Your 250KB JPEG often becomes a 160KB WebP.</p>
+
+      <h2>Step 4: Generate SEO Alt Text</h2>
+      <p>Never skip alt text — it helps visually impaired users and tells search engines what your image is about. Use the <a href="/tools/ai-alt-text-generator" class="text-[#7d4dff] font-extrabold hover:underline">AI Alt Text Generator</a> to instantly create descriptive alt text for any image.</p>
+
+      <h2>Do It All in Toolchi Workspace</h2>
+      <p>Instead of running these tools in separate tabs, open the full <a href="/workflows/blog-image-optimization" class="text-[#7d4dff] font-extrabold hover:underline">Blog Image Optimization Workflow</a> in Toolchi Workspace. All four tools open in a guided pipeline, and Smart Assist reminds you of the next step. The complete workflow takes under 2 minutes per image.</p>
     `
   }
 ];

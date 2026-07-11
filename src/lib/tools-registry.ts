@@ -44,7 +44,7 @@ export const CATEGORIES = [
   { id: "performance", name: "Performance Tools", desc: "Optimize files, verify compression, and measure load times." },
   { id: "operational", name: "Operational Tools", desc: "Utilities to generate mockups, open links, and clean files." },
   { id: "developer", name: "Developer & Casing Tools", desc: "Convert case, count text, format JSON, and generate hashes." },
-  { id: "ai", name: "AI Content Utilities", desc: "Analyze AI writing density and humanize text structures." }
+  { id: "ai", name: "AI Content Utilities", desc: "Analyze AI-like writing patterns, readability, sentence variation, and content structure." }
 ];
 
 const RAW_TOOLS_REGISTRY = [

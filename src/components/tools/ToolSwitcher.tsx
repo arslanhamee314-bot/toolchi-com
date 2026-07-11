@@ -193,7 +193,10 @@ export default function ToolSwitcher({ slug }: ToolSwitcherProps) {
     case "ai-summarizer":
     case "ai-title-generator":
     case "ai-paragraph-rewriter":
+      return <AiSuite slug={slug} />;
+
     // === 7. IMAGE CONVERSION & OPTIMIZER SUITE ===
+
     case "gif-optimizer":
     case "png-optimizer":
     case "gif-splitter":

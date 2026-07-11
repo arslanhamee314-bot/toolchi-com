@@ -5,6 +5,11 @@ import Link from "next/link";
 import Script from "next/script";
 import { InteractionProvider } from "@/components/ui/InteractionProvider";
 import CustomCursor from "@/components/ui/CustomCursor";
+import CommandPalette from "@/components/workspace/CommandPalette";
+import KeyboardShortcutsModal from "@/components/workspace/KeyboardShortcutsModal";
+import { ToastProvider } from "@/components/workspace/ToastProvider";
+import RouteProgress from "@/components/tools/RouteProgress";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Toolchi - Free Online Web & Developer Tools Directory",
@@ -67,6 +72,16 @@ export default function RootLayout({
           {/* Custom Cursor layer for desktop users */}
           <CustomCursor />
 
+          <Suspense fallback={null}>
+            <RouteProgress />
+          </Suspense>
+
+          {/* Global Command Palette — Ctrl+K / Cmd+K */}
+          <CommandPalette />
+
+          {/* Global Keyboard Shortcuts Modal — Press '?' */}
+          <KeyboardShortcutsModal />
+
           {/* Google Analytics (GA4) Tag */}
           {process.env.NEXT_PUBLIC_GA_ID && (
             <>
@@ -99,9 +114,11 @@ export default function RootLayout({
           <Header />
 
           {/* Main Content Area */}
-          <main className="flex-1 flex flex-col">
-            {children}
-          </main>
+          <ToastProvider>
+            <main className="flex-1 flex flex-col">
+              {children}
+            </main>
+          </ToastProvider>
 
           {/* Trust Footer */}
           <footer className="border-t border-border bg-white dark:bg-card py-8 px-6 print:hidden">

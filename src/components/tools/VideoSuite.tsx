@@ -2,6 +2,10 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { Upload, Film, Scissors, Crop, Maximize, Play, Pause, Download, RefreshCw, AlertCircle, ShieldCheck } from "lucide-react";
+import SmartAssist from "./SmartAssist";
+import PresetSelector from "./PresetSelector";
+import ResultScore from "./ResultScore";
+import NextBestActions from "./NextBestActions";
 
 interface VideoSuiteProps {
   slug: string;
@@ -14,6 +18,8 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
   const [error, setError] = useState<string | null>(null);
   const [reversing, setReversing] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [selectedPreset, setSelectedPreset] = useState("standard");
+  const [resultScoreValue, setResultScoreValue] = useState<number | null>(null);
 
   // Video properties
   const [duration, setDuration] = useState(0);
@@ -47,6 +53,63 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
       case "video-speed": return "Video Speed (Change playback rate)";
       case "video-loop": return "Video Loop (Record seamless looped segment)";
       default: return "Video Processing Workspace";
+    }
+  };
+
+  const getPresetsForSlug = () => {
+    if (slug === "video-cutter" || slug === "video-cropper" || slug === "resize-video") {
+      return [
+        { id: "standard", name: "Standard (Original)", description: "No scale modification" },
+        { id: "hd_720", name: "HD Ready (720p)", description: "Standard high definition" },
+        { id: "sd_480", name: "Web friendly (480p)", description: "Perfect balance for web loading" }
+      ];
+    }
+    if (slug === "video-loop") {
+      return [
+        { id: "standard", name: "Double Loop (2x)", description: "Repeat twice" },
+        { id: "loop_3", name: "Triple Loop (3x)", description: "Repeat three times" },
+        { id: "loop_5", name: "High Loop (5x)", description: "Repeat five times" }
+      ];
+    }
+    if (slug === "video-speed") {
+      return [
+        { id: "standard", name: "Normal (1.0x)", description: "Standard playback speed" },
+        { id: "fast", name: "Fast Tempo (1.5x)", description: "Speed up rate" },
+        { id: "slow", name: "Slow Tempo (0.75x)", description: "Slow down rate" }
+      ];
+    }
+    return [];
+  };
+
+  const handleSelectPreset = (presetId: string) => {
+    setSelectedPreset(presetId);
+    setResultUrl(null);
+    setResultScoreValue(null);
+
+    if (slug === "video-cutter" || slug === "video-cropper" || slug === "resize-video") {
+      if (presetId === "hd_720") {
+        setScaleWidth(1280);
+      } else if (presetId === "sd_480") {
+        setScaleWidth(854);
+      } else {
+        setScaleWidth(videoWidth);
+      }
+    } else if (slug === "video-loop") {
+      if (presetId === "loop_3") {
+        setLoopCount(3);
+      } else if (presetId === "loop_5") {
+        setLoopCount(5);
+      } else {
+        setLoopCount(2);
+      }
+    } else if (slug === "video-speed") {
+      if (presetId === "fast") {
+        setPlaybackSpeed(1.5);
+      } else if (presetId === "slow") {
+        setPlaybackSpeed(0.75);
+      } else {
+        setPlaybackSpeed(1.0);
+      }
     }
   };
 
@@ -138,6 +201,11 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
         recorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
         recorder.onstop = () => {
           setResultUrl(URL.createObjectURL(new Blob(chunks, { type: "video/webm" })));
+          
+          let score = 100;
+          if (segDuration > 8) score -= 20;
+          setResultScoreValue(score);
+
           setLoading(false);
           setReversing(false);
         };
@@ -186,6 +254,14 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
       mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
       mediaRecorder.onstop = () => {
         setResultUrl(URL.createObjectURL(new Blob(chunks, { type: mimeType })));
+
+        let score = 100;
+        const processedDuration = (endTime - startTime);
+        if (processedDuration > 10) score -= 20; // Too heavy
+        if (destW > 1280) score -= 15; // High resolution
+        if (muteAudio || slug === "mute-video") score += 5; // Good for web compression
+        setResultScoreValue(Math.min(100, score));
+
         setLoading(false);
       };
 
@@ -235,15 +311,71 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
     }
   };
 
+  // Dynamic Smart Assist recommendations
+  let recommendation = "Mute audio tracks if you are building web banners.";
+  let reason = "Videos with silent tracks compress significantly better and can autoplay without user interaction.";
+  let nextStep = "Toggle Strip audio checkbox";
+
+  if (slug === "video-cropper") {
+    recommendation = "Crop to exact matching layout aspect ratios.";
+    reason = "Cropping without correct target scaling causes visible edge stretching on high-DPI viewports.";
+    nextStep = "Upload video and select viewport coordinates";
+  } else if (slug === "resize-video") {
+    recommendation = "Downscale HD video width for lightning-fast page loading.";
+    reason = "Downscaling 1080p source video clips to 480p standard definition saves up to 75% file weight.";
+    nextStep = "Select resize dimensions";
+  } else if (slug.includes("video-to-")) {
+    recommendation = "Export WebM file for native HTML5 embedding.";
+    reason = "WebM is standard modern royalty-free web video. It has 40% better compression than traditional MP4 formats.";
+    nextStep = "Choose WebM format output";
+  } else if (slug === "reverse-video") {
+    recommendation = "Trim segments below 3 seconds for reversing.";
+    reason = "Reversing video draws each frame to canvas sequentially. Long clips require high RAM usage and delay processing.";
+    nextStep = "Set segment trim markers";
+  } else if (slug === "mute-video") {
+    recommendation = "Completely purge sound streams.";
+    reason = "Purging audio tracks allows mobile browsers to autoplay video loops automatically inside columns.";
+    nextStep = "Process muted video";
+  } else if (slug === "video-speed") {
+    recommendation = "Resample at native frame rates.";
+    reason = "Changing playback speeds can result in stuttering if frame durations are not properly aligned.";
+    nextStep = "Adjust speed slider";
+  } else if (slug === "video-loop") {
+    recommendation = "Match loop repetitions to target user viewport timelines.";
+    reason = "Too many loop repeats increase the final video runtime, inflating file sizes.";
+    nextStep = "Set loop count repeats";
+  }
+
+  const nextActions = [
+    { slug: "video-to-gif", name: "Video to GIF", description: "Convert high-fidelity video clips into looping web-friendly GIF files." },
+    { slug: "video-cropper", name: "Video Cropper", description: "Adjust aspect ratios and crop visible coordinates locally." },
+    { slug: "video-cutter", name: "Video Cutter", description: "Trim precise timestamps and durations in-browser." }
+  ];
+
+  const presetsList = getPresetsForSlug();
+
   return (
-    <div className="flex flex-col gap-6 text-left">
+    <div className="flex flex-col gap-6 text-foreground text-xs text-left">
+      
+      {/* Smart Assist Panel */}
+      <SmartAssist recommendation={recommendation} reason={reason} nextStep={nextStep} />
+
+      {/* Title Header */}
       <div className="flex items-center justify-between border-b border-border/40 pb-4">
-        <h4 className="text-sm font-extrabold text-foreground uppercase tracking-wider">{getToolTitle()}</h4>
+        <h4 className="text-sm font-extrabold text-white uppercase tracking-wider">{getToolTitle()}</h4>
         <span className="inline-flex items-center gap-1 text-[9px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-lg select-none">
           <ShieldCheck className="h-3.5 w-3.5" /> 100% Client Video Engine
         </span>
       </div>
 
+      {/* Presets Selector */}
+      {presetsList.length > 0 && (
+        <div className="border-b border-border/40 pb-4">
+          <PresetSelector presets={presetsList} selectedPresetId={selectedPreset} onSelect={handleSelectPreset} />
+        </div>
+      )}
+
+      {/* Main workspace container */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Controls Column */}
         <div className="lg:col-span-7 flex flex-col gap-5">
@@ -252,21 +384,21 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
-              className={`flex flex-col items-center justify-center border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all select-none ${
+              className={`flex flex-col items-center justify-center border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all bg-neutral-950/40 hover:bg-neutral-950/80 select-none ${
                 isDragging 
-                  ? "border-[#7d4dff] bg-[#7d4dff]/5 dark:bg-[#7d4dff]/10 scale-[0.99] animate-pulse" 
-                  : "border-border/80 hover:border-[#7d4dff] hover:bg-neutral-50/50 dark:hover:bg-neutral-800/10"
+                  ? "border-primary bg-primary/5 dark:bg-primary/10 scale-[0.99] animate-pulse" 
+                  : "border-border/80 hover:border-primary"
               }`}
             >
               <Film className="h-8 w-8 text-muted-foreground mb-3" />
-              <span className="text-xs font-bold text-foreground">
+              <span className="text-xs font-bold text-white">
                 {isDragging ? "Drop your video here" : "Upload Video File"}
               </span>
               <span className="text-[10px] text-muted-foreground mt-1">Select MP4, WebM, or MOV format</span>
               <input type="file" accept="video/*" className="hidden" onChange={handleVideoUpload} />
             </label>
           ) : (
-            <div className="space-y-4 border border-border p-4 rounded-3xl bg-card/10">
+            <div className="space-y-4 border border-border p-4 rounded-3xl bg-neutral-50 dark:bg-neutral-900/35">
               <video 
                 ref={videoRef}
                 src={videoUrl}
@@ -289,7 +421,7 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
                       max={duration}
                       value={startTime}
                       onChange={(e) => setStartTime(Number(e.target.value))}
-                      className="w-full px-3 py-1.5 text-xs bg-neutral-50 dark:bg-[#1a202c] border border-border rounded-xl outline-none"
+                      className="w-full px-3 py-1.5 text-xs bg-neutral-900 border border-border rounded-xl outline-none"
                     />
                   </div>
                   <div className="space-y-1">
@@ -301,7 +433,7 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
                       max={duration}
                       value={endTime}
                       onChange={(e) => setEndTime(Number(e.target.value))}
-                      className="w-full px-3 py-1.5 text-xs bg-neutral-50 dark:bg-[#1a202c] border border-border rounded-xl outline-none"
+                      className="w-full px-3 py-1.5 text-xs bg-neutral-900 border border-border rounded-xl outline-none"
                     />
                   </div>
                 </div>
@@ -316,7 +448,7 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
                         max={videoWidth}
                         value={cropX}
                         onChange={(e) => setCropX(Number(e.target.value))}
-                        className="w-full px-3 py-1.5 text-xs bg-neutral-50 dark:bg-[#1a202c] border border-border rounded-xl outline-none"
+                        className="w-full px-3 py-1.5 text-xs bg-neutral-900 border border-border rounded-xl outline-none"
                       />
                     </div>
                     <div className="space-y-1">
@@ -326,7 +458,7 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
                         max={videoHeight}
                         value={cropY}
                         onChange={(e) => setCropY(Number(e.target.value))}
-                        className="w-full px-3 py-1.5 text-xs bg-neutral-50 dark:bg-[#1a202c] border border-border rounded-xl outline-none"
+                        className="w-full px-3 py-1.5 text-xs bg-neutral-900 border border-border rounded-xl outline-none"
                       />
                     </div>
                     <div className="space-y-1">
@@ -336,7 +468,7 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
                         max={videoWidth}
                         value={cropW}
                         onChange={(e) => setCropW(Number(e.target.value))}
-                        className="w-full px-3 py-1.5 text-xs bg-neutral-50 dark:bg-[#1a202c] border border-border rounded-xl outline-none"
+                        className="w-full px-3 py-1.5 text-xs bg-neutral-900 border border-border rounded-xl outline-none"
                       />
                     </div>
                     <div className="space-y-1">
@@ -346,7 +478,7 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
                         max={videoHeight}
                         value={cropH}
                         onChange={(e) => setCropH(Number(e.target.value))}
-                        className="w-full px-3 py-1.5 text-xs bg-neutral-50 dark:bg-[#1a202c] border border-border rounded-xl outline-none"
+                        className="w-full px-3 py-1.5 text-xs bg-neutral-900 border border-border rounded-xl outline-none"
                       />
                     </div>
                   </div>
@@ -356,7 +488,7 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
                 {(slug === "video-speed") && (
                   <div className="space-y-1.5 col-span-2 pt-2 border-t border-border/40">
                     <span className="text-3xs font-extrabold text-muted-foreground uppercase">Playback Speed ({playbackSpeed}x)</span>
-                    <input type="range" min="0.25" max="4" step="0.25" value={playbackSpeed} onChange={(e) => setPlaybackSpeed(Number(e.target.value))} className="w-full accent-[#7d4dff]" />
+                    <input type="range" min="0.25" max="4" step="0.25" value={playbackSpeed} onChange={(e) => setPlaybackSpeed(Number(e.target.value))} className="w-full accent-primary" />
                   </div>
                 )}
 
@@ -364,7 +496,7 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
                 {slug === "video-loop" && (
                   <div className="space-y-1.5 col-span-2 pt-2 border-t border-border/40">
                     <span className="text-3xs font-extrabold text-muted-foreground uppercase">Loop Repetitions ({loopCount}x)</span>
-                    <input type="range" min="2" max="8" step="1" value={loopCount} onChange={(e) => setLoopCount(Number(e.target.value))} className="w-full accent-[#7d4dff]" />
+                    <input type="range" min="2" max="8" step="1" value={loopCount} onChange={(e) => setLoopCount(Number(e.target.value))} className="w-full accent-primary" />
                     <p className="text-[10px] text-muted-foreground">The segment will play {loopCount} times in the output file.</p>
                   </div>
                 )}
@@ -372,7 +504,7 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
                 {/* Mute toggle */}
                 {(slug === "mute-video" || slug === "video-cutter" || slug === "resize-video") && (
                   <div className="col-span-2 flex items-center gap-2 pt-2 border-t border-border/40">
-                    <input type="checkbox" id="muteAudio" checked={muteAudio} onChange={(e) => setMuteAudio(e.target.checked)} className="accent-[#7d4dff]" />
+                    <input type="checkbox" id="muteAudio" checked={muteAudio} onChange={(e) => setMuteAudio(e.target.checked)} className="accent-primary" />
                     <label htmlFor="muteAudio" className="text-3xs font-extrabold text-muted-foreground uppercase cursor-pointer">Strip audio from output</label>
                   </div>
                 )}
@@ -382,7 +514,7 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
               <button 
                 onClick={runVideoProcessing}
                 disabled={loading}
-                className="w-full py-2.5 bg-[#7d4dff] hover:bg-[#6530ef] disabled:bg-[#7d4dff]/45 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-[#7d4dff]/10"
+                className="w-full py-2.5 bg-primary hover:bg-primary-hover disabled:opacity-50 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-primary/10"
               >
                 {loading ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Scissors className="h-3.5 w-3.5" />}
                 <span>Process Video Output</span>
@@ -402,15 +534,19 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
         <div className="lg:col-span-5 flex flex-col gap-4">
           <span className="text-3xs font-extrabold text-muted-foreground uppercase select-none tracking-wider">Processed Video Render</span>
           
-          <div className="border border-border/80 bg-neutral-50/50 dark:bg-card/20 rounded-2xl p-6 min-h-[220px] flex flex-col items-center justify-center text-center relative overflow-hidden select-none">
+          <div className="border border-border/80 bg-neutral-50/50 dark:bg-card/25 rounded-2xl p-6 min-h-[220px] flex flex-col items-center justify-center text-center relative overflow-hidden select-none">
             {loading ? (
               <div className="flex flex-col items-center gap-3 text-muted-foreground">
-                <RefreshCw className="h-8 w-8 text-[#7d4dff] animate-spin" />
-                <p className="text-3xs font-bold uppercase tracking-wider animate-pulse">Encoding Frame Loops Client-Side...</p>
+                <RefreshCw className="h-8 w-8 text-primary animate-spin" />
+                <p className="text-3xs font-bold uppercase tracking-wider animate-pulse">{reversing ? "Drawing Canvas Frames in Reverse..." : "Encoding Frame Loops Client-Side..."}</p>
               </div>
             ) : resultUrl ? (
-              <div className="w-full flex flex-col items-center gap-4">
+              <div className="w-full flex flex-col items-center gap-5">
                 <video src={resultUrl} controls autoPlay loop className="max-h-[160px] rounded-xl border border-border shadow-xs bg-black" />
+
+                {resultScoreValue !== null && (
+                  <ResultScore score={resultScoreValue} metricTitle="Video Quality & Speed Index" details="Measures segment duration bounds, target dimensions, and tracks compression weight ratios." />
+                )}
                 
                 <div className="w-full flex flex-col gap-2">
                   <a 
@@ -421,7 +557,10 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
                     <Download className="h-3.5 w-3.5" /> Download WebM Video
                   </a>
                   <button 
-                    onClick={() => setResultUrl(null)} 
+                    onClick={() => {
+                      setResultUrl(null);
+                      setResultScoreValue(null);
+                    }} 
                     className="w-full py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-foreground font-extrabold text-3xs rounded-xl cursor-pointer"
                   >
                     Reset and Try Again
@@ -440,6 +579,9 @@ export default function VideoSuite({ slug }: VideoSuiteProps) {
           </div>
         </div>
       </div>
+
+      {/* Next Best Actions */}
+      <NextBestActions actions={nextActions} />
     </div>
   );
 }

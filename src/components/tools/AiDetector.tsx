@@ -10,11 +10,11 @@ interface SentenceResult {
 }
 
 export default function AiDetector() {
-  const [activeTab, setActiveTab] = useState<"detector" | "humanizer">("detector");
+  const [activeTab, setActiveTab] = useState<"detector" | "polisher">("detector");
   const [inputText, setInputText] = useState("");
   const [detectorResult, setDetectorResult] = useState<{
     aiPercent: number;
-    humanPercent: number;
+    naturalPercent: number;
     perplexity: "High" | "Medium" | "Low";
     buzzwordsFound: string[];
     sentences: SentenceResult[];
@@ -24,10 +24,10 @@ export default function AiDetector() {
     readabilityScore: number;
   } | null>(null);
 
-  // Naturalizer (Humanizer) states
-  const [humanizerInput, setHumanizerInput] = useState("");
-  const [humanizedText, setHumanizedText] = useState("");
-  const [isHumanizing, setIsHumanizing] = useState(false);
+  // Naturalizer (polisher) states
+  const [polisherInput, setpolisherInput] = useState("");
+  const [polishedText, setpolishedText] = useState("");
+  const [isPolishing, setisPolishing] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
 
   // Hook into central sample data event
@@ -40,7 +40,7 @@ export default function AiDetector() {
           // Let State propagate then trigger analysis (or analyze inline directly)
           analyzeTextContent(sampleText);
         } else {
-          setHumanizerInput(sampleText);
+          setpolisherInput(sampleText);
           naturalizeTextContent(sampleText);
         }
       }
@@ -57,7 +57,7 @@ export default function AiDetector() {
     "invaluable", "holistic", "delves", "groundbreaking", "fostering"
   ];
 
-  const HUMANIZER_REPLACEMENTS: Record<string, string> = {
+  const polisher_REPLACEMENTS: Record<string, string> = {
     "furthermore": "also",
     "Furthermore": "Also",
     "moreover": "what's more",
@@ -171,11 +171,11 @@ export default function AiDetector() {
     if (perplexity === "Low" && aiPercent < 70) aiPercent += 10;
     
     aiPercent = Math.min(Math.max(aiPercent, 5), 95);
-    const humanPercent = 100 - aiPercent;
+    const naturalPercent = 100 - aiPercent;
 
     setDetectorResult({
       aiPercent,
-      humanPercent,
+      naturalPercent,
       perplexity,
       buzzwordsFound: foundBuzzwords,
       sentences: processedSentences,
@@ -194,13 +194,13 @@ export default function AiDetector() {
   const naturalizeTextContent = (textToNaturalize: string) => {
     if (!textToNaturalize.trim()) return;
 
-    setIsHumanizing(true);
+    setisPolishing(true);
     
     setTimeout(() => {
       let text = textToNaturalize;
 
       // Swap common AI transitions & buzzwords using our rules map
-      Object.entries(HUMANIZER_REPLACEMENTS).forEach(([key, val]) => {
+      Object.entries(polisher_REPLACEMENTS).forEach(([key, val]) => {
         const regex = new RegExp(`\\b${key}\\b`, 'g');
         text = text.replace(regex, val);
       });
@@ -221,7 +221,7 @@ export default function AiDetector() {
           return `${firstPart}. ${formattedSecond}`;
         }
 
-        // Add small human phrases at sentence starts periodically
+        // Add small natural phrases at sentence starts periodically
         if (idx === 0 && !clean.startsWith("I") && Math.random() > 0.5) {
           clean = "In general, " + clean.charAt(0).toLowerCase() + clean.slice(1);
         } else if (idx === 3 && Math.random() > 0.6) {
@@ -232,17 +232,17 @@ export default function AiDetector() {
       });
 
       const outcome = modifiedSentences.filter(s => s.length > 0).join(" ");
-      setHumanizedText(outcome);
-      setIsHumanizing(false);
+      setpolishedText(outcome);
+      setisPolishing(false);
     }, 800);
   };
 
   const handleNaturalize = () => {
-    naturalizeTextContent(humanizerInput);
+    naturalizeTextContent(polisherInput);
   };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(humanizedText);
+    navigator.clipboard.writeText(polishedText);
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
   };
@@ -263,9 +263,9 @@ export default function AiDetector() {
           <Cpu className="h-4 w-4" /> Writing Pattern Analyst
         </button>
         <button
-          onClick={() => setActiveTab("humanizer")}
+          onClick={() => setActiveTab("polisher")}
           className={`flex items-center gap-2 px-5 py-2.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
-            activeTab === "humanizer"
+            activeTab === "polisher"
               ? "bg-primary text-primary-foreground shadow-md"
               : "text-muted-foreground hover:text-foreground"
           }`}
@@ -340,10 +340,10 @@ export default function AiDetector() {
 
                   <div className="flex flex-col gap-1">
                     <h3 className="text-xs font-extrabold text-foreground leading-snug">
-                      {detectorResult.aiPercent > 60 ? "Highly Uniform Phrasing" : detectorResult.aiPercent > 35 ? "Mixed Writing Patterns" : "Natural Human Flow"}
+                      {detectorResult.aiPercent > 60 ? "Highly Uniform Phrasing" : detectorResult.aiPercent > 35 ? "Mixed Writing Patterns" : "Natural Writing Flow"}
                     </h3>
                     <p className="text-2xs text-muted-foreground leading-normal">
-                      Your text contains <strong className="text-primary">{detectorResult.humanPercent}%</strong> natural sentence structure variations.
+                      Your text contains <strong className="text-primary">{detectorResult.naturalPercent}%</strong> natural sentence structure variations.
                     </p>
                   </div>
                 </div>
@@ -358,7 +358,7 @@ export default function AiDetector() {
                   <div className="p-3.5 bg-card border border-border/80 rounded-xl flex flex-col gap-0.5">
                     <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Sentence Variance</span>
                     <span className="text-xs font-extrabold text-foreground">{detectorResult.perplexity}</span>
-                    <span className="text-[8px] text-muted-foreground">High variance indicates human-like flow.</span>
+                    <span className="text-[8px] text-muted-foreground">High variance indicates natural sentence flow.</span>
                   </div>
                 </div>
 
@@ -405,7 +405,7 @@ export default function AiDetector() {
                 {/* Action Button */}
                 <button
                   onClick={() => {
-                    const report = `Toolchi AI Writing Analysis Report\n---------------------------------\nUniformity (AI) Score: ${detectorResult.aiPercent}%\nNatural Flow (Human) Score: ${detectorResult.humanPercent}%\nReadability Score: ${detectorResult.readabilityScore}/100\nSentence Variance (Perplexity): ${detectorResult.perplexity}\nLLM Buzzwords: ${detectorResult.buzzwordsFound.length} detected\nGenerated locally on Toolchi.online`;
+                    const report = `Toolchi AI Writing Analysis Report\n---------------------------------\nUniformity (AI) Score: ${detectorResult.aiPercent}%\nNatural Flow (Human) Score: ${detectorResult.naturalPercent}%\nReadability Score: ${detectorResult.readabilityScore}/100\nSentence Variance (Perplexity): ${detectorResult.perplexity}\nLLM Buzzwords: ${detectorResult.buzzwordsFound.length} detected\nGenerated locally on Toolchi.online`;
                     navigator.clipboard.writeText(report);
                     import("canvas-confetti").then((m) => m.default({ particleCount: 30, spread: 50, origin: { y: 0.85 } }));
                   }}
@@ -430,7 +430,7 @@ export default function AiDetector() {
       )}
 
       {/* Tab 2: Natural Phrasing Rewriter */}
-      {activeTab === "humanizer" && (
+      {activeTab === "polisher" && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           
           {/* Input Block */}
@@ -443,18 +443,18 @@ export default function AiDetector() {
             </div>
             
             <textarea
-              value={humanizerInput}
-              onChange={(e) => setHumanizerInput(e.target.value)}
+              value={polisherInput}
+              onChange={(e) => setpolisherInput(e.target.value)}
               placeholder="Paste text here to shift tone..."
               className="w-full h-80 p-4 bg-card border border-border rounded-2xl text-xs outline-none focus:border-primary/50 placeholder:text-muted-foreground/50 resize-none font-sans"
             />
             
             <button
               onClick={handleNaturalize}
-              disabled={isHumanizing || !humanizerInput.trim()}
+              disabled={isPolishing || !polisherInput.trim()}
               className="w-full py-3 bg-primary text-primary-foreground hover:opacity-90 text-xs font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 active:scale-95"
             >
-              {isHumanizing ? (
+              {isPolishing ? (
                 <>
                   <RefreshCw className="h-4 w-4 animate-spin" /> Shifting Tone Structures...
                 </>
@@ -474,15 +474,15 @@ export default function AiDetector() {
             </div>
             
             <div className="relative w-full h-80 p-4 bg-card border border-border rounded-2xl text-xs outline-none overflow-y-auto leading-relaxed">
-              {humanizedText ? (
-                <div className="text-foreground whitespace-pre-wrap font-sans text-[11px] pr-8">{humanizedText}</div>
+              {polishedText ? (
+                <div className="text-foreground whitespace-pre-wrap font-sans text-[11px] pr-8">{polishedText}</div>
               ) : (
                 <div className="text-muted-foreground/40 italic flex items-center justify-center h-full">
                   Rewritten natural output will generate here...
                 </div>
               )}
 
-              {humanizedText && (
+              {polishedText && (
                 <button
                   onClick={copyToClipboard}
                   className="absolute bottom-4 right-4 p-2 bg-neutral-900 border border-border hover:border-neutral-700 text-white rounded-xl shadow-md transition-colors flex items-center justify-center cursor-pointer z-10"
@@ -494,7 +494,7 @@ export default function AiDetector() {
             </div>
 
             {/* Naturalized Flow Badge */}
-            {humanizedText && (
+            {polishedText && (
               <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center gap-3.5">
                 <div className="h-9 w-9 rounded-xl bg-emerald-500/15 text-emerald-500 flex items-center justify-center border border-emerald-500/20 shrink-0">
                   <ShieldCheck className="h-5 w-5" />
@@ -515,3 +515,4 @@ export default function AiDetector() {
     </div>
   );
 }
+

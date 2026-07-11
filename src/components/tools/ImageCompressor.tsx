@@ -2,6 +2,12 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { Upload, Download, CheckCircle, RefreshCw, AlertCircle } from "lucide-react";
+import SmartAssist from "./SmartAssist";
+import PresetSelector from "./PresetSelector";
+import ResultScore from "./ResultScore";
+import NextBestActions from "./NextBestActions";
+import BrandingOptions from "@/components/workspace/BrandingOptions";
+
 
 export default function ImageCompressor() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -11,7 +17,29 @@ export default function ImageCompressor() {
   const [exportFormat, setExportFormat] = useState("image/webp"); // image/webp, image/png, image/jpeg, original
   const [compressing, setCompressing] = useState(false);
   const [stats, setStats] = useState<any>(null);
+  const [selectedPreset, setSelectedPreset] = useState("balanced");
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  const presets = [
+    { id: "balanced", name: "Balanced", description: "75% WebP, optimized size" },
+    { id: "smallest", name: "Smallest Size", description: "40% WebP for max savings" },
+    { id: "best", name: "Best Quality", description: "90% WebP for high fidelity" },
+    { id: "blog", name: "Blog Optimized", description: "80% WebP for fast page speeds" }
+  ];
+
+  const handleSelectPreset = (presetId: string) => {
+    setSelectedPreset(presetId);
+    setExportFormat("image/webp");
+    if (presetId === "balanced") {
+      setQuality(0.75);
+    } else if (presetId === "smallest") {
+      setQuality(0.4);
+    } else if (presetId === "best") {
+      setQuality(0.9);
+    } else if (presetId === "blog") {
+      setQuality(0.8);
+    }
+  };
 
   // Hook into central sample data event
   useEffect(() => {
@@ -69,8 +97,51 @@ export default function ImageCompressor() {
       canvas.height = img.naturalHeight;
       ctx.drawImage(img, 0, 0);
 
+      // Render branding watermark if enabled
+      try {
+        const { getBrandingConfig } = require("@/components/workspace/BrandingOptions");
+        const brandConfig = getBrandingConfig();
+        if (brandConfig.enabled) {
+          ctx.save();
+          ctx.globalAlpha = brandConfig.opacity;
+          // Proportional font sizing
+          const fontSize = Math.max(12, Math.round(canvas.width * 0.022));
+          ctx.font = `bold ${fontSize}px sans-serif`;
+          ctx.fillStyle = "rgba(120, 120, 120, 0.9)";
+          ctx.textBaseline = "middle";
+          
+          const padding = fontSize * 1.5;
+          let x = canvas.width - padding;
+          let y = canvas.height - padding;
+          let align: CanvasTextAlign = "right";
+
+          if (brandConfig.placement === "bottom-left") {
+            x = padding;
+            align = "left";
+          } else if (brandConfig.placement === "bottom-center") {
+            x = canvas.width / 2;
+            align = "center";
+          } else if (brandConfig.placement === "top-right") {
+            x = canvas.width - padding;
+            y = padding;
+            align = "right";
+          }
+
+          ctx.textAlign = align;
+          // White outline shadow for readability on dark/complex regions
+          ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+          ctx.lineWidth = Math.max(2, Math.round(fontSize * 0.15));
+          ctx.strokeText(brandConfig.text, x, y);
+          ctx.fillText(brandConfig.text, x, y);
+          ctx.restore();
+        }
+      } catch (e) {
+        // ignore
+      }
+
       const mimeType = exportFormat === "original" ? selectedFile.type : exportFormat;
       const resultDataUrl = canvas.toDataURL(mimeType, quality);
+
 
       // Estimate compressed size
       const base64Length = resultDataUrl.split(",")[1].length;
@@ -78,6 +149,21 @@ export default function ImageCompressor() {
 
       const savings = selectedFile.size - compressedSize;
       const pct = Math.round((savings / selectedFile.size) * 100);
+
+      // Calculate web readiness score (0-100)
+      let webScore = 100;
+      if (mimeType !== "image/webp" && mimeType !== "image/avif") {
+        webScore -= 15; // WebP/AVIF are preferred
+      }
+      if (quality > 0.85) {
+        webScore -= 10; // High quality limits savings
+      }
+      if (compressedSize > 500000) {
+        webScore -= 15; // Still heavy for web
+      } else if (compressedSize < 150000) {
+        webScore += 5; // Perfect lightweight banner
+      }
+      webScore = Math.max(20, Math.min(100, webScore));
 
       // Generate a pretty filename extension matching the target mime
       const formatExt = mimeType === "image/webp" ? "webp" : mimeType === "image/png" ? "png" : "jpg";
@@ -88,7 +174,8 @@ export default function ImageCompressor() {
         compressedSize: (compressedSize / 1024).toFixed(1) + " KB",
         savingsPercent: pct > 0 ? pct + "%" : "0%",
         savings: (savings / 1024).toFixed(1) + " KB",
-        targetFilename: `optimized-${selectedFile.name.split(".")[0]}.${formatExt}`
+        targetFilename: `optimized-${selectedFile.name.split(".")[0]}.${formatExt}`,
+        webScore
       });
       setCompressing(false);
       import("canvas-confetti").then((m) => m.default({ particleCount: 30, spread: 50, origin: { y: 0.85 } }));
@@ -112,6 +199,31 @@ export default function ImageCompressor() {
     setStats(null);
   };
 
+  // Dynamic Smart Assist recommendations
+  let recommendation = "WebP 75-80% is recommended for blogs.";
+  let reason = "It provides up to 80% size savings compared to PNG/JPEG with imperceptible quality loss.";
+  let nextStep = "Convert to WebP format";
+
+  if (exportFormat === "image/png") {
+    recommendation = "Convert to WebP format instead of PNG.";
+    reason = "PNG is lossless but produces significantly larger files. WebP will shrink file size by up to 80%.";
+    nextStep = "Change Export Target Format to WebP";
+  } else if (selectedFile && selectedFile.size > 2000000) {
+    recommendation = "This image is too large for standard blogs (over 2MB).";
+    reason = "We recommend resizing it to 1200px width before compression to prevent slow loading penalty.";
+    nextStep = "Resize image under Image Transform tools";
+  } else if (quality > 0.85) {
+    recommendation = "Try lowering compression level to Balanced (75%).";
+    reason = "Quality settings above 85% significantly increase file size without human-visible changes.";
+    nextStep = "Select Balanced Preset";
+  }
+
+  const nextActions = [
+    { slug: "resize-image", name: "Resize Image", description: "Scale image dimensions to match blog heroes or social headers." },
+    { slug: "watermark-image", name: "Watermark Image", description: "Protect your graphics with custom copyright text overlays." },
+    { slug: "jpg-to-webp", name: "JPG to WebP", description: "Batch convert multiple static files to next-gen formats." }
+  ];
+
   return (
     <div className="flex flex-col gap-6 text-foreground text-xs">
       <canvas ref={canvasRef} className="hidden" />
@@ -126,6 +238,9 @@ export default function ImageCompressor() {
           </p>
         </div>
       </div>
+
+      {/* Smart Assist Panel */}
+      <SmartAssist recommendation={recommendation} reason={reason} nextStep={nextStep} />
 
       <div className="flex flex-col items-center justify-center border-2 border-dashed border-border hover:border-[#7d4dff] rounded-2xl p-8 bg-white dark:bg-card/50 transition-colors relative group select-none min-h-[160px]">
         {!originalUrl && (
@@ -161,13 +276,19 @@ export default function ImageCompressor() {
 
       {originalUrl && (
         <div className="flex flex-col gap-5 border border-border/60 rounded-2xl p-5 bg-neutral-50 dark:bg-neutral-900/35">
+          {/* Preset Selector */}
+          <PresetSelector presets={presets} selectedPresetId={selectedPreset} onSelect={handleSelectPreset} />
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Format Selection Dropdown */}
             <div className="flex flex-col gap-2">
               <label className="font-bold text-3xs uppercase tracking-wider text-muted-foreground">Export Target Format</label>
               <select
                 value={exportFormat}
-                onChange={(e) => setExportFormat(e.target.value)}
+                onChange={(e) => {
+                  setExportFormat(e.target.value);
+                  setSelectedPreset(""); // Clear preset on manual select
+                }}
                 className="w-full px-3 py-2 bg-white dark:bg-[#1a1f2c] border border-border rounded-xl outline-none focus:border-primary text-foreground text-xs font-semibold"
               >
                 <option value="image/webp">WebP format (Recommended for web)</option>
@@ -189,10 +310,18 @@ export default function ImageCompressor() {
                 max="1.0"
                 step="0.05"
                 value={quality}
-                onChange={(e) => setQuality(parseFloat(e.target.value))}
+                onChange={(e) => {
+                  setQuality(parseFloat(e.target.value));
+                  setSelectedPreset(""); // Clear preset on manual adjust
+                }}
                 className="w-full h-2 rounded-lg bg-neutral-200 dark:bg-neutral-800 accent-[#7d4dff] cursor-pointer mt-1"
               />
             </div>
+          </div>
+
+          {/* Branding Settings Option Panel */}
+          <div className="pt-2 border-t border-border/40">
+            <BrandingOptions />
           </div>
 
           <button
@@ -202,15 +331,21 @@ export default function ImageCompressor() {
           >
             {compressing ? "Optimizing..." : "Compress Image"}
           </button>
+
         </div>
       )}
 
       {stats && (
-        <div className="border border-border rounded-2xl p-5 bg-white dark:bg-[#1c2230] flex flex-col gap-4 shadow-xs animate-in fade-in slide-in-from-top-2 duration-300">
-          <div className="flex items-center gap-2 border-b border-border/40 pb-3">
-            <CheckCircle className="h-5 w-5 text-emerald-400" />
-            <h3 className="font-extrabold text-sm">Optimization Complete</h3>
+        <div className="border border-border rounded-2xl p-5 bg-white dark:bg-[#1c2230] flex flex-col gap-5 shadow-xs animate-in fade-in slide-in-from-top-2 duration-300">
+          <div className="flex justify-between items-center border-b border-border/40 pb-3">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-5 w-5 text-emerald-400" />
+              <h3 className="font-extrabold text-sm">Optimization Complete</h3>
+            </div>
           </div>
+
+          {/* Quality Result Score Gauge */}
+          <ResultScore score={stats.webScore} metricTitle="Web Speed Readiness Score" details="Measures compression depth, load times suitability, and format next-gen checks." />
 
           <div className="grid grid-cols-3 gap-4 text-center">
             <div className="p-3 bg-neutral-50 dark:bg-neutral-800/40 rounded-xl border border-border/40">
@@ -236,6 +371,8 @@ export default function ImageCompressor() {
         </div>
       )}
 
+      {/* Next Best Actions recommendation block */}
+      <NextBestActions actions={nextActions} />
     </div>
   );
 }
