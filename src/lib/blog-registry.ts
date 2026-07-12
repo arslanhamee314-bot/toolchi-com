@@ -12,6 +12,7 @@ export interface BlogPost {
     avatar: string;
   };
   thumbnailGradient: string;
+  thumbnail: string;
 }
 
 export const BLOG_CATEGORIES = [
@@ -35,6 +36,7 @@ export const BLOG_POSTS: BlogPost[] = [
       avatar: "AR"
     },
     thumbnailGradient: "from-purple-500 to-indigo-600",
+    thumbnail: "/images/blog/webmaster.jpg",
     content: `
       <p>As the digital landscape evolves, webmasters in 2026 face unprecedented demands for site speed, security, and uptime. Search engine algorithms have shifted focus toward page experience metrics and cryptographic trust. To keep your platform competitive, utilizing a suite of local diagnostics is essential.</p>
       
@@ -65,6 +67,7 @@ export const BLOG_POSTS: BlogPost[] = [
       avatar: "MV"
     },
     thumbnailGradient: "from-pink-500 to-rose-600",
+    thumbnail: "/images/blog/compression.jpg",
     content: `
       <p>In modern web performance tuning, visual assets are the single largest source of bloat. Uncompressed high-definition hero banners and blog thumbnails can easily degrade your Core Web Vitals score. Optimizing images locally is the fastest win to double your loading speeds.</p>
       
@@ -96,6 +99,7 @@ export const BLOG_POSTS: BlogPost[] = [
       avatar: "ER"
     },
     thumbnailGradient: "from-blue-500 to-teal-600",
+    thumbnail: "/images/blog/ai_writing.jpg",
     content: `
       <p>Search engines prioritize high-quality, readable content. To build a reputable digital presence, your articles must display natural writing patterns. Understanding the structure of sentence flow allows creators to write clearly while satisfying search algorithms.</p>
       
@@ -126,6 +130,7 @@ export const BLOG_POSTS: BlogPost[] = [
       avatar: "AR"
     },
     thumbnailGradient: "from-violet-500 to-fuchsia-600",
+    thumbnail: "/images/blog/ssl_security.jpg",
     content: `
       <p>Security is the foundation of user trust. A site displaying security warnings will turn away visitors and face penalties in search rankings. Understanding and monitoring your Secure Sockets Layer (SSL) certificates is critical to maintaining a healthy site.</p>
       
@@ -158,8 +163,9 @@ export const BLOG_POSTS: BlogPost[] = [
       avatar: "ER"
     },
     thumbnailGradient: "from-blue-600 to-indigo-700",
+    thumbnail: "/images/blog/ai_writing.jpg",
     content: `
-      <p>The blogging landscape is shifting rapidly in 2026. High search engine presence now requires combining speed with original, human-like editorial value. While paid AI engines offer complex models, bloggers can achieve professional editing results for free using local, browser-based utilities. Here is our selection of the best free AI writing assistants you can bookmark today.</p>
+      <p>The blogging landscape is shifting rapidly in 2026. High search presence now requires combining speed with original, human-like editorial value. While paid AI engines offer complex models, bloggers can achieve professional editing results for free using local, browser-based utilities. Here is our selection of the best free AI writing assistants you can bookmark today.</p>
       
       <h2>1. AI Pattern Analyst & Reader</h2>
       <p>Before publishing any online copy, it is critical to verify sentence length variety and vocabulary flow. Search engine quality crawlers easily spot uniform, robotic patterns. Using the <a href="/tools/ai-detector" class="text-[#7d4dff] font-extrabold hover:underline">AI Content Pattern Analyst</a>, you can inspect perplexity metrics and identify predictable distribution sentences locally on your computer, ensuring total draft privacy.</p>
@@ -184,6 +190,7 @@ export const BLOG_POSTS: BlogPost[] = [
       avatar: "MV"
     },
     thumbnailGradient: "from-emerald-500 to-teal-600",
+    thumbnail: "/images/blog/ai_writing.jpg",
     content: `
       <p>Using AI to write articles is only the first step. To ensure your blog ranks high on search engine result pages, you need to follow a structured SEO editing workflow. AI-generated text is often overly repetitive and predictable. By incorporating readability analysis and manual styling, you can build content that satisfies both crawlers and human readers.</p>
       
@@ -210,6 +217,7 @@ export const BLOG_POSTS: BlogPost[] = [
       avatar: "MV"
     },
     thumbnailGradient: "from-orange-500 to-red-600",
+    thumbnail: "/images/blog/compression.jpg",
     content: `
       <p>Visual assets account for the majority of bytes sent over the internet. Choosing the right image format is one of the most effective ways to optimize website speed. Here is a comparison of JPG, PNG, WebP, and AVIF formats, helping you select the best container for your web pages.</p>
       
@@ -238,6 +246,7 @@ export const BLOG_POSTS: BlogPost[] = [
       avatar: "AR"
     },
     thumbnailGradient: "from-yellow-500 to-amber-600",
+    thumbnail: "/images/blog/webmaster.jpg",
     content: `
       <p>Starting a new blog does not have to be expensive. You can build a complete, professional writing and optimization workflow using free client-side tools. By focusing on site performance, readability, and secure diagnostics, you can rank higher and grow your traffic without paying for complex subscriptions.</p>
       
@@ -261,24 +270,25 @@ export const BLOG_POSTS: BlogPost[] = [
       avatar: "SM"
     },
     thumbnailGradient: "from-violet-500 to-purple-700",
+    thumbnail: "/images/blog/workspace.jpg",
     content: `
       <p>Most online tool websites work the same way: you open a tool, do a task, close the tab, then search for the next tool. This context-switching kills productivity. <strong>Toolchi Workspace</strong> was built to solve exactly this problem.</p>
-
+ 
       <h2>What is Toolchi Workspace?</h2>
       <p>Toolchi Workspace is a free multi-tool dashboard at <a href="/workspace" class="text-[#7d4dff] font-extrabold hover:underline">toolchi.online/workspace</a>. Instead of one tool per page, you get a full three-column layout: a tool navigator on the left, your active tools in the center (in tabs), and a Smart Assist panel on the right for suggestions and quality scoring.</p>
-
+ 
       <h2>Opening Multiple Tools in Tabs</h2>
       <p>On the free plan, you can open up to 3 tools simultaneously in tabs at the top of the workspace. For example, open <a href="/tools/json-formatter" class="text-[#7d4dff] font-extrabold hover:underline">JSON Formatter</a> in tab 1, <a href="/tools/compress-image" class="text-[#7d4dff] font-extrabold hover:underline">Image Compressor</a> in tab 2, and <a href="/tools/word-counter" class="text-[#7d4dff] font-extrabold hover:underline">Word Counter</a> in tab 3 — all without leaving the page.</p>
-
+ 
       <h2>Using Keyboard Shortcuts</h2>
       <p>Toolchi Workspace has a full keyboard shortcut system. Press <strong>Ctrl+K</strong> to open the global command palette and jump to any tool instantly. Press <strong>?</strong> to see all available shortcuts. Use <strong>Ctrl+1, Ctrl+2, Ctrl+3</strong> to switch between open tabs.</p>
-
+ 
       <h2>Smart Assist Panel</h2>
       <p>The right-side Smart Assist panel analyzes your current tool and suggests related tools, shows relevant workflow chains, and provides a quality score for your task. For example, if you have the Image Compressor open, it will recommend the <a href="/tools/resize-image" class="text-[#7d4dff] font-extrabold hover:underline">Image Resizer</a> and WebP Converter as next steps.</p>
-
+ 
       <h2>Workflows: Guided Step-by-Step Pipelines</h2>
       <p>Workflows connect multiple tools into a single pipeline. The <a href="/workflows/blog-image-optimization" class="text-[#7d4dff] font-extrabold hover:underline">Blog Image Optimization workflow</a> guides you through Resize → Compress → Convert to WebP → Generate Alt Text. Each step links directly to the tool, and the current step is highlighted so you never lose your place.</p>
-
+ 
       <h2>Mobile Experience</h2>
       <p>On mobile, Toolchi Workspace shows a clean bottom action bar with your open tabs as scrollable pills. Tap the purple "Tools" button to open a full-screen tool drawer with search, recent tools, popular tools, and a category browser.</p>
     `
@@ -296,21 +306,22 @@ export const BLOG_POSTS: BlogPost[] = [
       avatar: "JP"
     },
     thumbnailGradient: "from-teal-500 to-emerald-600",
+    thumbnail: "/images/blog/compression.jpg",
     content: `
       <p>Unoptimized images are the #1 cause of slow blog page speeds. A single 4MB JPEG from your phone camera can slow your page load by 3-5 seconds — destroying your Core Web Vitals score and bounce rate. Here's the complete workflow to fix this, entirely in your browser for free.</p>
-
+ 
       <h2>Step 1: Resize to the Right Dimensions</h2>
       <p>Most blog content areas are 800-1200px wide. Uploading a 4000px wide image just makes browsers scale it down — wasting bandwidth. Use the <a href="/tools/resize-image" class="text-[#7d4dff] font-extrabold hover:underline">Image Resizer</a> to set the exact width you need. For blog post feature images, 1200x630px is the ideal size for both web display and social media sharing.</p>
-
+ 
       <h2>Step 2: Compress Without Losing Quality</h2>
       <p>After resizing, run the image through the <a href="/tools/compress-image" class="text-[#7d4dff] font-extrabold hover:underline">Image Compressor</a>. Set quality to 75-80% — this typically reduces file size by 60-70% with no visible quality difference. For a photo that was 800KB after resizing, you should achieve 200-300KB.</p>
-
+ 
       <h2>Step 3: Convert to WebP</h2>
       <p>WebP is Google's modern image format — 25-35% smaller than JPEG at equivalent quality, and supported by all modern browsers. Use the <a href="/tools/jpg-to-webp" class="text-[#7d4dff] font-extrabold hover:underline">JPG to WebP Converter</a> for the final compression step. Your 250KB JPEG often becomes a 160KB WebP.</p>
-
+ 
       <h2>Step 4: Generate SEO Alt Text</h2>
       <p>Never skip alt text — it helps visually impaired users and tells search engines what your image is about. Use the <a href="/tools/ai-alt-text-generator" class="text-[#7d4dff] font-extrabold hover:underline">AI Alt Text Generator</a> to instantly create descriptive alt text for any image.</p>
-
+ 
       <h2>Do It All in Toolchi Workspace</h2>
       <p>Instead of running these tools in separate tabs, open the full <a href="/workflows/blog-image-optimization" class="text-[#7d4dff] font-extrabold hover:underline">Blog Image Optimization Workflow</a> in Toolchi Workspace. All four tools open in a guided pipeline, and Smart Assist reminds you of the next step. The complete workflow takes under 2 minutes per image.</p>
     `

@@ -82,8 +82,18 @@ export default function BlogPage() {
             {/* Featured Post Card (Only shown on "All" filter) */}
             {selectedCategory === "all" && featuredPost && (
               <article className="bg-white dark:bg-card border border-border rounded-3xl overflow-hidden card-shadow flex flex-col md:flex-row group transition-all-ease">
-                <div className={`w-full md:w-1/2 min-h-60 bg-gradient-to-tr ${featuredPost.thumbnailGradient} relative flex items-center justify-center p-8 text-white text-5xl font-extrabold select-none`}>
-                  📰
+                <div className="w-full md:w-1/2 min-h-60 relative overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+                  {featuredPost.thumbnail ? (
+                    <img 
+                      src={featuredPost.thumbnail} 
+                      alt={featuredPost.title} 
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 select-none" 
+                    />
+                  ) : (
+                    <div className={`absolute inset-0 bg-gradient-to-tr ${featuredPost.thumbnailGradient} flex items-center justify-center text-white text-5xl font-extrabold select-none`}>
+                      📰
+                    </div>
+                  )}
                 </div>
                 <div className="w-full md:w-1/2 p-6 md:p-8 flex flex-col justify-between gap-5">
                   <div className="flex flex-col gap-3">
@@ -114,8 +124,18 @@ export default function BlogPage() {
                     key={post.slug} 
                     className="bg-white dark:bg-card border border-border rounded-2xl overflow-hidden card-shadow flex flex-col justify-between min-h-96 group transition-all-ease"
                   >
-                    <div className={`h-40 bg-gradient-to-tr ${post.thumbnailGradient} flex items-center justify-center text-white text-4xl select-none`}>
-                      📝
+                    <div className="h-40 relative overflow-hidden bg-neutral-100 dark:bg-neutral-800 shrink-0">
+                      {post.thumbnail ? (
+                        <img 
+                          src={post.thumbnail} 
+                          alt={post.title} 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 select-none" 
+                        />
+                      ) : (
+                        <div className={`w-full h-full bg-gradient-to-tr ${post.thumbnailGradient} flex items-center justify-center text-white text-4xl select-none`}>
+                          📝
+                        </div>
+                      )}
                     </div>
                     <div className="p-5 flex-1 flex flex-col gap-3.5 justify-between">
                       <div className="flex flex-col gap-2.5">

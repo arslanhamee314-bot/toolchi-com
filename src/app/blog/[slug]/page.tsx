@@ -148,6 +148,16 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
         </header>
 
+        {post.thumbnail && (
+          <div className="w-full h-48 sm:h-80 md:h-[360px] rounded-3xl overflow-hidden relative shadow-md select-none bg-neutral-100 dark:bg-neutral-800 shrink-0">
+            <img 
+              src={post.thumbnail} 
+              alt={post.title} 
+              className="w-full h-full object-cover" 
+            />
+          </div>
+        )}
+
         {/* Dynamic HTML rendering */}
         <article className="prose dark:prose-invert max-w-none text-xs sm:text-sm text-foreground/80 leading-relaxed flex flex-col gap-6">
           <p className="font-semibold text-[#20242d] dark:text-[#f6f7fb] text-sm leading-relaxed">
