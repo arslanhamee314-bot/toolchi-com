@@ -84,9 +84,29 @@ export default function PrivacyPage() {
           </section>
 
           <section className="space-y-2">
-            <h2 className="text-base font-extrabold text-foreground tracking-tight">5. Compliance Contact</h2>
+            <h2 className="text-base font-extrabold text-foreground tracking-tight">5. Data Controller & Subprocessors</h2>
             <p>
-              If you have inquiries about our local processing sandboxes or compliance guidelines, feel free to submit feedback via our dedicated <Link href="/contact" className="text-[#7d4dff] hover:underline font-bold">Contact Page</Link>.
+              The data controller for Toolchi is Toolchi Inc. Because our file conversion, splitting, merging, and AI content utilities process files 100% locally on your computer via client-side JavaScript, we do not utilize any third-party subprocessors for processing your documents. 
+            </p>
+            <p>
+              To host the website and collect general web traffic analytics, we utilize Vercel Inc. (for hosting code) and Google Analytics (for anonymized telemetry and traffic monitoring). No user documents or sensitive strings are ever shared with these parties.
+            </p>
+          </section>
+
+          <section className="space-y-2">
+            <h2 className="text-base font-extrabold text-foreground tracking-tight">6. Data Subject Rights (GDPR & CCPA/CPRA Compliance)</h2>
+            <p>
+              Under global data protection regulations (such as GDPR, CCPA, and CPRA), you are granted rights to access, delete, rectify, or restrict the processing of your personal data. Because we do not upload or store your documents or text strings on our servers, we have no capability to access, delete, or retrieve your processed files.
+            </p>
+            <p>
+              For general site metrics or billing information (for Pro users), you may initiate request inquiries to have your data modified or deleted. Please submit your request via our contact support channel.
+            </p>
+          </section>
+
+          <section className="space-y-2">
+            <h2 className="text-base font-extrabold text-foreground tracking-tight">7. Compliance Contact</h2>
+            <p>
+              If you have inquiries about our local processing sandboxes or compliance guidelines, feel free to submit feedback via our dedicated <Link href="/contact" className="text-[#7d4dff] hover:underline font-bold">Contact Page</Link> or email our privacy desk directly at <span className="font-bold text-foreground">audit@toolchi.online</span>.
             </p>
           </section>
         </article>

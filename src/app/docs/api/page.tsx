@@ -307,6 +307,121 @@ print(response.json())`;
             </div>
           </div>
         </div>
+
+        {/* Complete Spec Documentation */}
+        <section className="border-t border-border/60 pt-12 mt-8 space-y-10 text-left">
+          
+          {/* Quickstart */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-black text-[#111827] dark:text-white flex items-center gap-2">
+              <Code className="h-5 w-5 text-primary" /> 1. Quickstart (Get Started in 60 Seconds)
+            </h2>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Integrating Toolchi automation in your codebase is simple. Follow these steps to trigger your first query:
+            </p>
+            <ol className="list-decimal pl-5 text-xs text-muted-foreground space-y-2">
+              <li>Navigate to the <Link href="/dashboard" className="text-primary hover:underline font-semibold">Developer Console Dashboard</Link>.</li>
+              <li>Click the <strong>"Generate New API Key"</strong> button to compile your sandbox key (`tc_live_...` or `tc_test_...`).</li>
+              <li>Copy the token and attach it as a Bearer credentials token in the authorization headers of your POST requests.</li>
+            </ol>
+          </div>
+
+          {/* Authentication specs */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-black text-[#111827] dark:text-white flex items-center gap-2">
+              <Key className="h-5 w-5 text-primary" /> 2. Authentication Flow
+            </h2>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              All API requests directed to Toolchi server endpoints must include a secure authorization bearer token. Queries containing missing or invalid keys will fail with a `401 Unauthorized` response code.
+            </p>
+            <div className="bg-neutral-950 text-indigo-300 p-4 rounded-2xl font-mono text-[10px] leading-relaxed">
+              Authorization: Bearer tc_live_your_actual_key_here
+            </div>
+          </div>
+
+          {/* Response Status Codes */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-black text-[#111827] dark:text-white flex items-center gap-2">
+              <AlertCircle className="h-5 w-5 text-primary" /> 3. Response Status Codes Reference
+            </h2>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Our REST endpoints utilize standard HTTP status indicators to communicate response status:
+            </p>
+            <div className="overflow-x-auto border border-border/80 rounded-2xl">
+              <table className="w-full text-xs text-left border-collapse">
+                <thead>
+                  <tr className="bg-neutral-50 dark:bg-card border-b border-border/80 font-bold text-foreground">
+                    <th className="p-3">Status Code</th>
+                    <th className="p-3">Meaning</th>
+                    <th className="p-3">Description / Mitigation</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border/40 text-muted-foreground">
+                  <tr>
+                    <td className="p-3 font-mono font-bold text-emerald-500">200 OK</td>
+                    <td className="p-3 font-semibold text-foreground">Success</td>
+                    <td className="p-3 leading-relaxed">The request completed successfully. Results are returned in the payload body.</td>
+                  </tr>
+                  <tr>
+                    <td className="p-3 font-mono font-bold text-amber-500">400 Bad Request</td>
+                    <td className="p-3 font-semibold text-foreground">Invalid Payload</td>
+                    <td className="p-3 leading-relaxed">Required parameters are missing, or JSON input formatting contains syntax errors.</td>
+                  </tr>
+                  <tr>
+                    <td className="p-3 font-mono font-bold text-rose-500">401 Unauthorized</td>
+                    <td className="p-3 font-semibold text-foreground">Access Denied</td>
+                    <td className="p-3 leading-relaxed">The Authorization header is missing, malformed, or using an inactive API key.</td>
+                  </tr>
+                  <tr>
+                    <td className="p-3 font-mono font-bold text-rose-400">429 Too Many Requests</td>
+                    <td className="p-3 font-semibold text-foreground">Rate Limit Exceeded</td>
+                    <td className="p-3 leading-relaxed">Your monthly request allocation has been exhausted. Upgrade your plan to increase limits.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Rate Limits */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-black text-[#111827] dark:text-white flex items-center gap-2">
+              <Terminal className="h-5 w-5 text-primary" /> 4. Rate Limits & Throttling
+            </h2>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              API allocation is reset on the first day of each calendar month. The standard **Developer API Plus** plan provides a quota of <strong>25,000 requests/month</strong>. Standard headers are appended to all endpoints to monitor usage margins:
+            </p>
+            <ul className="list-disc pl-5 text-xs text-muted-foreground space-y-1 leading-relaxed">
+              <li><code className="bg-neutral-100 dark:bg-card px-1 py-0.5 rounded text-foreground font-mono">X-RateLimit-Limit</code>: Total allowed requests inside the current billing cycle.</li>
+              <li><code className="bg-neutral-100 dark:bg-card px-1 py-0.5 rounded text-foreground font-mono">X-RateLimit-Remaining</code>: Number of requests remaining for the active calendar month.</li>
+            </ul>
+          </div>
+
+          {/* Webhooks sample */}
+          <div className="space-y-4 pb-8">
+            <h2 className="text-xl font-black text-[#111827] dark:text-white flex items-center gap-2">
+              <CheckCircle className="h-5 w-5 text-primary" /> 5. Webhooks & Event Receivers
+            </h2>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Register a destination Webhook URL in your Developer Console to receive asynchronous callback triggers. Once long-running operations (like bulk video conversions) complete, we transmit a POST request with the following JSON format:
+            </p>
+            <pre className="bg-neutral-950 text-emerald-400 p-4 rounded-2xl font-mono text-[9px] leading-relaxed overflow-x-auto">
+{`{
+  "event": "tool.completed",
+  "timestamp": 1783588755,
+  "payload": {
+    "tool_slug": "compress-image",
+    "status": "success",
+    "output_file": {
+      "name": "hero-optimized.webp",
+      "size_bytes": 104857,
+      "url": "https://api.toolchi.online/outputs/f837d7a8-44fa-41ea-bfcf-7a3891b29a28"
+    }
+  }
+}`}
+            </pre>
+          </div>
+
+        </section>
       </main>
     </div>
   );

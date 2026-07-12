@@ -61,7 +61,7 @@ export default function PricingPage() {
         "No Ad banners (Ad-Free Workspace)",
         "Secure cloud backups history (optional)"
       ],
-      cta: isProUser() ? "Active Pro Account ✨" : "Join Pro Waitlist",
+      cta: isProUser() ? "Active Pro Account ✨" : "Upgrade to Pro",
       popular: true
     },
     {
@@ -77,7 +77,7 @@ export default function PricingPage() {
         "24/7 Slack support channel",
         "Multi-user team dashboard settings"
       ],
-      cta: "Request API Access"
+      cta: "Get API Key"
     }
   ];
 
@@ -270,13 +270,15 @@ export default function PricingPage() {
                   </div>
                   
                   <div className="space-y-1.5">
-                    <h3 className="text-base sm:text-lg font-extrabold text-foreground">{dict.pricing.joinWaitlist}</h3>
+                    <h3 className="text-base sm:text-lg font-extrabold text-foreground">
+                      {selectedPlan === "creator" ? "Activate Creator Pro (Sandbox)" : "Activate Developer API Plus (Sandbox)"}
+                    </h3>
                     <p className="text-[11px] text-muted-foreground leading-relaxed">
-                      Toolchi Pro plans are currently in active beta. Upgrade instantly using the mock simulator below, or save your email to join the queue.
+                      Toolchi is running in developer sandbox mode. You can instantly simulate a premium upgrade below to unlock and test all advanced feature gates.
                     </p>
                   </div>
 
-                  <form onSubmit={handleSubmitWaitlist} className="space-y-4 text-left">
+                  <form onSubmit={(e) => { e.preventDefault(); handleDirectSimUpgrade(); }} className="space-y-4 text-left">
                     <div className="space-y-1.5">
                       <label className="text-3xs font-extrabold text-muted-foreground uppercase tracking-wider block">Full Name</label>
                       <input 
@@ -310,24 +312,12 @@ export default function PricingPage() {
                       </button>
                       <button 
                         type="submit"
-                        disabled={waitlistLoading}
-                        className="flex-1 py-2.5 bg-primary hover:bg-[#6530ef] text-white font-extrabold text-xs rounded-xl shadow-md shadow-[#7d4dff]/15 flex items-center justify-center gap-1 hover:scale-103 active:scale-97 transition-all cursor-pointer disabled:opacity-50"
+                        className="flex-1 py-2.5 bg-primary hover:bg-[#6530ef] text-white font-extrabold text-xs rounded-xl shadow-md shadow-[#7d4dff]/15 flex items-center justify-center gap-1 hover:scale-103 active:scale-97 transition-all cursor-pointer"
                       >
-                        {waitlistLoading ? "Submitting..." : dict.pricing.checkoutSpot}
+                        Confirm Activation & Upgrade
                       </button>
                     </div>
                   </form>
-
-                  {/* Simulator Quick Action */}
-                  <div className="border-t border-border/40 pt-4 flex flex-col gap-2">
-                    <span className="text-[9px] font-extrabold text-muted-foreground uppercase tracking-wider block">Developer Sandbox Bypass</span>
-                    <button
-                      onClick={handleDirectSimUpgrade}
-                      className="w-full py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-xs active:scale-95 transition-all"
-                    >
-                      <Sparkles className="h-3.5 w-3.5 animate-bounce" /> Simulate Direct Pro Upgrade
-                    </button>
-                  </div>
                 </>
               )}
 

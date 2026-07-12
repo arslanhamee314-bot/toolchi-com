@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Mail, MessageSquare, Send, CheckCircle2, MapPin } from "lucide-react";
+import { ArrowLeft, Mail, MessageSquare, Send, CheckCircle2, MapPin, Clock } from "lucide-react";
 
 export default function ContactPage() {
   const [name, setName] = useState("");
@@ -68,9 +68,22 @@ export default function ContactPage() {
             <div className="flex flex-col gap-4 border border-border p-5 rounded-3xl bg-card/10">
               <div className="flex items-start gap-3.5 text-xs">
                 <Mail className="h-5 w-5 text-[#7d4dff] shrink-0 mt-0.5" />
+                <div className="space-y-1">
+                  <h4 className="font-extrabold text-foreground">Direct Email Routing</h4>
+                  <p className="text-muted-foreground"><span className="font-bold text-foreground">Support:</span> support@toolchi.online</p>
+                  <p className="text-muted-foreground"><span className="font-bold text-foreground">Sales & Billing:</span> sales@toolchi.online</p>
+                  <p className="text-muted-foreground"><span className="font-bold text-foreground">Security Desk:</span> security@toolchi.online</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3.5 text-xs border-t border-border/40 pt-4">
+                <Clock className="h-5 w-5 text-[#7d4dff] shrink-0 mt-0.5" />
                 <div className="space-y-0.5">
-                  <h4 className="font-extrabold text-foreground">Support & Business</h4>
-                  <p className="text-muted-foreground">support@toolchi.online</p>
+                  <h4 className="font-extrabold text-foreground">Response SLA & Hours</h4>
+                  <p className="text-muted-foreground leading-normal">
+                    Mon - Fri: 9 AM - 6 PM UTC<br />
+                    <span className="font-semibold text-emerald-500">24-Hour Response SLA Guaranteed</span>
+                  </p>
                 </div>
               </div>
 

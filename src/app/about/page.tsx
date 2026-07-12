@@ -58,7 +58,7 @@ export default function AboutPage() {
             <div className="border border-border p-4 rounded-2xl bg-[#fafbfc]/40 dark:bg-neutral-900/10 space-y-2">
               <CheckCircle2 className="h-5 w-5 text-emerald-500" />
               <h4 className="font-extrabold text-xs text-foreground">Absolute Privacy</h4>
-              <p className="text-[10px] text-muted-foreground leading-normal">GDPR and HIPAA compliance by design - no data is logged or cached on servers.</p>
+              <p className="text-[10px] text-muted-foreground leading-normal">Designed for zero data exposure - no files or user inputs are uploaded or stored on servers.</p>
             </div>
             <div className="border border-border p-4 rounded-2xl bg-[#fafbfc]/40 dark:bg-neutral-900/10 space-y-2">
               <CheckCircle2 className="h-5 w-5 text-emerald-500" />

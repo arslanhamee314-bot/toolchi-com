@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronRight, ArrowLeft, ShieldCheck, Zap } from "lucide-react";
+import { ChevronRight, ArrowLeft, ShieldCheck, Zap, CheckCircle2 } from "lucide-react";
 import { getToolBySlug, TOOLS_REGISTRY, ToolItem } from "@/lib/tools-registry";
 import { getLocalizedTool } from "@/lib/tools-i18n";
 import ToolSwitcher from "@/components/tools/ToolSwitcher";
@@ -199,9 +199,11 @@ export default function ToolLayout({ slug, locale = "en" }: ToolLayoutProps) {
                 <h2 className="text-lg font-bold text-foreground tracking-tight">{dict.common.features}</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   {tool.features.map((feature, idx) => (
-                    <div key={idx} className={`p-4 bg-white dark:bg-card border border-border/70 rounded-2xl flex flex-col gap-0.5 ${isRtl ? "text-right" : "text-left"}`}>
-                      <span className="text-3xs font-extrabold text-primary uppercase tracking-wider">Feature {idx + 1}</span>
-                      <p className="text-xs text-muted-foreground leading-normal mt-0.5">{feature}</p>
+                    <div key={idx} className={`p-4 bg-white dark:bg-card border border-border/70 rounded-2xl flex items-start gap-3 ${isRtl ? "text-right flex-row-reverse" : "text-left"}`}>
+                      <div className="h-6 w-6 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
+                        <CheckCircle2 className="h-3.5 w-3.5" />
+                      </div>
+                      <p className="text-xs text-muted-foreground leading-relaxed">{feature}</p>
                     </div>
                   ))}
                 </div>
