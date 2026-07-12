@@ -17,9 +17,13 @@ export async function generateMetadata({ params }: ToolPageProps) {
     };
   }
 
+  const title = tool.seoTitle;
+  const description = tool.seoDescription;
+  const url = `https://toolchi.online/tools/${tool.slug}`;
+
   return {
-    title: tool.seoTitle,
-    description: tool.seoDescription,
+    title,
+    description,
     alternates: {
       canonical: `/tools/${tool.slug}`,
       languages: {
@@ -29,6 +33,27 @@ export async function generateMetadata({ params }: ToolPageProps) {
         "x-default": `/tools/${tool.slug}`
       }
     },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "website",
+      siteName: "Toolchi",
+      images: [
+        {
+          url: `https://toolchi.online/og/${tool.slug}.png`,
+          width: 1200,
+          height: 630,
+          alt: tool.name,
+        }
+      ]
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [`https://toolchi.online/og/${tool.slug}.png`]
+    }
   };
 
 }

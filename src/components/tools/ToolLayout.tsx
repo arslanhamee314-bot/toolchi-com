@@ -111,27 +111,53 @@ export default function ToolLayout({ slug, locale = "en" }: ToolLayoutProps) {
     }
   }
 
-  const jsonLd = {
+  const appLd = {
     "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "WebApplication",
-        "@id": `https://toolchi.online/tools/${tool.slug}#webapp`,
-        "url": `https://toolchi.online/tools/${tool.slug}`,
-        "name": tool.name,
-        "applicationCategory": "UtilityApplication",
-        "operatingSystem": "All",
-        "description": tool.shortDesc
-      }
-    ]
+    "@type": "SoftwareApplication",
+    "name": tool.name,
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Any (browser-based)",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "url": `https://toolchi.online/tools/${tool.slug}`,
+    "description": tool.shortDesc,
   };
+
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://toolchi.online" },
+      { "@type": "ListItem", "position": 2, "name": "Tools", "item": "https://toolchi.online/tools" },
+      { "@type": "ListItem", "position": 3, "name": tool.name, "item": `https://toolchi.online/tools/${tool.slug}` },
+    ],
+  };
+
+  const faqLd = tool.faqs?.length ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": tool.faqs.map(f => ({
+      "@type": "Question",
+      "name": f.question,
+      "acceptedAnswer": { "@type": "Answer", "text": f.answer },
+    })),
+  } : null;
 
   return (
     <div className={`py-8 px-4 sm:px-6 max-w-5xl mx-auto w-full relative overflow-hidden print:p-0 print:max-w-none print:w-full ${isRtl ? "text-right" : "text-left"}`} dir={isRtl ? "rtl" : "ltr"}>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(appLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
+      {faqLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+        />
+      )}
 
       <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
 

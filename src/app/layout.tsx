@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Link from "next/link";
@@ -10,6 +11,13 @@ import KeyboardShortcutsModal from "@/components/workspace/KeyboardShortcutsModa
 import { ToastProvider } from "@/components/workspace/ToastProvider";
 import RouteProgress from "@/components/tools/RouteProgress";
 import { Suspense } from "react";
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-inter",
+});
 
 export const metadata: Metadata = {
   title: "Toolchi - Free Online Web & Developer Tools Directory",
@@ -26,9 +34,9 @@ export const metadata: Metadata = {
     }
   },
   icons: {
-    icon: "/logo.jpg",
-    shortcut: "/logo.jpg",
-    apple: "/logo.jpg",
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
   },
   openGraph: {
     title: "Toolchi - Free Online Web & Developer Tools Directory",
@@ -59,15 +67,37 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const websiteLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Toolchi",
+    url: "https://toolchi.online",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: "https://toolchi.online/tools?q={search_term_string}",
+      "query-input": "required name=search_term_string",
+    },
+  };
+
+  const orgLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Toolchi",
+    url: "https://toolchi.online",
+    logo: "https://toolchi.online/favicon.ico",
+  };
+
   return (
-    <html lang="en">
-      <head>
-        {/* Google Fonts Inter for Toolchi design accuracy */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-      </head>
+    <html lang="en" className={inter.variable}>
       <body className="antialiased min-h-screen flex flex-col bg-[#f6f7fb] dark:bg-[#11141c] text-black dark:text-white">
+        <script 
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd) }} 
+        />
+        <script 
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgLd) }} 
+        />
         <InteractionProvider>
           {/* Custom Cursor layer for desktop users */}
           <CustomCursor />

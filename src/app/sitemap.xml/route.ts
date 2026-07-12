@@ -5,58 +5,71 @@ import { WORKFLOWS } from "@/lib/workflows-registry";
 
 export async function GET() {
   const baseUrl = "https://toolchi.online";
-
+  const lastmod = new Date().toISOString().split("T")[0];
   const locales = ["ur", "tr"];
-  const xmlUrls = [
-    // Default English
-    `  <url>\n    <loc>${baseUrl}</loc>\n    <changefreq>daily</changefreq>\n    <priority>1.0</priority>\n  </url>`,
-    `  <url>\n    <loc>${baseUrl}/workspace</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.95</priority>\n  </url>`,
-    `  <url>\n    <loc>${baseUrl}/tools</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`,
-    `  <url>\n    <loc>${baseUrl}/blog</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`,
-    `  <url>\n    <loc>${baseUrl}/ai-tools</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>`,
-    `  <url>\n    <loc>${baseUrl}/pdf-tools</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>`,
-    `  <url>\n    <loc>${baseUrl}/image-tools</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>`,
-    `  <url>\n    <loc>${baseUrl}/developer-tools</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>`,
-    `  <url>\n    <loc>${baseUrl}/seo-tools</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>`,
-    `  <url>\n    <loc>${baseUrl}/blogging-tools</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>`,
-    `  <url>\n    <loc>${baseUrl}/webmaster-tools</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>`,
-    `  <url>\n    <loc>${baseUrl}/video-tools</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.85</priority>\n  </url>`,
-    `  <url>\n    <loc>${baseUrl}/audio-tools</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.85</priority>\n  </url>`,
-    `  <url>\n    <loc>${baseUrl}/gif-tools</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.85</priority>\n  </url>`,
-    `  <url>\n    <loc>${baseUrl}/business-tools</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.85</priority>\n  </url>`,
-    `  <url>\n    <loc>${baseUrl}/developers</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.95</priority>\n  </url>`,
-    `  <url>\n    <loc>${baseUrl}/developers/image-compression-api</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.85</priority>\n  </url>`,
-    `  <url>\n    <loc>${baseUrl}/developers/pdf-tools-api</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.85</priority>\n  </url>`,
-    `  <url>\n    <loc>${baseUrl}/developers/seo-audit-api</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.85</priority>\n  </url>`,
-    `  <url>\n    <loc>${baseUrl}/developers/ai-blogging-api</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.85</priority>\n  </url>`,
-    `  <url>\n    <loc>${baseUrl}/docs/api</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>`,
 
-    
-    // Localized Alternates
-    ...locales.flatMap(locale => [
-      `  <url>\n    <loc>${baseUrl}/${locale}</loc>\n    <changefreq>daily</changefreq>\n    <priority>0.9</priority>\n  </url>`,
-      `  <url>\n    <loc>${baseUrl}/${locale}/workspace</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.85</priority>\n  </url>`,
-      `  <url>\n    <loc>${baseUrl}/${locale}/pricing</loc>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>`,
-      `  <url>\n    <loc>${baseUrl}/${locale}/blog</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>`
-    ]),
-
-    ...WORKFLOWS.map(w => {
-      return `  <url>\n    <loc>${baseUrl}/workflows/${w.id}</loc>\n    <changefreq>monthly</changefreq>\n    <priority>0.85</priority>\n  </url>`;
-    }),
-    ...TOOLS_REGISTRY.flatMap(tool => {
-      return [
-        `  <url>\n    <loc>${baseUrl}/tools/${tool.slug}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`,
-        ...locales.map(locale => `  <url>\n    <loc>${baseUrl}/${locale}/tools/${tool.slug}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.75</priority>\n  </url>`)
-      ];
-    }),
-    ...BLOG_POSTS.flatMap(post => {
-      return [
-        `  <url>\n    <loc>${baseUrl}/blog/${post.slug}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`,
-        ...locales.map(locale => `  <url>\n    <loc>${baseUrl}/${locale}/blog/${post.slug}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>`)
-      ];
-    })
+  const staticUrls = [
+    { loc: "", changefreq: "daily", priority: "1.0" },
+    { loc: "/workspace", changefreq: "weekly", priority: "0.95" },
+    { loc: "/tools", changefreq: "weekly", priority: "0.8" },
+    { loc: "/blog", changefreq: "weekly", priority: "0.8" },
+    { loc: "/ai-tools", changefreq: "weekly", priority: "0.9" },
+    { loc: "/pdf-tools", changefreq: "weekly", priority: "0.9" },
+    { loc: "/image-tools", changefreq: "weekly", priority: "0.9" },
+    { loc: "/developer-tools", changefreq: "weekly", priority: "0.9" },
+    { loc: "/seo-tools", changefreq: "weekly", priority: "0.9" },
+    { loc: "/blogging-tools", changefreq: "weekly", priority: "0.9" },
+    { loc: "/webmaster-tools", changefreq: "weekly", priority: "0.9" },
+    { loc: "/video-tools", changefreq: "weekly", priority: "0.85" },
+    { loc: "/audio-tools", changefreq: "weekly", priority: "0.85" },
+    { loc: "/gif-tools", changefreq: "weekly", priority: "0.85" },
+    { loc: "/business-tools", changefreq: "weekly", priority: "0.85" },
+    { loc: "/developers", changefreq: "weekly", priority: "0.95" },
+    { loc: "/developers/image-compression-api", changefreq: "weekly", priority: "0.85" },
+    { loc: "/developers/pdf-tools-api", changefreq: "weekly", priority: "0.85" },
+    { loc: "/developers/seo-audit-api", changefreq: "weekly", priority: "0.85" },
+    { loc: "/developers/ai-blogging-api", changefreq: "weekly", priority: "0.85" },
+    { loc: "/docs/api", changefreq: "weekly", priority: "0.9" },
+    { loc: "/pricing", changefreq: "weekly", priority: "0.8" },
   ];
 
+  const xmlUrls: string[] = [];
+
+  // Add static URLs
+  staticUrls.forEach(item => {
+    xmlUrls.push(
+      `  <url>\n    <loc>${baseUrl}${item.loc}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>${item.changefreq}</changefreq>\n    <priority>${item.priority}</priority>\n  </url>`
+    );
+  });
+
+  // Add localized static URLs
+  locales.forEach(locale => {
+    xmlUrls.push(`  <url>\n    <loc>${baseUrl}/${locale}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.9</priority>\n  </url>`);
+    xmlUrls.push(`  <url>\n    <loc>${baseUrl}/${locale}/workspace</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.85</priority>\n  </url>`);
+    xmlUrls.push(`  <url>\n    <loc>${baseUrl}/${locale}/pricing</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>`);
+    xmlUrls.push(`  <url>\n    <loc>${baseUrl}/${locale}/blog</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>`);
+  });
+
+  // Workflows
+  WORKFLOWS.forEach(w => {
+    xmlUrls.push(`  <url>\n    <loc>${baseUrl}/workflows/${w.id}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.85</priority>\n  </url>`);
+  });
+
+  // Tools
+  TOOLS_REGISTRY.forEach(tool => {
+    xmlUrls.push(`  <url>\n    <loc>${baseUrl}/tools/${tool.slug}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`);
+    locales.forEach(locale => {
+      xmlUrls.push(`  <url>\n    <loc>${baseUrl}/${locale}/tools/${tool.slug}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.75</priority>\n  </url>`);
+    });
+  });
+
+  // Blog posts
+  BLOG_POSTS.forEach(post => {
+    xmlUrls.push(`  <url>\n    <loc>${baseUrl}/blog/${post.slug}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`);
+    locales.forEach(locale => {
+      xmlUrls.push(`  <url>\n    <loc>${baseUrl}/${locale}/blog/${post.slug}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>`);
+    });
+  });
 
   const xmlContent = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

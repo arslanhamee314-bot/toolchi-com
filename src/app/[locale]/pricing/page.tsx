@@ -11,12 +11,38 @@ export async function generateMetadata({ params }: LocalizedPricingProps) {
   const validLocales = ["ur", "tr"];
   if (!validLocales.includes(locale)) return {};
 
+  const title = locale === "ur" ? "قیمتیں - Toolchi Pro" : "Fiyatlandırma - Toolchi Pro";
+  const description = locale === "ur"
+    ? "ٹولچی پرو قیمتوں کے پیکیجز اور تفصیلات۔"
+    : "Toolchi Pro fiyatlandırma detayları ve paketleri.";
+  const url = `https://toolchi.online/${locale}/pricing`;
+
   return {
-    title: locale === "ur" ? "قیمتیں - Toolchi Pro" : "Fiyatlandırma - Toolchi Pro",
-    description: "Toolchi Creator Pro Suite pricing details.",
+    title,
+    description,
     alternates: {
       canonical: `/${locale}/pricing`,
+      languages: {
+        en: "/pricing",
+        ur: "/ur/pricing",
+        tr: "/tr/pricing",
+        "x-default": "/pricing"
+      }
     },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "website",
+      siteName: "Toolchi",
+      images: [{ url: "https://toolchi.online/logo.jpg", width: 800, height: 800, alt: "Toolchi Logo" }]
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["https://toolchi.online/logo.jpg"]
+    }
   };
 }
 

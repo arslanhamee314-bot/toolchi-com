@@ -17,9 +17,13 @@ export async function generateMetadata({ params }: LocalizedToolProps) {
   if (!tool) return {};
 
   const localized = getLocalizedTool(slug, locale);
+  const title = localized?.seoTitle || tool.seoTitle;
+  const description = localized?.seoDescription || tool.seoDescription;
+  const url = `https://toolchi.online/${locale}/tools/${tool.slug}`;
+
   return {
-    title: localized?.seoTitle || tool.seoTitle,
-    description: localized?.seoDescription || tool.seoDescription,
+    title,
+    description,
     alternates: {
       canonical: `/${locale}/tools/${tool.slug}`,
       languages: {
@@ -29,6 +33,27 @@ export async function generateMetadata({ params }: LocalizedToolProps) {
         "x-default": `/tools/${tool.slug}`
       }
     },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "website",
+      siteName: "Toolchi",
+      images: [
+        {
+          url: `https://toolchi.online/og/${tool.slug}.png`,
+          width: 1200,
+          height: 630,
+          alt: tool.name,
+        }
+      ]
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [`https://toolchi.online/og/${tool.slug}.png`]
+    }
   };
 
 }

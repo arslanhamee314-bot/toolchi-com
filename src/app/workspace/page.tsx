@@ -7,14 +7,28 @@ export const metadata = {
   description: "Open multiple tools in one smart workspace. Follow guided workflows, get Smart Assist suggestions, and finish tasks faster - all free, no signup, runs in browser.",
   alternates: {
     canonical: "/workspace",
+    languages: {
+      en: "/workspace",
+      ur: "/ur/workspace",
+      tr: "/tr/workspace",
+      "x-default": "/workspace"
+    }
   },
   openGraph: {
     title: "Toolchi Workspace - Smart Multi-Tool Dashboard",
     description: "Open multiple tools in tabs, follow smart workflows, and finish tasks faster. Free, no signup.",
-    url: "/workspace",
+    url: "https://toolchi.online/workspace",
     siteName: "Toolchi",
+    locale: "en_US",
     type: "website",
+    images: [{ url: "https://toolchi.online/logo.jpg", width: 800, height: 800, alt: "Toolchi Logo" }]
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Toolchi Workspace - Smart Multi-Tool Dashboard",
+    description: "Open multiple tools in tabs, follow smart workflows, and finish tasks faster. Free, no signup.",
+    images: ["https://toolchi.online/logo.jpg"]
+  }
 };
 
 interface WorkspacePageProps {
