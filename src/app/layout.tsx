@@ -33,11 +33,6 @@ export const metadata: Metadata = {
       "en-IN": "/?locale=en-in",
     }
   },
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/favicon.ico",
-  },
   openGraph: {
     title: "Toolchi - Free Online Web & Developer Tools Directory",
     description: "Explore Toolchi's complete all-in-one suite of free online web, developer, PDF, and productivity tools. 100% secure, local, and private.",
