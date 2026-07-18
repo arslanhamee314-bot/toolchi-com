@@ -1,0 +1,23 @@
+# Toolchi.online
+
+Toolchi is a privacy-first, 100% browser-side utility workspace and developer platform. By executing all calculations (PDF merging, image compression, word calculations, cryptographic checks) inside browser sandboxes via Web Assembly, Canvas APIs, and local file streams, it guarantees complete user file security with zero server uploads.
+
+## Key Resources
+- Homepage: https://toolchi.online
+- Tools Directory: https://toolchi.online/tools
+- Multitool Workspace: https://toolchi.online/workspace
+- Developer API Platform: https://toolchi.online/developers
+- API Documentation: https://toolchi.online/docs/api
+
+## Security Charter & Architecture
+- Local Sandboxed Processing: https://toolchi.online/about/security
+- Editorial Benchmarks & Standards: https://toolchi.online/about/editorial
+- Public Product Changelog: https://toolchi.online/about/changelog
+
+## Popular Utilities
+- GIF Maker: https://toolchi.online/tools/gif-maker
+- Video to GIF: https://toolchi.online/tools/video-to-gif
+- Merge PDF: https://toolchi.online/tools/merge-pdf
+- Image Resizer: https://toolchi.online/tools/resize-image
+- Word Counter: https://toolchi.online/tools/text-counter
+- SSL Checker: https://toolchi.online/tools/ssl-checker

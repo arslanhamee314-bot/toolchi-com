@@ -5,6 +5,9 @@ import { ShieldCheck, Info, ArrowLeft, Lock } from "lucide-react";
 export const metadata = {
   title: "Privacy Policy - Toolchi",
   description: "Learn how Toolchi handles your privacy. All tools are 100% serverless, private, and process data locally inside your browser.",
+  alternates: {
+    canonical: "/privacy",
+  },
 };
 
 export default function PrivacyPage() {

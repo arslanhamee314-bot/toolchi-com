@@ -5,6 +5,9 @@ import { ArrowLeft, ShieldCheck, Heart, Users, Target, CheckCircle2, ShieldAlert
 export const metadata = {
   title: "About Us - Toolchi",
   description: "Discover Toolchi's mission. Learn about our secure, 100% browser-side processing philosophy and the engineering team behind the platform.",
+  alternates: {
+    canonical: "/about",
+  },
 };
 
 export default function AboutPage() {
@@ -128,6 +131,34 @@ export default function AboutPage() {
           </div>
         </section>
 
+
+        {/* E-E-A-T Resource Anchors */}
+        <section className="border-t border-border/40 pt-8 space-y-4">
+          <h3 className="text-lg font-bold text-foreground tracking-tight">Trust & E-E-A-T Disclosures</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <Link 
+              href="/about/editorial" 
+              className="group border border-border bg-white dark:bg-card p-4 rounded-2xl flex flex-col gap-1 hover:border-primary/40 transition-colors"
+            >
+              <h4 className="font-extrabold text-xs text-foreground group-hover:text-primary transition-colors">Editorial Policies</h4>
+              <p className="text-[10px] text-muted-foreground leading-normal">Learn about our fact-checking processes and utility test benchmarks.</p>
+            </Link>
+            <Link 
+              href="/about/security" 
+              className="group border border-border bg-white dark:bg-card p-4 rounded-2xl flex flex-col gap-1 hover:border-teal-500/40 transition-colors"
+            >
+              <h4 className="font-extrabold text-xs text-foreground group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">Security Sandbox Blueprint</h4>
+              <p className="text-[10px] text-muted-foreground leading-normal">Explore how in-browser memory isolates and handles client file data.</p>
+            </Link>
+            <Link 
+              href="/about/changelog" 
+              className="group border border-border bg-white dark:bg-card p-4 rounded-2xl flex flex-col gap-1 hover:border-indigo-500/40 transition-colors"
+            >
+              <h4 className="font-extrabold text-xs text-foreground group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">Public Release Log</h4>
+              <p className="text-[10px] text-muted-foreground leading-normal">View platform feature updates, bug fixes, and version histories.</p>
+            </Link>
+          </div>
+        </section>
 
         {/* 3. Safety/FAQ Section */}
         <section className="border-t border-border/40 pt-8 space-y-4">

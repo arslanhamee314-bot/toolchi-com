@@ -5,6 +5,9 @@ import { Scale, ArrowLeft, FileText } from "lucide-react";
 export const metadata = {
   title: "Terms of Service - Toolchi",
   description: "Read the Terms of Service for using Toolchi's free local-first tools and utility suites.",
+  alternates: {
+    canonical: "/terms",
+  },
 };
 
 export default function TermsPage() {

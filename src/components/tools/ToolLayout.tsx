@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronRight, ArrowLeft, ShieldCheck, Zap, CheckCircle2, Star, Award } from "lucide-react";
+import { ChevronRight, ArrowLeft, ShieldCheck, Zap, CheckCircle2, Star, Award, Sparkles } from "lucide-react";
 import { getToolBySlug, TOOLS_REGISTRY, ToolItem } from "@/lib/tools-registry";
 import { getLocalizedTool } from "@/lib/tools-i18n";
 import ToolSwitcher from "@/components/tools/ToolSwitcher";
@@ -14,6 +14,7 @@ import ToolCard from "@/components/tools/ToolCard";
 import AdUnit from "@/components/AdUnit";
 import RelatedWorkflowBlock from "@/components/workspace/RelatedWorkflowBlock";
 import { getDictionary } from "@/i18n/dictionary";
+import { getToolLastUpdatedDate, formatLastUpdatedDate } from "@/lib/tool-dates-config";
 
 interface ToolLayoutProps {
   slug: string;
@@ -26,7 +27,7 @@ function getDifferentiationContent(toolName: string, categoryId: string) {
   if (categoryId === "optimize" || categoryId === "transform") {
     return {
       title: `Why Toolchi's Image Workspace is Different`,
-      text: `${commonHeader}All scaling, cropping, and compression operations run strictly inside your browser tab utilizing canvas and CPU threads. Our workspace integrates a dynamic Web Speed Readiness Score to analyze page load suitability, and offers custom presets tailored for blog heroes (1200px), SEO previews, and social headers with 100% file privacy.`
+      text: `${commonHeader}All image resizing and quantization operations execute directly inside your browser tab via client-side canvas streams and CPU worker threads. Our workspace analyzes your image dimensions and computes immediate speed readiness scores, offering optimized presets (like 1200px widths for blog hero headers) with zero cloud processing.`
     };
   }
   
@@ -145,24 +146,28 @@ export default function ToolLayout({ slug, locale = "en" }: ToolLayoutProps) {
     }
   }
 
+  const localePath = locale === "en" ? "" : `/${locale}`;
+  const lastUpdated = getToolLastUpdatedDate(tool.slug);
+
   const appLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "name": tool.name,
     "applicationCategory": "UtilityApplication",
-    "operatingSystem": "Any (browser-based)",
+    "operatingSystem": "Any (Browser-based)",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-    "url": `https://toolchi.online/tools/${tool.slug}`,
-    "description": tool.shortDesc,
+    "url": `https://toolchi.online${localePath}/tools/${tool.slug}`,
+    "description": baseTool.seoDescription || tool.shortDesc,
+    "dateModified": lastUpdated,
   };
 
   const breadcrumbLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://toolchi.online" },
-      { "@type": "ListItem", "position": 2, "name": "Tools", "item": "https://toolchi.online/tools" },
-      { "@type": "ListItem", "position": 3, "name": tool.name, "item": `https://toolchi.online/tools/${tool.slug}` },
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": `https://toolchi.online${localePath}` },
+      { "@type": "ListItem", "position": 2, "name": "Tools", "item": `https://toolchi.online${localePath}/tools` },
+      { "@type": "ListItem", "position": 3, "name": tool.name, "item": `https://toolchi.online${localePath}/tools/${tool.slug}` },
     ],
   };
 
@@ -173,6 +178,19 @@ export default function ToolLayout({ slug, locale = "en" }: ToolLayoutProps) {
       "@type": "Question",
       "name": f.question,
       "acceptedAnswer": { "@type": "Answer", "text": f.answer },
+    })),
+  } : null;
+
+  const howToLd = tool.howToUse?.length ? {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": `How to use ${tool.name}`,
+    "description": baseTool.seoDescription || tool.shortDesc,
+    "step": tool.howToUse.map((step, i) => ({
+      "@type": "HowToStep",
+      "position": i + 1,
+      "text": step,
+      "url": `https://toolchi.online${localePath}/tools/${tool.slug}#step-${i + 1}`,
     })),
   } : null;
 
@@ -190,6 +208,12 @@ export default function ToolLayout({ slug, locale = "en" }: ToolLayoutProps) {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+        />
+      )}
+      {howToLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(howToLd) }}
         />
       )}
 
@@ -221,6 +245,11 @@ export default function ToolLayout({ slug, locale = "en" }: ToolLayoutProps) {
                 )}
               </div>
               <p className="text-xs sm:text-sm text-muted-foreground mt-1">{tool.shortDesc}</p>
+              <div className="flex items-center gap-4 mt-2">
+                <span className="text-[10px] text-muted-foreground font-semibold flex items-center gap-1">
+                  📅 Last updated: {formatLastUpdatedDate(lastUpdated)}
+                </span>
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -243,6 +272,30 @@ export default function ToolLayout({ slug, locale = "en" }: ToolLayoutProps) {
             </Link>
           </div>
         </div>
+
+        {/* Linguistic & AI Summary Block */}
+        <div className="glass rounded-3xl border border-border/85 p-5 bg-card/20 shadow-xs relative overflow-hidden flex flex-col sm:flex-row gap-5 items-start">
+          <div className="flex items-center gap-2 text-primary font-bold text-[10px] uppercase tracking-wider shrink-0 bg-primary/10 px-3 py-1.5 rounded-xl border border-primary/20">
+            <Sparkles className="h-4 w-4 text-primary" />
+            <span>AI Overview</span>
+          </div>
+          <div className="flex-1 space-y-3">
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              {tool.answerBlock}
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-[10px] mt-2 border-t border-border/30 pt-3">
+              <div>
+                <span className="font-extrabold text-emerald-500 uppercase tracking-wide block mb-1">👍 Best For:</span>
+                <span className="text-foreground/80">{tool.bestFor}</span>
+              </div>
+              <div>
+                <span className="font-extrabold text-rose-500 uppercase tracking-wide block mb-1">⚠️ Not For:</span>
+                <span className="text-foreground/80">{tool.notFor}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
 
         {/* Tool container */}
         <section className="glass rounded-3xl border border-border p-6 md:p-8 bg-card/25 shadow-2xl relative overflow-hidden print:border-0 print:bg-transparent print:shadow-none print:p-0 print:rounded-none">

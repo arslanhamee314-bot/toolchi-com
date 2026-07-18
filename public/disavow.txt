@@ -1,0 +1,11 @@
+# Toolchi.online disavow file - submitted 2026-07-12
+domain:fiverr-affordable-seo-services.site
+domain:optimizeflow.top
+domain:blogsphere.top
+domain:plurio.shop
+domain:anchorurl.cloud
+domain:backlinks-checker.com
+domain:domaindexer.com
+domain:drjack.world
+domain:portailorange.net
+domain:qwenterprise.com

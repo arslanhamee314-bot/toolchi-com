@@ -23,6 +23,9 @@ export interface ToolItem {
   shortDescription?: string;
   features?: string[];
   useCases?: string[];
+  answerBlock?: string;
+  bestFor?: string;
+  notFor?: string;
 }
 
 export const CATEGORIES = [
@@ -918,9 +921,13 @@ export const TOOLS_REGISTRY: ToolItem[] = RAW_TOOLS_REGISTRY.map(tool => {
     tags: custom.tags || moneyContent.tags || [tool.category],
     shortDescription: tool.shortDesc,
     features: moneyContent.features || [],
-    useCases: moneyContent.useCases || []
+    useCases: moneyContent.useCases || [],
+    answerBlock: moneyContent.answerBlock || `Use ${tool.name} to process, optimize, or format your data files and code directly inside your browser window. This private, 100% client-side utility provides instant processing speeds without uploading files to remote servers.`,
+    bestFor: moneyContent.bestFor || "Instant private client-side processing of standard data tasks",
+    notFor: moneyContent.notFor || "Bulk automation requiring server-side daemon scripts"
   } as ToolItem;
 });
+
 
 export const getToolBySlug = (slug: string) => {
   return TOOLS_REGISTRY.find(t => t.slug === slug);

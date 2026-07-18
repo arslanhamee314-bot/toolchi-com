@@ -167,6 +167,19 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <div dangerouslySetInnerHTML={{ __html: post.content }} className="space-y-4" />
         </article>
 
+        {/* Author Bio Box */}
+        <div className="glass rounded-3xl border border-border/80 p-6 bg-card/25 shadow-xs flex flex-col sm:flex-row gap-5 items-center mt-6">
+          <div className="h-16 w-16 rounded-full bg-[#7d4dff]/10 border border-[#7d4dff]/20 text-[#7d4dff] font-bold text-xl flex items-center justify-center shrink-0 select-none">
+            AH
+          </div>
+          <div className="flex-1 space-y-2 text-center sm:text-left">
+            <h4 className="text-sm font-bold text-foreground">Written by Arslan Hameed</h4>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Arslan Hameed is the Founder and Lead Systems Architect of Toolchi, specializing in client-side runtime engineering and highly optimized in-browser file transformation pipelines. With a focus on sandbox security and local-first compute models, he designs high-performance utilities that run entirely on device resources.
+            </p>
+          </div>
+        </div>
+
         {/* Next article link */}
         <div className="border-t border-border pt-8 mt-6 flex justify-between">
           <Link 

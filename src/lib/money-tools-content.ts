@@ -94,7 +94,7 @@ export const MONEY_TOOLS_CONTENT: Record<string, Partial<ToolItem>> = {
     ]
   },
   "compress-image": {
-    longDesc: "The Free Image Compressor is a local utility that reduces file sizes of PNG, JPG, and WebP images. By utilizing native HTML5 canvas rendering streams and client-side compression algorithms, the compressor allows you to optimize files without uploading them to remote servers. Keep absolute control over image quality, output resolution, and target sizes. Ideal for bloggers, web designers, and content managers who need to optimize visual assets to improve website speeds and boost Core Web Vitals.",
+    longDesc: "Toolchi's image compression workspace utilizes browser-native canvas quantization and progressive CanvasRenderingContext2D pixel-buffer downscaling algorithms to reduce the size of PNG, JPG, and WebP assets locally in memory. Perfect for bloggers and front-end developers who need to optimize heavy screenshots or hero banners before publishing to reduce page weights without visual artifacts. By avoiding server-side uploads entirely, the utility eliminates transmission latency and secures your media files in a 100% private sandbox.",
     features: [
       "Local image compression that operates offline without uploads.",
       "Adjustable quality slider with real-time file size previews.",
@@ -140,7 +140,9 @@ export const MONEY_TOOLS_CONTENT: Record<string, Partial<ToolItem>> = {
     ]
   },
   "webp-to-jpg": {
-    longDesc: "The WebP to JPG Converter helps you convert WebP images back to compatible JPG or PNG formats. While WebP is great for speed, some editors, older browsers, or social channels require JPG files. This utility converts images locally in your browser, keeping your data secure. Upload WebP files, adjust output preferences, and download standard images instantly.",
+    seoTitle: "WebP to JPG Converter - Convert WebP to JPEG Locally | Toolchi",
+    seoDescription: "Convert high-efficiency WebP files back to highly compatible JPG or PNG formats securely. Batch conversion, local canvas parsing, 100% private.",
+    longDesc: "The WebP to JPG Converter transforms WebP web graphics back into standard JPG or transparent PNG images. While WebP files are excellent for website loading speeds, they are not universally compatible with legacy design software, offline editors, or email clients. This converter parses image files locally using browser canvas rendering contexts, ensuring complete file security and fast downloads without network delays.",
     features: [
       "Convert WebP to standard JPG or PNG formats locally.",
       "Batch conversion handles multiple WebP files at once.",
@@ -160,7 +162,10 @@ export const MONEY_TOOLS_CONTENT: Record<string, Partial<ToolItem>> = {
       { question: "Can I convert WebP to transparent PNG?", answer: "Yes, the tool supports outputting to PNG format to preserve image transparency." },
       { question: "Does conversion affect image resolution?", answer: "No, the pixel dimensions of your image remain identical to the original WebP." },
       { question: "Are there any file size limits?", answer: "No, the converter processes large WebP files locally using your device's memory." }
-    ]
+    ],
+    answerBlock: "Convert Google WebP image assets into JPEG or transparent PNG formats. The converter processes files locally in your browser sandbox, keeping your media secure and providing instant file downloads.",
+    bestFor: "Converting web-optimized WebP files into compatible JPG formats for design apps.",
+    notFor: "Vector scaling or deep raw photo editing processes"
   },
   "merge-pdf": {
     longDesc: "The Merge PDF tool lets you combine multiple PDF documents, reports, or slides into a single, organized file. By using client-side JavaScript packages, the tool compiles document bytes locally in your browser memory, keeping your documents confidential. Rearrange pages, add files, and download the consolidated PDF document instantly without server queues or file limits.",
@@ -301,7 +306,9 @@ export const MONEY_TOOLS_CONTENT: Record<string, Partial<ToolItem>> = {
     ]
   },
   "text-counter": {
-    longDesc: "The Word Counter and Text Analyzer helps writers track character counts, word counts, and reading times for their content. Operating client-side, the tool analyzes text structures in real-time, helping you write copy that fits within character limits for social media, blogs, or essays.",
+    seoTitle: "Word Counter - Analyze Text and Character Counts | Toolchi",
+    seoDescription: "Count words, characters, sentences, and paragraphs in real-time. Calculate reading time, check keyword frequency, 100% private.",
+    longDesc: "The Word Counter and Text Analyzer helps writers track character counts, word counts, and reading times for their content. Operating client-side, the tool analyzes text structures in real-time, helping you write copy that fits within character limits for social media, blogs, or essays. It also parses word frequency density to prevent repetitive phrasing.",
     features: [
       "Real-time word, character, and sentence count tracking.",
       "Calculates estimated reading time and speaking time.",
@@ -321,7 +328,10 @@ export const MONEY_TOOLS_CONTENT: Record<string, Partial<ToolItem>> = {
       { question: "Is my text shared with any servers?", answer: "No, all calculations and keyword frequency checks run locally on your computer." },
       { question: "How does the keyword analyzer help?", answer: "It lists the most frequent words in your text, helping you avoid repetition." },
       { question: "Is there a length limit?", answer: "No, the tool can analyze large articles or manuscripts in real-time." }
-    ]
+    ],
+    answerBlock: "Track word counts, character limits, sentence frequencies, and reading metrics instantly. Running entirely client-side, this word count tool keeps your copy confidential.",
+    bestFor: "Checking word count targets and keyword density limits privately for copywriters.",
+    notFor: "Detailed grammatical proofreading or spelling corrections"
   },
   "case-converter": {
     longDesc: "The Case Converter helps you switch text capitalization styles instantly. Toggle between lower case, UPPER CASE, title case, sentence case, or camelCase. The tool runs locally in your browser, keeping your text secure.",
@@ -347,6 +357,8 @@ export const MONEY_TOOLS_CONTENT: Record<string, Partial<ToolItem>> = {
     ]
   },
   "ssl-checker": {
+    seoTitle: "SSL Certificate Checker - Verify Website Security | Toolchi",
+    seoDescription: "Verify website SSL validity, expiration parameters, and intermediate trust chain hops. Safe URL query diagnostics, 100% secure.",
     longDesc: "The SSL Certificate Checker is a diagnostic tool that inspects website SSL certificates, security protocols, and trust chains. Running local query loops, the checker verifies SSL expiration dates, certificate issuers, and encryption algorithms, helping you ensure your website remains secure and trusted.",
     features: [
       "Check SSL certificate validation and expiration details.",
@@ -367,7 +379,10 @@ export const MONEY_TOOLS_CONTENT: Record<string, Partial<ToolItem>> = {
       { question: "How often should I check my SSL certificate?", answer: "We recommend checking it quarterly or setting up alerts for 30 days before expiration." },
       { question: "Can I check intranet sites?", answer: "No, the tool can only verify public web domains accessible from the internet." },
       { question: "What is a trust chain error?", answer: "It occurs when a browser cannot verify the connection between your certificate and a trusted root authority." }
-    ]
+    ],
+    answerBlock: "Audit web domain security certificates and encryption algorithms. The query parses certification chains to ensure HTTPS endpoints are valid and properly installed.",
+    bestFor: "Verifying SSL certificate dates and Intermediate trust chain hops securely.",
+    notFor: "Port scanning or intrusion penetration testing"
   },
   "robots-txt-checker": {
     longDesc: "The Robots.txt Checker and Validator analyzes website robots.txt instructions to ensure search engine crawlers can index your pages correctly. It parses allow/disallow directives, flags syntax errors, and validates sitemap declarations. The checker runs locally, making it a fast way to audit your technical SEO settings.",
@@ -393,6 +408,8 @@ export const MONEY_TOOLS_CONTENT: Record<string, Partial<ToolItem>> = {
     ]
   },
   "xml-sitemap-validator": {
+    seoTitle: "XML Sitemap Validator - Verify Sitemap Indexes | Toolchi",
+    seoDescription: "Validate sitemap file layouts, URL structure counts, and formatting standards. Spot indexing blockages locally in your browser.",
     longDesc: "The XML Sitemap Validator parses and checks website sitemap files to ensure they follow sitemap protocols. It scans sitemap indexes, verifies URL formatting, checks XML schemas, and flags issues that could affect indexing. The validation runs client-side, helping you check your sitemap files quickly and securely.",
     features: [
       "Parse XML sitemaps to verify formatting.",
@@ -413,7 +430,10 @@ export const MONEY_TOOLS_CONTENT: Record<string, Partial<ToolItem>> = {
       { question: "How do sitemaps help SEO?", answer: "They provide a direct list of pages to search engines, helping crawlers find and index your content faster." },
       { question: "Can I validate sitemap index files?", answer: "Yes, the tool can follow links to validate child sitemaps." },
       { question: "Do I need priority tags in my sitemap?", answer: "Modern search engines mostly ignore priority and changefreq tags, focusing on URL quality and modification dates." }
-    ]
+    ],
+    answerBlock: "Check sitemap index files for formatting rules and link crawlability. Spot syntax errors, unencoded characters, and URL index constraints locally.",
+    bestFor: "Auditing XML sitemap syntax formatting for search console compliance.",
+    notFor: "Directly submitting sitemap links to search index indexers"
   },
   "redirect-checker": {
     longDesc: "The Redirect Chain Checker tracks URL redirection steps, mapping out status codes (301, 302, 307) and destination paths. It identifies redirect loops and chains that can slow down your site and affect search engine crawl efficiency. Perfect for technical SEO audits and fixing broken link pathways.",
@@ -460,5 +480,85 @@ export const MONEY_TOOLS_CONTENT: Record<string, Partial<ToolItem>> = {
       { question: "Are my keyword searches private?", answer: "Yes, all suggestions are generated locally in your browser memory; no searches are sent to registrars." },
       { question: "What makes a good domain name?", answer: "Keep it short, easy to spell, pronounceable, and avoid hyphens or numbers." }
     ]
+  },
+  "gif-maker": {
+    seoTitle: "GIF Maker - Create Animated GIFs from Images Online | Toolchi",
+    seoDescription: "Assemble animated GIFs from PNG, JPG, or WebP images instantly in your browser. 100% private, no uploads required, custom delay frames control.",
+    longDesc: "The Free Online GIF Maker lets you compile animated GIF images from standard image formats like PNG, JPG, JPEG, and WebP. Operating entirely inside your browser's local sandbox, the tool processes frames in local memory using HTML5 canvas buffers, ensuring your media is never uploaded to remote servers. You can easily adjust frame delays, repeat counts, and scale ratios to generate high-performance animations optimized for blog content and social messaging.",
+    features: [
+      "In-browser frame assembly with 100% data privacy.",
+      "Supports PNG, JPG, JPEG, and WebP frame sources.",
+      "Custom frame delay controls in milliseconds.",
+      "Adjustable animation loop repetitions.",
+      "Fast local client-side compilation."
+    ],
+    useCases: [
+      "Creating step-by-step tutorial animations for help guides.",
+      "Compiling photographic slide sequences into lightweight web assets.",
+      "Building short product demonstration animations for landing pages.",
+      "Creating custom animated memes from custom images."
+    ],
+    faqs: [
+      { question: "Is my image media uploaded to your servers?", answer: "No, all rendering processes run locally on your device via client-side canvas buffers; no files are sent to the network." },
+      { question: "How many image frames can I add?", answer: "You can load as many frames as your system memory allows, generally up to 50-100 frames works smoothly." },
+      { question: "Can I adjust the speed of the GIF?", answer: "Yes, you can specify custom frame delay timings in milliseconds to speed up or slow down the output." },
+      { question: "Does it support transparent PNGs?", answer: "Yes, transparency channels are preserved when generating animated GIFs." }
+    ],
+    answerBlock: "Create custom animated GIFs online from PNG, JPG, and WebP images. This browser-side GIF creator processes all image frames locally inside your device's sandbox, guaranteeing total data security and immediate file downloads.",
+    bestFor: "Quickly converting static image frame sequences into custom animated GIFs privately.",
+    notFor: "Advanced video layer effects and complex vector animation editing"
+  },
+  "video-to-gif": {
+    seoTitle: "Video to GIF Converter - Convert Video to GIF Online | Toolchi",
+    seoDescription: "Convert MP4, WebM, and MOV videos into lightweight animated GIFs securely in your browser. No server uploads, adjustable FPS and crop settings.",
+    longDesc: "The Video to GIF Converter transforms video clips into highly-optimized animated GIFs. By utilizing local browser decoding capabilities, the utility processes video frames directly within your tab's memory sandbox. This local workflow protects your privacy and eliminates bandwidth delay. Adjust frames-per-second (FPS), scale dimensions, and select exact start and end timelines to generate perfectly sized animations for newsletters, blogs, and social platforms.",
+    features: [
+      "Secure client-side video conversion with zero server uploads.",
+      "Adjustable frames-per-second (FPS) output selectors.",
+      "Custom start and end timestamp clipping tools.",
+      "Supports MP4, WebM, and standard video containers.",
+      "Compresses and optimizes final output sizes."
+    ],
+    useCases: [
+      "Converting video screen recordings to GIF tutorials for technical blogs.",
+      "Creating lightweight email animation banners from marketing videos.",
+      "Extracting key highlights from clips to share on social networks.",
+      "Compressing long video demonstrations into fast-loading loops."
+    ],
+    faqs: [
+      { question: "Which video formats are supported?", answer: "We support standard web-compatible video formats including MP4, WebM, and Apple MOV files." },
+      { question: "Is there a video file size limit?", answer: "Since conversion runs in your browser's RAM, we recommend keeping clips under 50MB for optimal performance." },
+      { question: "Can I choose the frame rate?", answer: "Yes, you can adjust the output FPS (from 5 to 15 frames per second) to balance quality and file size." },
+      { question: "Are my video clips private?", answer: "Absolutely. The converter operates 100% client-side; no video data is ever sent online." }
+    ],
+    answerBlock: "Convert MP4, WebM, and MOV videos into animated GIFs in your browser. This offline converter decodes video streams locally on your device, ensuring maximum file privacy and fast conversions without network latency.",
+    bestFor: "Extracting specific video frames into lightweight web-ready animated loops privately.",
+    notFor: "Heavy batch video rendering or high-definition cinematic conversions"
+  },
+  "resize-image": {
+    seoTitle: "Image Resizer - Change Image Dimensions Online | Toolchi",
+    seoDescription: "Resize PNG, JPG, and WebP images to custom dimensions locally. Maintain aspect ratios, select compression presets, 100% private.",
+    longDesc: "The Online Image Resizer changes the pixel dimensions and scale factors of PNG, JPG, JPEG, and WebP images. By operating locally in your browser memory via canvas resampling streams, it protects your file privacy. You can resize by width and height, lock aspect ratios to prevent warping, and select output formats and compression quality. Ideal for developers and designers who need to optimize web assets.",
+    features: [
+      "Local resizing of JPG, PNG, and WebP files without uploads.",
+      "Aspect ratio lock to keep original scaling properties.",
+      "Rescale by exact pixels or percentage scale factors.",
+      "Custom output format selections.",
+      "Fast client-side canvas processing."
+    ],
+    useCases: [
+      "Adjusting image dimensions to fit social media header requirements.",
+      "Generating thumbnail images from large photo assets.",
+      "Preparing banners for web pages to prevent layout shifts.",
+      "Downscaling resolution before email uploads to reduce sizes."
+    ],
+    faqs: [
+      { question: "Will resizing reduce image quality?", answer: "Resizing reduces resolution but uses smart canvas bilinear filters to keep details clear. Quality can also be tweaked before download." },
+      { question: "Can I resize files offline?", answer: "Yes. Once page files load, the tool operates entirely offline." },
+      { question: "Is my data secure?", answer: "Yes. rescalers execute in your tab's local sandboxed memory; no files are sent to servers." }
+    ],
+    answerBlock: "Resize image dimensions and crop layout properties of PNG, JPG, and WebP files. All resampling runs inside your local browser window to protect your privacy and guarantee fast download exports.",
+    bestFor: "Rescaling image aspect ratios and dimensions privately for web design guidelines.",
+    notFor: "AI-based pixel upscaling or deep vector restructuring"
   }
 };

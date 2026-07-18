@@ -24,6 +24,21 @@ const nextConfig: NextConfig = {
         destination: "/",
         permanent: true,
       },
+      {
+        source: "/home/",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/:locale/home",
+        destination: "/:locale",
+        permanent: true,
+      },
+      {
+        source: "/:locale/home/",
+        destination: "/:locale",
+        permanent: true,
+      },
     ];
   },
   async headers() {
