@@ -2,6 +2,29 @@
 
 import React from "react";
 import { CATEGORIES } from "@/lib/tools-registry";
+import LucideIcon from "./LucideIcon";
+
+const categoryIconMap: Record<string, string> = {
+  "gif-maker": "Image",
+  "documents": "FileText",
+  "video-tools": "Video",
+  "audio": "Music",
+  "transform": "Maximize2",
+  "optimize": "Sparkles",
+  "effects": "Sliders",
+  "split": "Scissors",
+  "add-text": "Type",
+  "webp": "ArrowLeftRight",
+  "apng": "Film",
+  "avif": "FileImage",
+  "jxl": "Grid",
+  "svg": "Code",
+  "webmaster": "Globe",
+  "performance": "Zap",
+  "operational": "Sliders",
+  "developer": "Code",
+  "ai": "Brain"
+};
 
 export default function CategoryFilters() {
   const handleCategoryClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
@@ -20,29 +43,11 @@ export default function CategoryFilters() {
           key={cat.id}
           href={`#workspace`}
           onClick={(e) => handleCategoryClick(e, cat.id)}
-          className="p-4 rounded-xl border border-border bg-neutral-50 dark:bg-[#1a1f2c] hover:border-[#7d4dff]/40 hover:bg-[#7d4dff]/5 dark:hover:bg-[#7d4dff]/10 text-center flex flex-col items-center justify-center gap-2.5 transition-all active:scale-95 group shadow-2xs"
+          className="p-4 rounded-2xl border border-border/80 bg-white hover:border-[#7d4dff]/50 hover:shadow-lg hover:shadow-[#7d4dff]/5 dark:bg-[#171c26] dark:hover:bg-[#1c2230] text-center flex flex-col items-center justify-center gap-3 transition-all duration-300 active:scale-95 group shadow-2xs cursor-pointer hover:-translate-y-1"
         >
           {/* Visual Category badge */}
-          <div className="h-10 w-10 rounded-full bg-[#f3eeff] dark:bg-[#251e1c] text-[#7d4dff] flex items-center justify-center font-bold text-base border border-[#e8ddff]/40 group-hover:scale-105 transition-transform">
-            {cat.id === "gif-maker" && <img src="/images/maker.png" className="h-6 w-6 object-contain" alt="" />}
-            {cat.id === "video-tools" && <img src="/images/video.svg" className="h-6 w-6 object-contain" alt="" />}
-            {cat.id === "audio" && <img src="/images/audio.svg" className="h-6 w-6 object-contain" alt="" />}
-            {cat.id === "transform" && <img src="/images/resize.svg" className="h-6 w-6 object-contain" alt="" />}
-            {cat.id === "optimize" && <img src="/images/optimize.svg" className="h-6 w-6 object-contain" alt="" />}
-            {cat.id === "effects" && <img src="/images/effects.svg" className="h-6 w-6 object-contain" alt="" />}
-            {cat.id === "split" && <img src="/images/split.svg" className="h-6 w-6 object-contain" alt="" />}
-            {cat.id === "add-text" && <img src="/images/insert-text.svg" className="h-6 w-6 object-contain" alt="" />}
-            {cat.id === "webp" && <img src="/images/webp.svg" className="h-6 w-6 object-contain" alt="" />}
-            {cat.id === "apng" && <img src="/images/apng.svg" className="h-6 w-6 object-contain" alt="" />}
-            {cat.id === "avif" && <img src="/images/avif.svg" className="h-6 w-6 object-contain" alt="" />}
-            {cat.id === "jxl" && <img src="/images/jxl.svg" className="h-6 w-6 object-contain" alt="" />}
-            {cat.id === "svg" && <img src="/images/svg.svg" className="h-6 w-6 object-contain" alt="" />}
-            {cat.id === "documents" && "📄"}
-            {cat.id === "webmaster" && "🌐"}
-            {cat.id === "performance" && "⚡"}
-            {cat.id === "operational" && "⚙️"}
-            {cat.id === "developer" && "💻"}
-            {cat.id === "ai" && "🤖"}
+          <div className="h-11 w-11 rounded-full bg-[#f3eeff] dark:bg-[#1e1935] text-[#7d4dff] flex items-center justify-center font-bold text-base border border-[#e8ddff]/60 dark:border-[#7d4dff]/25 group-hover:scale-105 group-hover:bg-[#7d4dff] group-hover:text-white transition-all duration-300">
+            <LucideIcon name={categoryIconMap[cat.id] || "HelpCircle"} className="h-5 w-5" />
           </div>
           <span className="text-[9px] font-extrabold text-foreground group-hover:text-[#7d4dff] transition-colors leading-tight uppercase tracking-wider">
             {cat.name.replace(" Tools", "").replace(" Utilities", "")}

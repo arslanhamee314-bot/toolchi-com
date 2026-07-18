@@ -1,7 +1,35 @@
 import { NextRequest, NextResponse } from "next/server";
+import { validateApiKey, rateLimitCheck, sanitizeError } from "@/lib/api-helper";
 
 export async function POST(req: NextRequest) {
   try {
+    // 1. Rate Limiting Check
+    const rate = rateLimitCheck(req);
+    const headers = {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization, x-api-key",
+      "X-RateLimit-Limit": String(rate.limit),
+      "X-RateLimit-Remaining": String(rate.remaining)
+    };
+
+    if (!rate.allowed) {
+      return NextResponse.json({
+        success: false,
+        error: "Rate Limit Exceeded",
+        reason: "You have exceeded the limit of 30 requests per minute."
+      }, { status: 429, headers });
+    }
+
+    // 2. Authentication Check
+    if (!validateApiKey(req)) {
+      return NextResponse.json({
+        success: false,
+        error: "Unauthorized Access",
+        reason: "Invalid API credentials or missing Authorization token."
+      }, { status: 401, headers });
+    }
+
     const body = await req.json();
     const url = body.url || "https://toolchi.online/sitemap.xml";
 
@@ -46,17 +74,13 @@ export async function POST(req: NextRequest) {
       timestamp: new Date().toISOString()
     }, {
       status: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization"
-      }
+      headers
     });
   } catch (err: any) {
     return NextResponse.json({
       success: false,
-      error: "Invalid Request Payload",
-      reason: err.message
+      error: "Request Processing Failed",
+      reason: sanitizeError(err)
     }, { status: 400 });
   }
 }
@@ -67,7 +91,7 @@ export async function OPTIONS() {
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Authorization"
+      "Access-Control-Allow-Headers": "Content-Type, Authorization, x-api-key"
     }
   });
 }

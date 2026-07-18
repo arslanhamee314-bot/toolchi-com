@@ -11,6 +11,8 @@ import SmartAssistPanel from "./SmartAssistPanel";
 import MobileToolDrawer from "./MobileToolDrawer";
 import ToolSwitcher from "@/components/tools/ToolSwitcher";
 import LucideIcon from "@/components/tools/LucideIcon";
+import { isProUser, setProUser } from "@/lib/pro-features";
+
 
 const MAX_FREE_TABS = 3;
 
@@ -34,15 +36,28 @@ export default function WorkspaceShell({ initialSlug, workflowId }: WorkspaceShe
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [mobileAssistOpen, setMobileAssistOpen] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const [showProModal, setShowProModal] = useState(false);
+  const [isPro, setIsPro] = useState(false);
+
+  // Sync pro user state
+  useEffect(() => {
+    setIsPro(isProUser());
+    const handler = () => setIsPro(isProUser());
+    window.addEventListener("toolchi_pro_change", handler);
+    return () => window.removeEventListener("toolchi_pro_change", handler);
+  }, []);
 
   // Initialize with default tool
   useEffect(() => {
+    const isProActive = isProUser();
+    const limit = isProActive ? 20 : MAX_FREE_TABS;
+
     const workflow = workflowId ? getWorkflowById(workflowId) : undefined;
     if (workflow) {
       const workflowTabs = workflow.steps
         .map((step) => TOOLS_REGISTRY.find((t) => t.slug === step.slug))
         .filter(Boolean)
-        .slice(0, MAX_FREE_TABS)
+        .slice(0, limit)
         .map((tool) => ({ slug: tool!.slug, tool: tool! }));
 
       if (workflowTabs.length > 0) {
@@ -126,8 +141,16 @@ export default function WorkspaceShell({ initialSlug, workflowId }: WorkspaceShe
       setMobileDrawerOpen(false);
       return;
     }
-    if (tabs.length >= MAX_FREE_TABS) {
-      // Replace oldest (first) tab
+
+    const isProActive = isProUser();
+    const limit = isProActive ? 20 : MAX_FREE_TABS;
+
+    if (tabs.length >= limit) {
+      if (!isProActive) {
+        setShowProModal(true);
+        return;
+      }
+      // Pro limit: replace oldest tab
       const tool = TOOLS_REGISTRY.find((t) => t.slug === slug);
       if (!tool) return;
       setTabs((prev) => [...prev.slice(1), { slug, tool }]);
@@ -192,14 +215,14 @@ export default function WorkspaceShell({ initialSlug, workflowId }: WorkspaceShe
             <button
               key={tab.slug}
               onClick={() => setActiveTabSlug(tab.slug)}
-              className={`hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-3xs sm:text-xs font-semibold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
                 tab.slug === activeTabSlug
-                  ? "bg-primary/10 text-primary border border-primary/25"
+                  ? "bg-primary/10 text-primary border border-primary/25 font-extrabold"
                   : "text-muted-foreground hover:text-foreground hover:bg-background"
               }`}
             >
               <LucideIcon name={tab.tool.iconName} className="h-3.5 w-3.5 shrink-0" />
-              <span className="max-w-[100px] truncate">{tab.tool.name}</span>
+              <span className="max-w-[70px] sm:max-w-[100px] truncate">{tab.tool.name}</span>
               <span
                 onClick={(e) => closeTab(tab.slug, e)}
                 className="ml-0.5 p-0.5 rounded hover:bg-primary/10 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
@@ -210,7 +233,7 @@ export default function WorkspaceShell({ initialSlug, workflowId }: WorkspaceShe
           ))}
 
           {/* Add tab */}
-          {tabs.length < MAX_FREE_TABS && (
+          {(isPro || tabs.length < MAX_FREE_TABS) ? (
             <button
               onClick={() => setMobileDrawerOpen(true)}
               className="hidden lg:flex items-center gap-1 px-2 py-1.5 text-muted-foreground hover:text-foreground text-xs rounded-xl hover:bg-background transition-colors cursor-pointer shrink-0"
@@ -219,15 +242,14 @@ export default function WorkspaceShell({ initialSlug, workflowId }: WorkspaceShe
               <Plus className="h-3.5 w-3.5" />
               <span className="hidden sm:inline text-xs">Add Tool</span>
             </button>
-          )}
-          {tabs.length >= MAX_FREE_TABS && (
-            <Link
-              href="/pricing"
+          ) : (
+            <button
+              onClick={() => setShowProModal(true)}
               className="hidden lg:flex items-center gap-1 px-2.5 py-1.5 text-primary bg-primary/5 border border-primary/20 text-[10px] font-bold rounded-xl hover:bg-primary/10 transition-colors cursor-pointer shrink-0"
             >
               <Sparkles className="h-3 w-3" />
-              Pro: Unlimited Tabs
-            </Link>
+              Upgrade: Unlimited Tabs
+            </button>
           )}
         </div>
 
@@ -368,6 +390,52 @@ export default function WorkspaceShell({ initialSlug, workflowId }: WorkspaceShe
         onSelectTool={openTool}
         activeSlugs={tabs.map((t) => t.slug)}
       />
+
+      {/* Pro Upgrade Modal */}
+      {showProModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-[#1a1f2c] border border-border rounded-3xl max-w-md w-full p-6 shadow-2xl flex flex-col gap-6 text-center select-none relative">
+            <button
+              onClick={() => setShowProModal(false)}
+              className="absolute top-4 right-4 p-1.5 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+            >
+              <X className="h-4 w-4" />
+            </button>
+
+            <div className="mx-auto h-12 w-12 bg-primary/10 text-primary border border-primary/20 rounded-2xl flex items-center justify-center">
+              <Sparkles className="h-6 w-6" />
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="font-extrabold text-lg text-foreground tracking-tight">Upgrade to Creator Pro</h3>
+              <p className="text-xs text-muted-foreground leading-relaxed px-2">
+                You've reached the free limit of <strong>3 concurrent workspace tabs</strong>. Upgrade to Pro for unlimited tabs, batch processing, custom watermarks, and an ad-free experience.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2.5">
+              <Link
+                href="/pricing"
+                onClick={() => setShowProModal(false)}
+                className="w-full py-2.5 bg-primary hover:bg-[#6530ef] text-white font-extrabold text-xs rounded-xl shadow-md shadow-primary/15 transition-all text-center"
+              >
+                Upgrade to Pro for $9/mo
+              </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  // Simulate buying Pro instantly for testing
+                  setProUser(true);
+                  setShowProModal(false);
+                }}
+                className="w-full py-2.5 border border-border hover:bg-neutral-50 dark:hover:bg-neutral-900 text-foreground font-bold text-xs rounded-xl transition-all cursor-pointer"
+              >
+                Activate Free Pro Trial (Developer Mode)
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

@@ -7,6 +7,28 @@ import ToolSwitcher from "./ToolSwitcher";
 import LucideIcon from "./LucideIcon";
 import { Sparkles, ArrowRight, ShieldCheck, History, ChevronDown, ChevronUp, Clock, X } from "lucide-react";
 
+const categoryIconMap: Record<string, string> = {
+  "gif-maker": "Image",
+  "documents": "FileText",
+  "video-tools": "Video",
+  "audio": "Music",
+  "transform": "Maximize2",
+  "optimize": "Sparkles",
+  "effects": "Sliders",
+  "split": "Scissors",
+  "add-text": "Type",
+  "webp": "ArrowLeftRight",
+  "apng": "Film",
+  "avif": "FileImage",
+  "jxl": "Grid",
+  "svg": "Code",
+  "webmaster": "Globe",
+  "performance": "Zap",
+  "operational": "Sliders",
+  "developer": "Code",
+  "ai": "Brain"
+};
+
 interface HistoryEntry {
   slug: string;
   name: string;
@@ -108,25 +130,7 @@ export default function InteractiveWorkspace() {
               return (
                 <button key={cat.id} onClick={() => handleCategoryChange(cat.id)} className={`px-3 py-1.5 rounded-xl text-2xs font-extrabold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 active:scale-95 snap-start shrink-0 ${isActive ? "bg-[#7d4dff] text-white shadow-sm shadow-[#7d4dff]/20" : "text-neutral-300 hover:text-white hover:bg-white/5"}`}>
                   <span className="flex items-center justify-center shrink-0 w-4 h-4">
-                    {cat.id === "gif-maker" && <img src="/images/maker.png" className="h-4 w-4 object-contain" alt="" />}
-                    {cat.id === "video-tools" && <img src="/images/video.svg" className="h-4 w-4 object-contain" alt="" />}
-                    {cat.id === "audio" && <img src="/images/audio.svg" className="h-4 w-4 object-contain" alt="" />}
-                    {cat.id === "transform" && <img src="/images/resize.svg" className="h-4 w-4 object-contain" alt="" />}
-                    {cat.id === "optimize" && <img src="/images/optimize.svg" className="h-4 w-4 object-contain" alt="" />}
-                    {cat.id === "effects" && <img src="/images/effects.svg" className="h-4 w-4 object-contain" alt="" />}
-                    {cat.id === "split" && <img src="/images/split.svg" className="h-4 w-4 object-contain" alt="" />}
-                    {cat.id === "add-text" && <img src="/images/insert-text.svg" className="h-4 w-4 object-contain" alt="" />}
-                    {cat.id === "webp" && <img src="/images/webp.svg" className="h-4 w-4 object-contain" alt="" />}
-                    {cat.id === "apng" && <img src="/images/apng.svg" className="h-4 w-4 object-contain" alt="" />}
-                    {cat.id === "avif" && <img src="/images/avif.svg" className="h-4 w-4 object-contain" alt="" />}
-                    {cat.id === "jxl" && <img src="/images/jxl.svg" className="h-4 w-4 object-contain" alt="" />}
-                    {cat.id === "svg" && <img src="/images/svg.svg" className="h-4 w-4 object-contain" alt="" />}
-                    {cat.id === "documents" && "📄"}
-                    {cat.id === "webmaster" && "🌐"}
-                    {cat.id === "performance" && "⚡"}
-                    {cat.id === "operational" && "⚙️"}
-                    {cat.id === "developer" && "💻"}
-                    {cat.id === "ai" && "🤖"}
+                    <LucideIcon name={categoryIconMap[cat.id] || "HelpCircle"} className="h-3.5 w-3.5" />
                   </span>
                   <span>{cat.name.replace(" Tools", "").replace(" Utilities", "")}</span>
                 </button>

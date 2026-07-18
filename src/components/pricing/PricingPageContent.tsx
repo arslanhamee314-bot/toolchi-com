@@ -301,6 +301,67 @@ export default function PricingPageContent() {
           </div>
         )}
 
+        {/* Visual Feature Comparison Matrix */}
+        <section className="border-t border-border/40 pt-12 mt-8 text-left max-w-3xl mx-auto space-y-6">
+          <h3 className="text-lg font-extrabold text-foreground text-center">Feature Comparison Matrix</h3>
+          <div className="overflow-x-auto border border-border/80 rounded-2xl bg-white dark:bg-card">
+            <table className="w-full text-xs text-left border-collapse">
+              <thead>
+                <tr className="bg-neutral-50 dark:bg-neutral-900 border-b border-border/80 text-muted-foreground font-bold">
+                  <th className="p-4">Feature</th>
+                  <th className="p-4 text-center">Free Sandbox</th>
+                  <th className="p-4 text-center text-[#7d4dff]">Creator Pro</th>
+                  <th className="p-4 text-center">Developer API Plus</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border/60 text-muted-foreground">
+                <tr className="hover:bg-neutral-50/40 dark:hover:bg-neutral-800/10">
+                  <td className="p-4 font-semibold text-foreground">In-Browser Sandbox</td>
+                  <td className="p-4 text-center text-emerald-500 font-bold">✓ Yes</td>
+                  <td className="p-4 text-center text-emerald-500 font-bold">✓ Yes</td>
+                  <td className="p-4 text-center text-emerald-500 font-bold">✓ Yes</td>
+                </tr>
+                <tr className="hover:bg-neutral-50/40 dark:hover:bg-neutral-800/10">
+                  <td className="p-4 font-semibold text-foreground">Workspace Tab Limit</td>
+                  <td className="p-4 text-center">3 Tabs max</td>
+                  <td className="p-4 text-center text-[#7d4dff] font-bold">Unlimited</td>
+                  <td className="p-4 text-center font-bold">Unlimited</td>
+                </tr>
+                <tr className="hover:bg-neutral-50/40 dark:hover:bg-neutral-800/10">
+                  <td className="p-4 font-semibold text-foreground">Batch Conversions</td>
+                  <td className="p-4 text-center">Single files</td>
+                  <td className="p-4 text-center">Up to 20 files</td>
+                  <td className="p-4 text-center font-bold">Up to 100 files</td>
+                </tr>
+                <tr className="hover:bg-neutral-50/40 dark:hover:bg-neutral-800/10">
+                  <td className="p-4 font-semibold text-foreground">Custom Watermarks</td>
+                  <td className="p-4 text-center">No</td>
+                  <td className="p-4 text-center text-emerald-500 font-bold">✓ Yes</td>
+                  <td className="p-4 text-center text-emerald-500 font-bold">✓ Yes</td>
+                </tr>
+                <tr className="hover:bg-neutral-50/40 dark:hover:bg-neutral-800/10">
+                  <td className="p-4 font-semibold text-foreground">Programmatic API Reqs</td>
+                  <td className="p-4 text-center">No</td>
+                  <td className="p-4 text-center">No</td>
+                  <td className="p-4 text-center font-bold">25,000 / mo</td>
+                </tr>
+                <tr className="hover:bg-neutral-50/40 dark:hover:bg-neutral-800/10">
+                  <td className="p-4 font-semibold text-foreground">Ad-Free Experience</td>
+                  <td className="p-4 text-center">With Ads</td>
+                  <td className="p-4 text-center text-emerald-500 font-bold">✓ Ad-Free</td>
+                  <td className="p-4 text-center text-emerald-500 font-bold">✓ Ad-Free</td>
+                </tr>
+                <tr className="hover:bg-neutral-50/40 dark:hover:bg-neutral-800/10">
+                  <td className="p-4 font-semibold text-foreground">Slack/Team Support</td>
+                  <td className="p-4 text-center">No</td>
+                  <td className="p-4 text-center">Email Support</td>
+                  <td className="p-4 text-center font-bold">24/7 Slack</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
         {/* Pricing FAQ Section */}
         <section className="border-t border-border/40 pt-10 mt-6 text-left max-w-3xl mx-auto space-y-6">
           <h3 className="text-lg font-extrabold text-foreground flex items-center gap-1.5">

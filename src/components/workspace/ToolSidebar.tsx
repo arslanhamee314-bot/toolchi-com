@@ -34,19 +34,26 @@ export default function ToolSidebar({ activeSlugs = [], onOpenTool }: ToolSideba
 
   // Load recent tools and favorites from localStorage
   useEffect(() => {
-    try {
-      const storedRecent = JSON.parse(localStorage.getItem("toolchi_recent") || "[]") as string[];
-      const recentItems = storedRecent
-        .map((slug: string) => TOOLS_REGISTRY.find((t) => t.slug === slug))
-        .filter(Boolean) as ToolItem[];
-      setRecentTools(recentItems.slice(0, 5));
+    const loadState = () => {
+      try {
+        const storedRecent = JSON.parse(localStorage.getItem("toolchi_recent") || "[]") as string[];
+        const recentItems = storedRecent
+          .map((slug: string) => TOOLS_REGISTRY.find((t) => t.slug === slug))
+          .filter(Boolean) as ToolItem[];
+        setRecentTools(recentItems.slice(0, 5));
 
-      const storedFavs = JSON.parse(localStorage.getItem("toolchi_favorites") || "[]") as string[];
-      setFavorites(storedFavs);
-    } catch {
-      // ignore
-    }
+        const storedFavs = JSON.parse(localStorage.getItem("toolchi_favorites") || "[]") as string[];
+        setFavorites(storedFavs);
+      } catch {
+        // ignore
+      }
+    };
+
+    loadState();
+    window.addEventListener("toolchi_favorites_change", loadState);
+    return () => window.removeEventListener("toolchi_favorites_change", loadState);
   }, []);
+
 
   const toggleCat = useCallback((id: string) => {
     setExpandedCats((prev) =>

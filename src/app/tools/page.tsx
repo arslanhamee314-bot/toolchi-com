@@ -1,16 +1,16 @@
 import React from "react";
 import Link from "next/link";
 import { Folder, ChevronRight, Home } from "lucide-react";
-import { CATEGORIES, getToolsByCategory } from "@/lib/tools-registry";
-import LucideIcon from "@/components/tools/LucideIcon";
+import DirectoryListWithSearch from "@/components/tools/DirectoryListWithSearch";
 
 export const metadata = {
   title: "All Tools Directory - Complete Suite of Browser Utilities | Toolchi",
-  description: "Browse the complete directory of over 25+ browser utilities. Text converters, local PDF editors, JSON formatters, color space converters, and calculators.",
+  description: "Browse the complete directory of over 90+ browser utilities. Text converters, local PDF editors, JSON formatters, color space converters, and calculators.",
   alternates: {
     canonical: "/tools",
   },
 };
+
 
 export default function ToolsDirectoryPage() {
   return (
@@ -35,43 +35,8 @@ export default function ToolsDirectoryPage() {
           </div>
         </div>
 
-        {/* Directory Categorized Index Map */}
-        <div className="flex flex-col gap-10">
-          {CATEGORIES.map((category) => {
-            const categoryTools = getToolsByCategory(category.id);
-            if (categoryTools.length === 0) return null;
-
-            return (
-              <div key={category.id} className="flex flex-col gap-4">
-                <div className="flex items-baseline gap-3 border-b border-border/20 pb-2">
-                  <h2 className="text-base font-bold text-foreground tracking-tight">{category.name}</h2>
-                  <span className="text-3xs text-muted-foreground font-semibold">{categoryTools.length} utilities</span>
-                </div>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {categoryTools.map((tool) => (
-                    <Link
-                      key={tool.slug}
-                      href={`/tools/${tool.slug}`}
-                      className="p-4 rounded-xl border border-border/80 bg-card/10 hover:border-primary/40 hover:bg-card/25 transition-all flex items-center justify-between group"
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div className="h-8 w-8 rounded-lg bg-[#f3eeff] dark:bg-[#251e1c] text-[#7d4dff] flex items-center justify-center border border-[#e8ddff]/80 dark:border-[#7d4dff]/20 shrink-0 shadow-xs group-hover:scale-105 group-hover:border-[#7d4dff]/40 transition-all">
-                          <LucideIcon name={tool.iconName} className="h-4 w-4" />
-                        </div>
-                        <div className="min-w-0">
-                          <span className="text-xs font-semibold text-foreground group-hover:text-primary transition-colors block truncate">{tool.name}</span>
-                          <span className="text-3xs text-muted-foreground block truncate">{tool.category}</span>
-                        </div>
-                      </div>
-                      <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        {/* Directory Categorized Index Map with Search & Filtering */}
+        <DirectoryListWithSearch />
 
         {/* Return Button */}
         <div className="flex justify-center border-t border-border/40 pt-8 mt-4">

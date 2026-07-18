@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronRight, ArrowLeft, ShieldCheck, Zap, CheckCircle2 } from "lucide-react";
+import { ChevronRight, ArrowLeft, ShieldCheck, Zap, CheckCircle2, Star, Award } from "lucide-react";
 import { getToolBySlug, TOOLS_REGISTRY, ToolItem } from "@/lib/tools-registry";
 import { getLocalizedTool } from "@/lib/tools-i18n";
 import ToolSwitcher from "@/components/tools/ToolSwitcher";
@@ -80,6 +80,40 @@ export default function ToolLayout({ slug, locale = "en" }: ToolLayoutProps) {
       document.documentElement.lang = locale;
     }
   }, [locale, isRtl]);
+
+  const [isFav, setIsFav] = useState(false);
+  const [usageCount, setUsageCount] = useState(0);
+
+  // Sync favorites and usage statistics locally
+  useEffect(() => {
+    try {
+      const favs = JSON.parse(localStorage.getItem("toolchi_favorites") || "[]") as string[];
+      setIsFav(favs.includes(slug));
+    } catch {}
+
+    try {
+      const count = parseInt(localStorage.getItem(`toolchi_usage_${slug}`) || "0", 10);
+      const nextCount = count + 1;
+      localStorage.setItem(`toolchi_usage_${slug}`, String(nextCount));
+      setUsageCount(nextCount);
+    } catch {}
+  }, [slug]);
+
+  const handleToggleFavorite = () => {
+    try {
+      const favs = JSON.parse(localStorage.getItem("toolchi_favorites") || "[]") as string[];
+      let nextFavs: string[];
+      if (favs.includes(slug)) {
+        nextFavs = favs.filter((s) => s !== slug);
+        setIsFav(false);
+      } else {
+        nextFavs = [...favs, slug];
+        setIsFav(true);
+      }
+      localStorage.setItem("toolchi_favorites", JSON.stringify(nextFavs));
+      window.dispatchEvent(new Event("toolchi_favorites_change"));
+    } catch {}
+  };
 
   // Localized tool metadata
   const localized = getLocalizedTool(slug, locale);
@@ -178,16 +212,36 @@ export default function ToolLayout({ slug, locale = "en" }: ToolLayoutProps) {
               <LucideIcon name={tool.iconName} className="h-5 w-5" />
             </div>
             <div className={isRtl ? "text-right" : "text-left"}>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">{tool.name}</h1>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">{tool.name}</h1>
+                {usageCount > 1 && (
+                  <span className="inline-flex items-center gap-1 text-[9px] font-extrabold text-indigo-500 bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded-full select-none">
+                    <Award className="h-3 w-3" /> Used {usageCount} times
+                  </span>
+                )}
+              </div>
               <p className="text-xs sm:text-sm text-muted-foreground mt-1">{tool.shortDesc}</p>
             </div>
           </div>
-          <Link 
-            href={getLocalizedLink("/")}
-            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors bg-card border border-border px-3 py-1.5 rounded-lg hover:border-neutral-700 shrink-0"
-          >
-            <ArrowLeft className="h-4.5 w-4.5" /> {dict.common.backToDashboard}
-          </Link>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleToggleFavorite}
+              className={`p-2 rounded-lg border transition-all cursor-pointer ${
+                isFav
+                  ? "bg-yellow-500/10 border-yellow-500/30 text-yellow-500 hover:bg-yellow-500/20"
+                  : "bg-card border-border text-muted-foreground hover:text-foreground hover:border-neutral-700"
+              }`}
+              title={isFav ? "Remove from Favorites" : "Add to Favorites"}
+            >
+              <Star className={`h-4.5 w-4.5 ${isFav ? "fill-yellow-500 text-yellow-500" : ""}`} />
+            </button>
+            <Link 
+              href={getLocalizedLink("/")}
+              className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors bg-card border border-border px-3 py-1.5 rounded-lg hover:border-neutral-700 shrink-0"
+            >
+              <ArrowLeft className="h-4.5 w-4.5" /> {dict.common.backToDashboard}
+            </Link>
+          </div>
         </div>
 
         {/* Tool container */}

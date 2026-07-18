@@ -85,8 +85,8 @@ export default function AboutPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Profile 1: Arslan Hameed */}
-            <article className="border border-border bg-card/20 rounded-3xl p-6 flex flex-col sm:flex-row gap-5 items-start">
-              <div className="h-16 w-16 bg-[#7d4dff]/10 border border-[#7d4dff]/10 rounded-2xl flex items-center justify-center text-[#7d4dff] font-extrabold text-xl shrink-0">
+            <article className="border border-border/80 bg-white dark:bg-card hover:border-[#7d4dff]/40 rounded-3xl p-6 flex flex-col sm:flex-row gap-5 items-start transition-all duration-300 shadow-2xs hover:shadow-md">
+              <div className="h-16 w-16 bg-gradient-to-tr from-violet-600 via-primary to-indigo-500 border border-primary/20 rounded-2xl flex items-center justify-center text-white font-extrabold text-xl shrink-0 shadow-sm">
                 AH
               </div>
               <div className="space-y-2 text-left">
@@ -98,35 +98,36 @@ export default function AboutPage() {
                   Arslan is a senior software engineer specializing in browser runtime environments and client-side system architecture. At Toolchi, he designs the custom canvas video capture engines and DSP pipelines to optimize client-side processing speeds.
                 </p>
                 <div className="flex gap-2.5 text-3xs font-bold text-muted-foreground">
-                  <a href="https://github.com/arslanhamee314-bot" className="hover:text-foreground hover:underline">GitHub Profile</a>
+                  <a href="https://github.com/arslanhamee314-bot" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">GitHub Profile</a>
                   <span>-</span>
-                  <span>Contact: support@toolchi.online</span>
+                  <span>support@toolchi.online</span>
                 </div>
               </div>
             </article>
 
             {/* Profile 2: Compliance Auditor */}
-            <article className="border border-border bg-card/20 rounded-3xl p-6 flex flex-col sm:flex-row gap-5 items-start">
-              <div className="h-16 w-16 bg-emerald-500/10 border border-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-500 font-extrabold text-xl shrink-0">
+            <article className="border border-border/80 bg-white dark:bg-card hover:border-[#14b8a6]/40 rounded-3xl p-6 flex flex-col sm:flex-row gap-5 items-start transition-all duration-300 shadow-2xs hover:shadow-md">
+              <div className="h-16 w-16 bg-gradient-to-tr from-teal-500 to-emerald-600 border border-teal-500/20 rounded-2xl flex items-center justify-center text-white font-extrabold text-xl shrink-0 shadow-sm">
                 TS
               </div>
               <div className="space-y-2 text-left">
                 <div>
                   <h4 className="font-extrabold text-sm text-foreground">Toolchi Security Board</h4>
-                  <p className="text-3xs font-bold text-emerald-500 uppercase tracking-wider mt-0.5">Privacy, Security & Compliance Audit</p>
+                  <p className="text-3xs font-bold text-teal-600 dark:text-teal-400 uppercase tracking-wider mt-0.5">Privacy, Security & Compliance Audit</p>
                 </div>
                 <p className="text-3xs sm:text-2xs text-muted-foreground leading-relaxed">
                   Our internal compliance division monitors code changes to ensure all dependencies remain locally packaged. They verify that no tracking scripts are injected, guaranteeing full privacy standard audit clearances.
                 </p>
                 <div className="flex gap-2.5 text-3xs font-bold text-muted-foreground">
-                  <Link href="/privacy" className="hover:text-foreground hover:underline">Privacy Charter</Link>
+                  <Link href="/privacy" className="text-teal-600 dark:text-teal-400 hover:underline">Privacy Charter</Link>
                   <span>-</span>
-                  <span>Compliance: audit@toolchi.online</span>
+                  <span>audit@toolchi.online</span>
                 </div>
               </div>
             </article>
           </div>
         </section>
+
 
         {/* 3. Safety/FAQ Section */}
         <section className="border-t border-border/40 pt-8 space-y-4">

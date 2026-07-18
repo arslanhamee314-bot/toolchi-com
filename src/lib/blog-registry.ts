@@ -36,7 +36,7 @@ export const BLOG_POSTS: BlogPost[] = [
       avatar: "AR"
     },
     thumbnailGradient: "from-purple-500 to-indigo-600",
-    thumbnail: "/images/blog/webmaster.jpg",
+    thumbnail: "",
     content: `
       <p>As the digital landscape evolves, webmasters in 2026 face unprecedented demands for site speed, security, and uptime. Search engine algorithms have shifted focus toward page experience metrics and cryptographic trust. To keep your platform competitive, utilizing a suite of local diagnostics is essential.</p>
       
@@ -67,7 +67,7 @@ export const BLOG_POSTS: BlogPost[] = [
       avatar: "MV"
     },
     thumbnailGradient: "from-pink-500 to-rose-600",
-    thumbnail: "/images/blog/compression.jpg",
+    thumbnail: "",
     content: `
       <p>In modern web performance tuning, visual assets are the single largest source of bloat. Uncompressed high-definition hero banners and blog thumbnails can easily degrade your Core Web Vitals score. Optimizing images locally is the fastest win to double your loading speeds.</p>
       
@@ -99,7 +99,7 @@ export const BLOG_POSTS: BlogPost[] = [
       avatar: "ER"
     },
     thumbnailGradient: "from-blue-500 to-teal-600",
-    thumbnail: "/images/blog/ai_writing.jpg",
+    thumbnail: "",
     content: `
       <p>Search engines prioritize high-quality, readable content. To build a reputable digital presence, your articles must display natural writing patterns. Understanding the structure of sentence flow allows creators to write clearly while satisfying search algorithms.</p>
       
@@ -130,7 +130,7 @@ export const BLOG_POSTS: BlogPost[] = [
       avatar: "AR"
     },
     thumbnailGradient: "from-violet-500 to-fuchsia-600",
-    thumbnail: "/images/blog/ssl_security.jpg",
+    thumbnail: "",
     content: `
       <p>Security is the foundation of user trust. A site displaying security warnings will turn away visitors and face penalties in search rankings. Understanding and monitoring your Secure Sockets Layer (SSL) certificates is critical to maintaining a healthy site.</p>
       
@@ -163,7 +163,7 @@ export const BLOG_POSTS: BlogPost[] = [
       avatar: "ER"
     },
     thumbnailGradient: "from-blue-600 to-indigo-700",
-    thumbnail: "/images/blog/ai_writing.jpg",
+    thumbnail: "",
     content: `
       <p>The blogging landscape is shifting rapidly in 2026. High search presence now requires combining speed with original, human-like editorial value. While paid AI engines offer complex models, bloggers can achieve professional editing results for free using local, browser-based utilities. Here is our selection of the best free AI writing assistants you can bookmark today.</p>
       
@@ -190,7 +190,7 @@ export const BLOG_POSTS: BlogPost[] = [
       avatar: "MV"
     },
     thumbnailGradient: "from-emerald-500 to-teal-600",
-    thumbnail: "/images/blog/ai_writing.jpg",
+    thumbnail: "",
     content: `
       <p>Using AI to write articles is only the first step. To ensure your blog ranks high on search engine result pages, you need to follow a structured SEO editing workflow. AI-generated text is often overly repetitive and predictable. By incorporating readability analysis and manual styling, you can build content that satisfies both crawlers and human readers.</p>
       
@@ -217,7 +217,7 @@ export const BLOG_POSTS: BlogPost[] = [
       avatar: "MV"
     },
     thumbnailGradient: "from-orange-500 to-red-600",
-    thumbnail: "/images/blog/compression.jpg",
+    thumbnail: "",
     content: `
       <p>Visual assets account for the majority of bytes sent over the internet. Choosing the right image format is one of the most effective ways to optimize website speed. Here is a comparison of JPG, PNG, WebP, and AVIF formats, helping you select the best container for your web pages.</p>
       
@@ -246,7 +246,7 @@ export const BLOG_POSTS: BlogPost[] = [
       avatar: "AR"
     },
     thumbnailGradient: "from-yellow-500 to-amber-600",
-    thumbnail: "/images/blog/webmaster.jpg",
+    thumbnail: "",
     content: `
       <p>Starting a new blog does not have to be expensive. You can build a complete, professional writing and optimization workflow using free client-side tools. By focusing on site performance, readability, and secure diagnostics, you can rank higher and grow your traffic without paying for complex subscriptions.</p>
       
@@ -270,7 +270,7 @@ export const BLOG_POSTS: BlogPost[] = [
       avatar: "SM"
     },
     thumbnailGradient: "from-violet-500 to-purple-700",
-    thumbnail: "/images/blog/workspace.jpg",
+    thumbnail: "",
     content: `
       <p>Most online tool websites work the same way: you open a tool, do a task, close the tab, then search for the next tool. This context-switching kills productivity. <strong>Toolchi Workspace</strong> was built to solve exactly this problem.</p>
  
@@ -306,7 +306,7 @@ export const BLOG_POSTS: BlogPost[] = [
       avatar: "JP"
     },
     thumbnailGradient: "from-teal-500 to-emerald-600",
-    thumbnail: "/images/blog/compression.jpg",
+    thumbnail: "",
     content: `
       <p>Unoptimized images are the #1 cause of slow blog page speeds. A single 4MB JPEG from your phone camera can slow your page load by 3-5 seconds — destroying your Core Web Vitals score and bounce rate. Here's the complete workflow to fix this, entirely in your browser for free.</p>
  

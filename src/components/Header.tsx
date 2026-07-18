@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { Menu, X, Globe, ChevronDown } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
@@ -67,13 +68,16 @@ export default function Header() {
         
         {/* Logo/Brand link */}
         <Link href={getLocalizedLink("/")} onClick={closeMenu} className={`flex items-center gap-2.5 group select-none shrink-0 ${isRtl ? "flex-row-reverse" : ""}`}>
-          <img 
+          <Image 
             src="/logo.jpg" 
             alt="Toolchi Logo" 
-            className="h-10 w-10 rounded-lg border border-border/80 shadow-xs group-hover:scale-105 transition-transform" 
+            width={40}
+            height={40}
+            className="rounded-lg border border-border/80 shadow-xs group-hover:scale-105 transition-transform" 
           />
           <span className="font-extrabold text-base text-[#20242d] dark:text-[#f6f7fb] tracking-tight">Toolchi</span>
         </Link>
+
 
         {/* Right side container holding both Nav and Controls */}
         <div className={`hidden md:flex items-center gap-6 ${isRtl ? "mr-auto ml-0 flex-row-reverse" : "ml-auto"}`}>

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Search, X, Sparkles, ArrowRight } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import { TOOLS_REGISTRY } from "@/lib/tools-registry";
 
 export default function HeroSearch() {
   const searchParams = useSearchParams();
@@ -52,12 +53,12 @@ export default function HeroSearch() {
     handleSearchChange("");
   };
 
-  const popularShortcuts = [
-    { name: "Compress Image", href: "/tools/compress-image" },
-    { name: "Minify Code", href: "/tools/minify-code" },
-    { name: "SSL Checker", href: "/tools/ssl-checker" },
-    { name: "JSON Formatter", href: "/tools/json-formatter" },
-  ];
+  const popularShortcuts = TOOLS_REGISTRY.filter((t) => t.popular)
+    .slice(0, 4)
+    .map((t) => ({
+      name: t.name,
+      href: `/tools/${t.slug}`
+    }));
 
   return (
     <div className="w-full flex flex-col gap-4 text-left">

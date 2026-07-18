@@ -3,10 +3,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Terminal, Code, Cpu, Database, Image as ImageIcon, FileText, Globe, Key, CheckCircle, ArrowRight } from "lucide-react";
-import Header from "@/components/Header";
 
 export default function DevelopersLanding() {
-
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
@@ -54,7 +52,7 @@ export default function DevelopersLanding() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0b0f19] text-foreground transition-colors selection:bg-primary/20">
-      <Header />
+
 
       <main className="max-w-6xl mx-auto px-6 py-16 flex flex-col gap-16">
         {/* Hero Section */}
